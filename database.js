@@ -26,17 +26,16 @@ var newlyRegisteredGenre = [];
 function checkGenre(path, metadata) {
     var genre = metadata.genre[0];
 
-    connection.query('SELECT count(*) FROM genres WHERE name = "' + genre + '"', function(err, rows, fields) {
+    connection.query('SELECT * FROM genres WHERE name = "' + genre + '"', function(err, rows, fields) {
         if (err) throw err;
 
-        var nbMatch = parseInt(rows[0]["count(*)"]);
+        var nbMatch = rows.length;
         if (nbMatch == 0) {
             // Checking if the genre was already told to be inserted by Mysql
             if (newlyRegisteredGenre.indexOf(genre) == -1 ) {
-                console.log("Genre " + genre + " not existing, inserting...");
                 newlyRegisteredGenre.push(genre);
-                var genreInsertStatement = {id : '', name: genre};
-                connection.query("INSERT INTO genres SET ?", genreInsertStatement, function(err, rows, fields) {
+                var insertStatement = {id : '', name: genre};
+                connection.query("INSERT INTO genres SET ?", insertStatement, function(err, rows, fields) {
                     if (err) throw err;
                     console.log("Done");
                     checkArtist(path, metadata);
@@ -44,7 +43,7 @@ function checkGenre(path, metadata) {
             }
         }
         else {
-            console.log("Genre already registered, moving on");
+            metadata['genre_id'] = rows[0]['id'];
             checkArtist(path, metadata);
         }
     });
@@ -55,31 +54,96 @@ var newlyRegisteredArtist = [];
 function checkArtist(path, metadata) {
     var artist = metadata.artist;
 
-    connection.query('SELECT count(*) FROM artists WHERE name = "' + artist + '"', function(err, rows, fields) {
+    connection.query('SELECT * FROM artists WHERE name = "' + artist + '"', function(err, rows, fields) {
         if (err) throw err;
 
-        var nbMatch = parseInt(rows[0]["count(*)"]);
+        var nbMatch = rows.length;
         if (nbMatch == 0) {
+            /*
+             * TO DO : Fix pour éviter d'insérer plusieurs fois le même artiste
+             */
             if (newlyRegisteredArtist.indexOf(artist) == -1 ) {
-                console.log("Artist " + artist + " not existing, inserting...");
                 newlyRegisteredArtist.push(artist);
-                var artistInsertStatement = {id : '', name: artist};
-                connection.query("INSERT INTO artists SET ?", artistInsertStatement, function(err, rows, fields) {
+
+                var insertStatement = {id : '', name: artist};
+                connection.query("INSERT INTO artists SET ?", insertStatement, function(err, rows, fields) {
                     if (err) throw err;
-                    console.log("Done");
+                    metadata['artist_id'] = rows['insertId'];
                     checkAlbum(path, metadata);
                 });
             }
         }
         else {
-            console.log("Artist already registered, moving on");
+            metadata['artist_id'] = rows[0]['id'];
             checkAlbum(path, metadata);
         }
     });
 }
 
+var newlyRegisteredAlbum = [];
+
 function checkAlbum(path, metadata) {
-    console.log("Checking album");
+    var album = metadata.album;
+
+    connection.query('SELECT * FROM albums WHERE name = "' + album + '"', function(err, rows, fields) {
+        if (err) throw err;
+
+        nbMatch = rows.length;
+        if (nbMatch == 0) {
+            if (newlyRegisteredAlbum.indexOf(album) == -1 ) {
+                console.log("Album " + album + " not existing, inserting...");
+                newlyRegisteredAlbum.push(album);
+
+                var insertStatement = {id : '', name: album};
+                connection.query("INSERT INTO albums SET ?", insertStatement, function(err, rows, fields) {
+                    if (err) throw err;
+                    metadata['album_id'] = rows['insertId'];
+                    checkSong(path, metadata);
+                });
+            }
+        }
+        else {
+            metadata['album_id'] = rows[0]['id'];
+            console.log("Album already registered, moving on");
+            checkSong(path, metadata);
+        }
+    });
+}
+
+function checkSong(path, metadata) {
+    var genre = metadata.genre[0];
+    var genre_id = metadata.genre_id;
+    var artist = metadata.artist;
+    var artist_id = metadata.artist_id;
+    var album = metadata.album;
+    var album_id = metadata.album_id;
+    var title = metadata.title ;
+
+    console.log("Title : " + title + ", path : " + path +", id_albums : " + album_id +", id_artists : " + artist_id + ", genre_id : " + genre_id);
+
+    connection.query('SELECT * FROM songs WHERE path = "' + path + '"', function(err, rows, fields) {
+        if (err) throw err;
+
+        // Inserting if match
+        nbMatch = rows.length;
+        if (nbMatch == 0) {
+            var song = {id : '', name: title, path: path, id_albums: album_id, id_artists : artist_id};
+            connection.query("INSERT INTO songs SET ?", song, function(err, rows, fields) {
+                if (err) throw err;
+                metadata['song_id'] = rows['insertId'];
+                genreAssociation(metadata);
+            });
+        }
+    });
+}
+
+function genreAssociation(metadata) {
+    genre_id = metadata.genre_id;
+    song_id = metadata.song_id;
+    var genreRelation = {id : genre_id, id_songs: song_id};
+    connection.query("INSERT INTO genreAssociation SET ?", genreRelation, function(err, rows, fields) {
+        if (err) throw err;
+    });
 }
 
 /*
