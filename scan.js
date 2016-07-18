@@ -39,4 +39,5 @@ function listProcessing(IDontGetWhatThisVarIsFor, results) {
     });
 }
 
+walk("music/Pink Martini/Sympathique", listProcessing);
 walk("music/Ratatat/LP4", listProcessing);
