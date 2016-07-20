@@ -10,13 +10,11 @@ var connection = mysql.createConnection({
 });
 
 exports.insertSong = function(path, metadata) {
-    console.log("Inserting metadata for song " + path);
     var title = metadata.title
         artist = metadata.artist
         album = metadata.album
         genre = metadata.genre[0]
         ;
-    console.log(title + ", " + artist + ", " + album + ", " + genre)
 
     checkGenre(path, metadata);
 }
@@ -36,8 +34,11 @@ function checkGenre(path, metadata) {
                 newlyRegisteredGenre.push(genre);
                 var insertStatement = {id : '', name: genre};
                 connection.query("INSERT INTO genres SET ?", insertStatement, function(err, rows, fields) {
-                    if (err) throw err;
-                    console.log("Done");
+                    if (err) {
+                        console.log("Error while inserting genre for song : " + metadata.title + ", path : " + metadata.path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
+                        throw err;
+                    }
+                    metadata['genre_id'] = rows['insertId'];
                     checkArtist(path, metadata);
                 });
             }
@@ -67,7 +68,10 @@ function checkArtist(path, metadata) {
 
                 var insertStatement = {id : '', name: artist};
                 connection.query("INSERT INTO artists SET ?", insertStatement, function(err, rows, fields) {
-                    if (err) throw err;
+                    if (err) {
+                        console.log("Error while inserting artist for song : " + metadata.title + ", path : " + metadata.path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
+                        throw err;
+                    }
                     metadata['artist_id'] = rows['insertId'];
                     checkAlbum(path, metadata);
                 });
@@ -91,12 +95,14 @@ function checkAlbum(path, metadata) {
         nbMatch = rows.length;
         if (nbMatch == 0) {
             if (newlyRegisteredAlbum.indexOf(album) == -1 ) {
-                console.log("Album " + album + " not existing, inserting...");
                 newlyRegisteredAlbum.push(album);
 
                 var insertStatement = {id : '', name: album};
                 connection.query("INSERT INTO albums SET ?", insertStatement, function(err, rows, fields) {
-                    if (err) throw err;
+                    if (err) {
+                        console.log("Error while inserting album for song : " + metadata.title + ", path : " + metadata.path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
+                        throw err;
+                    }
                     metadata['album_id'] = rows['insertId'];
                     checkSong(path, metadata);
                 });
@@ -104,7 +110,6 @@ function checkAlbum(path, metadata) {
         }
         else {
             metadata['album_id'] = rows[0]['id'];
-            console.log("Album already registered, moving on");
             checkSong(path, metadata);
         }
     });
@@ -119,8 +124,6 @@ function checkSong(path, metadata) {
     var album_id = metadata.album_id;
     var title = metadata.title ;
 
-    console.log("Title : " + title + ", path : " + path +", id_albums : " + album_id +", id_artists : " + artist_id + ", genre_id : " + genre_id);
-
     connection.query('SELECT * FROM songs WHERE path = "' + path + '"', function(err, rows, fields) {
         if (err) throw err;
 
@@ -129,7 +132,10 @@ function checkSong(path, metadata) {
         if (nbMatch == 0) {
             var song = {id : '', name: title, path: path, id_albums: album_id, id_artists : artist_id};
             connection.query("INSERT INTO songs SET ?", song, function(err, rows, fields) {
-                if (err) throw err;
+                if (err) {
+                    console.log("Error while inserting song : " + metadata.title + ", path : " + metadata.path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
+                    throw err;
+                }
                 metadata['song_id'] = rows['insertId'];
                 genreAssociation(metadata);
             });
@@ -142,7 +148,12 @@ function genreAssociation(metadata) {
     song_id = metadata.song_id;
     var genreRelation = {id : genre_id, id_songs: song_id};
     connection.query("INSERT INTO genreAssociation SET ?", genreRelation, function(err, rows, fields) {
-        if (err) throw err;
+            if (err) {
+                console.log("Error while associating genre to the song : " + metadata.title + ", path : " + metadata.path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
+                throw err;
+            }
+            else
+                console.log("Song successfully inserted for : " + metadata.title + ", path : " + metadata.path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
     });
 }
 
