@@ -16,7 +16,7 @@ var currentGenreHref = "";
 var playGenre = function() {
     var dataHref = this.getAttribute("data-href");
     currentGenreHref = dataHref;
-    getAjax(dataHref, function(data){ 
+    getAjax(window.location.toString().slice(0, -1) + dataHref, function(data){ 
         data = JSON.parse(data);
         var player = document.getElementById("player");
         player.setAttribute("src", data.randomSong.path);
