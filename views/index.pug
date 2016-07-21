@@ -3,11 +3,13 @@ html
     title= title
   body
     h1= message
-    div
-      audio#player(controls='controls', autoplay)
+    div.player
+      span#play play
+      audio#player(autoplay)
     ul
       each val in genres
-        a(class='genreItem', href='#', data-href="/genre/" + val.id)
+        a(class="genreItem", href="#", data-href="/genre/" + val.id)
           li(data-id = val.id)= val.name
     div
     script(src="/public/js/ui.js")
+    link(href="/public/css/style.css", rel="stylesheet")

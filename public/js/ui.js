@@ -35,6 +35,15 @@ function playNext(){
         player.setAttribute("src", data.randomSong.path);
     });
 }
+function playPause(){
+    var player = document.querySelector("#player");
+    if (player.paused)
+        player.play();
+    else
+        player.pause();
+}
 
 // Playing another song at the end of each songs
 document.querySelector("#player").addEventListener("ended", playNext, false);
+// Play pause song
+document.querySelector("#play").addEventListener("click", playPause, false);
