@@ -18,8 +18,7 @@ var playGenre = function() {
     currentGenreHref = dataHref;
     getAjax(dataHref, function(data){ 
         data = JSON.parse(data);
-        var player = document.getElementById("player");
-        player.setAttribute("src", data.randomSong.path);
+        player(data.randomSong);
     });
 };
 
@@ -31,8 +30,7 @@ function playNext(){
     console.log("Chargement de la prochaine chanson.");
     getAjax(currentGenreHref, function(data){ 
         data = JSON.parse(data);
-        var player = document.getElementById("player");
-        player.setAttribute("src", data.randomSong.path);
+        player(data.randomSong);
     });
 }
 function playPause(){
@@ -42,6 +40,30 @@ function playPause(){
     else
         player.pause();
 }
+
+function player(songData) {
+    var player = document.getElementById("player");
+    player.setAttribute("src", songData.path);
+
+    playerVue.play(songData);
+}
+
+// Vue.js
+var playerVue = new Vue({
+    el: '#app',
+    data: {
+        title: '',
+        artist: '',
+        album: ''
+    },
+    methods: {
+        play: function(data) {
+            this.title = data.song
+            this.artist = data.artist
+            this.album = data.album
+        }
+    }
+});
 
 // Playing another song at the end of each songs
 document.querySelector("#player").addEventListener("ended", playNext, false);

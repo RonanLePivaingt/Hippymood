@@ -19,12 +19,17 @@ exports.Index = function(req, res){
 exports.Genre = function(req, res){
     var genre = req.params.id;
 
-    var SQLquery = 'SELECT * FROM songs, genreAssociation WHERE songs.id = genreAssociation.id_songs AND genreAssociation.id = "' + req.params.id + '"';
+    var SQLquery = 'SELECT songs.id, songs.name AS song, artists.name AS artist, songs.path, albums.name AS album ';
+        SQLquery += 'FROM songs, genreAssociation, artists, albums ';
+        SQLquery += 'WHERE songs.id = genreAssociation.id_songs ';
+        SQLquery += 'AND genreAssociation.id = "' + req.params.id + '"';
+        SQLquery += 'AND songs.id_artists = artists.id ';
+        SQLquery += 'AND songs.id_albums = albums.id ';
 
     connection.query(SQLquery, function(err, rows, fields) {
         var randomSong = rows[Math.floor(Math.random() * rows.length)];
         randomSong['path'] = randomSong['path'].substring(25); // 21 pour JLC et 25 en local
 
-        res.send({ title: 'Hippymood', message: 'HippyMood', randomSong: randomSong});
+        res.send({randomSong});
     });
 };
