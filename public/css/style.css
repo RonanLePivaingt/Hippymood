@@ -20,7 +20,13 @@ hide {
  */
 @media screen and (min-resolution: 2dppx) {
     /* Wide card with share menu button */
+    * {
+        font-size: 4rem;
+    }
     h1 {
+        font-size: 3em;
+    }
+    h2 {
         font-size: 4em;
     }
     .mdl-button {
@@ -31,8 +37,9 @@ hide {
         width: 90%;
         margin: 0 auto; 
     }
-    * {
-        font-size: 2rem;
+    .demo-card-wide.mdl-card, .genreList {
+        width: 100%;
+        margin: 0 auto; 
     }
     /* Player menu */
     #menu li {
@@ -163,6 +170,9 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+#playerButtons > span {
+    width: 5%;
 }
 .genreList button {
     margin: 10px;
