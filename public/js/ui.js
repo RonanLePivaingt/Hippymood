@@ -55,7 +55,7 @@ var playerVue = new Vue({
  */
 var genres = document.getElementsByClassName("genreItem");
 
-var player = document.getElementById("player");
+var playerHTML5 = document.getElementById("playerHTML5");
 var buttonPause = document.querySelector("#pause");
 var buttonPlay = document.querySelector("#play");
 
@@ -66,7 +66,7 @@ var currentGenre;
  * Player functions
  */
 function play(songData) {
-    player.setAttribute("src", songData.path);
+    playerHTML5.setAttribute("src", songData.path);
 
     playerVue.play(songData);
 }
@@ -92,7 +92,7 @@ function playNext(){
     }
 }
 function downloadSong() {
-    var songUrl = player.getAttribute("src");
+    var songUrl = playerHTML5.getAttribute("src");
     location.replace(songUrl);
 }
 
@@ -100,17 +100,17 @@ function downloadSong() {
  * Player functions for the UI
  */
 function playPause(){
-    if (player.paused) {
-        player.play();
+    if (playerHTML5.paused) {
+        playerHTML5.play();
         playPauseStyling();
     }
     else {
-        player.pause();
+        playerHTML5.pause();
         playPauseStyling();
     }
 }
 function playPauseStyling(){
-    if (player.paused) {
+    if (playerHTML5.paused) {
         buttonPause.style.display = 'none';
         buttonPlay.style.display = 'inline-block';
     }
@@ -129,7 +129,7 @@ for (var i = 0; i < genres.length; i++) {
 }
 
 // Playing another song at the end of each songs
-document.querySelector("#player").addEventListener("ended", playNext, false);
+document.querySelector("#playerHTML5").addEventListener("ended", playNext, false);
 
 // Play pause song
 document.querySelector("#play").addEventListener("click", playPause, false);

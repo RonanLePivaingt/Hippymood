@@ -5,7 +5,7 @@ html
         div.mdl-grid
             h1 Hippy Mood
         div#app.mdl-grid
-            div.demo-card-wide.mdl-card.mdl-shadow--2dp
+            div#player.demo-card-wide.mdl-card.mdl-shadow--2dp
                 div.mdl-card__title
                     h2.mdl-card__title-text 
                         i.material-icons audiotrack
@@ -19,13 +19,13 @@ html
                         span 
                             strong {{artist}}
                 div#playerButtons.mdl-card__actions.mdl-card--border
-                    button#pause.mdl-button.mdl-js-button.mdl-button--icon.md-48.mdl-js-ripple-effect.mdl-button--colored
-                        i.material-icons.md-48 pause
-                    button#play.hide.mdl-button.mdl-js-button.mdl-button--icon.md-48.mdl-js-ripple-effect.mdl-button--colored
-                        i.material-icons.md-48 play_arrow
-                    button#next.mdl-button.mdl-js-button.mdl-button--icon.md-48.mdl-js-ripple-effect
-                        i.material-icons.md-48 skip_next
-                div.mdl-card__menu
+                    button#pause.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect.mdl-button--colored
+                        i.material-icons pause
+                    button#play.hide.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect.mdl-button--colored
+                        i.material-icons play_arrow
+                    button#next.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect
+                        i.material-icons skip_next
+                div#menu.mdl-card__menu
                     button#demo-menu-lower-right.mdl-button.mdl-js-button.mdl-button--icon
                         i.material-icons more_vert
                     ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect(for="demo-menu-lower-right")
@@ -36,10 +36,11 @@ html
                 each val in genres
                     button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.genreItem(class="genreItem", data-href="/genre/" + val.id)
                         span= val.name
-        audio#player(autoplay)
+        audio#playerHTML5(autoplay)
         script(src="/public/js/vue.js")
         script(src="/public/js/mdl/material.min.js")
         script(src="/public/js/ui.js")
         link(href="/public/css/mdl/material.min.css", rel="stylesheet")
         link(href="/public/css/style.css", rel="stylesheet")
+        link(href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700", rel="stylesheet")
         link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")

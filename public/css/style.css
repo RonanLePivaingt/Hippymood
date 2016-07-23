@@ -1,6 +1,152 @@
+/* 
+ * Layout
+ */
+/*
+ * General
+ */
+#app {
+    align-items: vertically;
+}
+.genreList {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 hide {
     display:none;
 }
+/* 
+ * Hi-resolution handling
+ */
+@media screen and (min-resolution: 2dppx) {
+    /* Wide card with share menu button */
+    h1 {
+        font-size: 4em;
+    }
+    .mdl-button {
+        height: 4rem;
+    }
+    /* Player */
+    .demo-card-wide.mdl-card, .genreList {
+        width: 90%;
+        margin: 0 auto; 
+    }
+    * {
+        font-size: 2rem;
+    }
+    /* Player menu */
+    #menu li {
+        font-size: 4rem;
+    }
+    /*
+    #menu > div > div, #menu > div > ul {
+        height: 8rem;
+    }
+    */
+    #demo-menu-lower-right {
+        height: 10rem;
+        width: 10rem;
+    }
+    #demo-menu-lower-right i.material-icons {
+        font-size: 4em;
+        transform: translate(-50%, -50%);
+        width: unset;
+        line-height: unset;
+    }
+    /* Player icons & buttons */
+    #player i.material-icons {
+        font-size: 5em;
+    }
+    #playerButtons button { 
+        height: 7em;
+        width: 7em;
+    }
+    #playerButtons i.material-icons {
+        font-size: 6em;
+        transform: translate(-50%, -50%);
+        width: unset;
+        line-height: unset;
+    }
+    /* Genres list */
+    .genreList button span {
+        font-size: 3rem;
+    }
+    .genreList .mdl-button {
+        height: 9rem;
+    }
+}
+/* 
+ * normal resolution handling
+ */
+@media screen and (max-resolution: 2dppx) {
+    h1 {
+        font-size: 5rem;
+    }
+    /* Wide card with share menu button */
+    /* Player */
+    .demo-card-wide.mdl-card, .genreList {
+        width: 512px;
+        margin: 0 auto; 
+    }
+    #player h2 {
+        font-size: 2rem;
+    }
+    #player p > span {
+        font-size: 1.5rem;
+    }
+    /* Player icons & buttons */
+    #player i.material-icons {
+        font-size: 3em;
+        width: unset;
+        line-height: unset;
+    }
+    #playerButtons button { 
+        height: 4em;
+        width: 4em;
+    }
+    #playerButtons i.material-icons {
+        font-size: 3em;
+        transform: translate(-50%, -50%);
+        width: unset;
+        line-height: unset;
+    }
+    /* Player menu */
+    #menu li {
+        font-size: 2rem;
+    }
+    /*
+    #demo-menu-lower-right {
+        height: 3rem;
+        width: 3rem;
+    }
+    */
+    #demo-menu-lower-right {
+        height: 4rem;
+        width: 4rem;
+    }
+    #demo-menu-lower-right i.material-icons {
+        font-size: 2em;
+        width: unset;
+        line-height: unset;
+        transform: translate(-50%, -50%);
+    }
+    /*
+    #menu > div > div, #menu > div > ul {
+        height: 200px;
+    }
+    */
+    /* Genres list */
+    .genreList button span {
+        font-size: 1rem;
+    }
+    .genreList .mdl-button {
+        height: 3rem;
+    }
+}
+
+/*
+ * Specific elements
+ */
 button.hide {
     display:none;
 }
@@ -9,31 +155,14 @@ h1 {
     width: 100%;
     text-align: center;
 }
+#player h2 > span, #player p > span {
+    margin: auto;
+}
 /* Player */
 #playerButtons {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-#downloadSong {
-    text-decoration: none;
-    decoration: none;
-}
-/*
-.material-icons.md-48 { font-size: 36px; }
-*/
-button.md-48 { 
-    height: 2em;
-    width: 2em;
-}
-#app {
-    align-items: vertically;
-}
-.genreList {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 512px;
 }
 .genreList button {
     margin: 10px;
@@ -42,10 +171,6 @@ button.md-48 {
     vertical-align: bottom;
 }
 /* Wide card with share menu button */
-.demo-card-wide.mdl-card {
-    width: 512px;
-    margin: 0 auto; 
-}
 .demo-card-wide > .mdl-card__title {
     color: #fff;
     height: 176px;
@@ -56,4 +181,8 @@ button.md-48 {
 }
 .demo-card-wide > .mdl-card__menu {
     color: #fff;
+}
+#downloadSong {
+    text-decoration: none;
+    decoration: none;
 }
