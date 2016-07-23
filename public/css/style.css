@@ -4,6 +4,17 @@ hide {
 button.hide {
     display:none;
 }
+/* Title */
+h1 {
+    width: 100%;
+    text-align: center;
+}
+/* Player */
+#playerButtons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 /*
 .material-icons.md-48 { font-size: 36px; }
 */
@@ -11,10 +22,31 @@ button.md-48 {
     height: 2em;
     width: 2em;
 }
+.genreList {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .genreList button {
     display:inline-block;
     margin: 10px;
 }
 #app span {
     vertical-align: bottom;
+}
+/* Wide card with share menu button */
+.demo-card-wide.mdl-card {
+    width: 512px;
+    margin: 0 auto; 
+}
+.demo-card-wide > .mdl-card__title {
+    color: #fff;
+    height: 176px;
+    /*
+    background: url('../assets/demos/welcome_card.jpg') center / cover;
+    */
+    background: rgb(0,188,212);
+}
+.demo-card-wide > .mdl-card__menu {
+    color: #fff;
 }
