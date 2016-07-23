@@ -46,19 +46,17 @@ var playerVue = new Vue({
  */
 var genres = document.getElementsByClassName("genreItem");
 
-var player = document.querySelector("#player");
+var player = document.getElementById("player");
 var buttonPause = document.querySelector("#pause");
 var buttonPlay = document.querySelector("#play");
 
 var lastGenre = '';
 var currentGenre;
 
-
 /*
  * Player functions
  */
 function play(songData) {
-    var player = document.getElementById("player");
     player.setAttribute("src", songData.path);
 
     playerVue.play(songData);
@@ -73,16 +71,16 @@ function playGenre() {
         data = JSON.parse(data);
         play(data.randomSong);
         genreButtonStyle();
-        playPause();
     });
 };
 function playNext(){
-    console.log("Chargement de la prochaine chanson.");
-    getAjax(currentGenreHref, function(data){ 
-        data = JSON.parse(data);
-        play(data.randomSong);
-        playPause();
-    });
+    if (currentGenre) {
+        var dataHref = currentGenre.getAttribute("data-href");
+        getAjax(dataHref, function(data){ 
+            data = JSON.parse(data);
+            play(data.randomSong);
+        });
+    }
 }
 
 /*
@@ -91,14 +89,21 @@ function playNext(){
 function playPause(){
     if (player.paused) {
         player.play();
-        buttonPlay.style.display = 'none';
-        buttonPause.style.display = 'inline-block';
-
+        playPauseStyling();
     }
     else {
         player.pause();
+        playPauseStyling();
+    }
+}
+function playPauseStyling(){
+    if (player.paused) {
         buttonPause.style.display = 'none';
         buttonPlay.style.display = 'inline-block';
+    }
+    else {
+        buttonPlay.style.display = 'none';
+        buttonPause.style.display = 'inline-block';
     }
 }
 
@@ -117,6 +122,9 @@ document.querySelector("#player").addEventListener("ended", playNext, false);
 document.querySelector("#play").addEventListener("click", playPause, false);
 document.querySelector("#pause").addEventListener("click", playPause, false);
 
+// Skipping to next song
+document.querySelector("#next").addEventListener("click", playNext, false);
+
 function genreButtonStyle() {
     // Check lastGenre as it is undefined on first execution
     if (lastGenre)
@@ -124,3 +132,14 @@ function genreButtonStyle() {
 
     addClass(currentGenre,"mdl-button--colored");
 }
+
+// Keyboard shortcuts
+window.addEventListener("keypress", function(event) {
+    // Play/pause with the spacebar
+    if (event.charCode == 32)
+        playPause();
+
+    // Skipping song with ctrl+right
+    if (event.ctrlKey && event.keyCode == 39)
+        playNext();
+});
