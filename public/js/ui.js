@@ -80,6 +80,7 @@ function playGenre() {
         data = JSON.parse(data);
         play(data.randomSong);
         genreButtonStyle();
+        playingStyling();
     });
 };
 function playNext(){
@@ -88,6 +89,7 @@ function playNext(){
         getAjax(dataHref, function(data){ 
             data = JSON.parse(data);
             play(data.randomSong);
+            playingStyling();
         });
     }
 }
@@ -102,22 +104,20 @@ function downloadSong() {
 function playPause(){
     if (playerHTML5.paused) {
         playerHTML5.play();
-        playPauseStyling();
+        playingStyling();
     }
     else {
         playerHTML5.pause();
-        playPauseStyling();
+        pausedStyling();
     }
 }
-function playPauseStyling(){
-    if (playerHTML5.paused) {
-        buttonPause.style.display = 'none';
-        buttonPlay.style.display = 'inline-block';
-    }
-    else {
-        buttonPlay.style.display = 'none';
-        buttonPause.style.display = 'inline-block';
-    }
+function playingStyling(){
+    buttonPlay.style.display = 'none';
+    buttonPause.style.display = 'inline-block';
+}
+function pausedStyling(){
+    buttonPause.style.display = 'none';
+    buttonPlay.style.display = 'inline-block';
 }
 
 /*
