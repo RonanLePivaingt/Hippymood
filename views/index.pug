@@ -1,20 +1,40 @@
 html
-  head
-    title= title
-  body
-    h1= message
-    div.player
-      audio#player(autoplay)
-    div#app
-        span#play play
-        p {{title}}
-        p {{artist}}
-        p {{album}}
-    ul
-      each val in genres
-        a(class="genreItem", href="#", data-href="/genre/" + val.id)
-          li(data-id = val.id)= val.name
-    div
-    script(src="/public/js/vue.js")
-    script(src="/public/js/ui.js")
-    link(href="/public/css/style.css", rel="stylesheet")
+    head
+        title= title
+    body
+        div.mdl-grid
+            div.mdl-cell.mdl-cell--3-col
+            div.mdl-cell.mdl-cell--6-col
+                div.mdl-grid
+                    h1 Hippy Mood
+                div.mdl-grid
+                    div.mdl-cell.mdl-cell--3-col
+                        button#pause.mdl-button.mdl-js-button.mdl-button--icon.md-48.mdl-js-ripple-effect
+                            i.material-icons.md-48 pause
+                        button#play.hide.mdl-button.mdl-js-button.mdl-button--icon.md-48.mdl-js-ripple-effect
+                            i.material-icons.md-48 play_arrow
+                        button#next.mdl-button.mdl-js-button.mdl-button--icon.md-48.mdl-js-ripple-effect
+                            i.material-icons.md-48 skip_next
+                    div#app.mdl-cell.mdl-cell--9-col
+                        p 
+                            i.material-icons audiotrack
+                            span {{title}}
+                        p 
+                            i.material-icons album
+                            span {{album}}
+                        p 
+                            i.material-icons recent_actors
+                            span {{artist}}
+                div.mdl-grid.genreList
+                    each val in genres
+                        button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.genreItem(class="genreItem", data-href="/genre/" + val.id)
+                            span= val.name
+            div.mdl-cell.mdl-cell--3-col
+        div.player
+        audio#player(autoplay)
+        script(src="/public/js/vue.js")
+        script(src="/public/js/mdl/material.min.js")
+        script(src="/public/js/ui.js")
+        link(href="/public/css/mdl/material.min.css", rel="stylesheet")
+        link(href="/public/css/style.css", rel="stylesheet")
+        link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")

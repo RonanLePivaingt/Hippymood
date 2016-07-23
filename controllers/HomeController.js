@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
 
 exports.Index = function(req, res){
     connection.query('SELECT * FROM genres', function(err, rows, fields) {
-        res.render('index', { title: 'Hippymood', message: 'HippyMood', genres: rows});
+        res.render('index', { title: 'Hippymood', genres: rows});
     });
 };
 

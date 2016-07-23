@@ -35,10 +35,19 @@ function playNext(){
 }
 function playPause(){
     var player = document.querySelector("#player");
-    if (player.paused)
+    var buttonPause = document.querySelector("#pause");
+    var buttonPlay = document.querySelector("#play");
+    if (player.paused) {
         player.play();
-    else
+        buttonPlay.style.display = 'none';
+        buttonPause.style.display = 'inline-block';
+
+    }
+    else {
         player.pause();
+        buttonPause.style.display = 'none';
+        buttonPlay.style.display = 'inline-block';
+    }
 }
 
 function player(songData) {
@@ -69,3 +78,4 @@ var playerVue = new Vue({
 document.querySelector("#player").addEventListener("ended", playNext, false);
 // Play pause song
 document.querySelector("#play").addEventListener("click", playPause, false);
+document.querySelector("#pause").addEventListener("click", playPause, false);
