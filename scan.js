@@ -28,12 +28,9 @@ var walk = function(dir, done) {
 
 function listProcessing(IDontGetWhatThisVarIsFor, results) {
     results.forEach(function(name, index) {
-        // Limiting the number of scans for development
-        if (index < 500) {
-            // Processing only mp3 files
-            if (name.slice(-3) == "mp3") {
-                id3tags.scan(name);
-            }
+    // Processing only mp3 files
+        if (name.slice(-3) == "mp3") {
+            id3tags.scan(name);
         }
     });
 }

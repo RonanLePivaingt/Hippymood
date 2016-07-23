@@ -28,7 +28,7 @@ exports.Genre = function(req, res){
 
     connection.query(SQLquery, function(err, rows, fields) {
         var randomSong = rows[Math.floor(Math.random() * rows.length)];
-        randomSong['path'] = randomSong['path'].substring(21); // 21 pour JLC et 25 en local
+        randomSong['path'] = randomSong['path'].substring(25); // 21 pour JLC et 25 en local
 
         res.send({randomSong});
     });
