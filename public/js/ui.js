@@ -1,3 +1,16 @@
+/* 
+ * Useful generic functions 
+ */
+function addClass(el, className) {
+    if (el.classList) el.classList.add(className);
+    else if (!hasClass(el, className)) el.className += ' ' + className;
+}
+
+function removeClass(el, className) {
+    if (el.classList) el.classList.remove(className);
+    else el.className = el.className.replace(new RegExp('\\b'+ className+'\\b', 'g'), '');
+}
+
 function getAjax(url, success) {
     var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
     xhr.open('GET', url);
@@ -9,32 +22,124 @@ function getAjax(url, success) {
     return xhr;
 }
 
+/*
+ * Vue.js
+ */
+var playerVue = new Vue({
+    el: '#app',
+    data: {
+        title: '',
+        artist: '',
+        album: ''
+    },
+    methods: {
+        play: function(data) {
+            this.title = data.song
+            this.artist = data.artist
+            this.album = data.album
+        }
+    }
+});
+
+/*
+ * Global vars
+ */
 var genres = document.getElementsByClassName("genreItem");
 
-var currentGenreHref = "";
+var player = document.getElementById("player");
+var buttonPause = document.querySelector("#pause");
+var buttonPlay = document.querySelector("#play");
 
-var playGenre = function() {
+var lastGenre = '';
+var currentGenre;
+
+/*
+ * Player functions
+ */
+function play(songData) {
+    player.setAttribute("src", songData.path);
+
+    playerVue.play(songData);
+}
+function playGenre() {
+    // Saving genre information
+    lastGenre = currentGenre;
+    currentGenre = this;
+
     var dataHref = this.getAttribute("data-href");
-    currentGenreHref = dataHref;
-    getAjax(window.location.toString().slice(0, -1) + dataHref, function(data){ 
+    getAjax(dataHref, function(data){ 
         data = JSON.parse(data);
-        var player = document.getElementById("player");
-        player.setAttribute("src", data.randomSong.path);
+        play(data.randomSong);
+        genreButtonStyle();
     });
 };
+function playNext(){
+    if (currentGenre) {
+        var dataHref = currentGenre.getAttribute("data-href");
+        getAjax(dataHref, function(data){ 
+            data = JSON.parse(data);
+            play(data.randomSong);
+        });
+    }
+}
 
+/*
+ * Player functions for the UI
+ */
+function playPause(){
+    if (player.paused) {
+        player.play();
+        playPauseStyling();
+    }
+    else {
+        player.pause();
+        playPauseStyling();
+    }
+}
+function playPauseStyling(){
+    if (player.paused) {
+        buttonPause.style.display = 'none';
+        buttonPlay.style.display = 'inline-block';
+    }
+    else {
+        buttonPlay.style.display = 'none';
+        buttonPause.style.display = 'inline-block';
+    }
+}
+
+/*
+ * Events
+ */
+// Playing genre on click
 for (var i = 0; i < genres.length; i++) {
     genres[i].addEventListener('click', playGenre, false);
 }
 
-function playNext(){
-    console.log("Chargement de la prochaine chanson.");
-    getAjax(currentGenreHref, function(data){ 
-        data = JSON.parse(data);
-        var player = document.getElementById("player");
-        player.setAttribute("src", data.randomSong.path);
-    });
-}
-
 // Playing another song at the end of each songs
 document.querySelector("#player").addEventListener("ended", playNext, false);
+
+// Play pause song
+document.querySelector("#play").addEventListener("click", playPause, false);
+document.querySelector("#pause").addEventListener("click", playPause, false);
+
+// Skipping to next song
+document.querySelector("#next").addEventListener("click", playNext, false);
+
+function genreButtonStyle() {
+    // Check lastGenre as it is undefined on first execution
+    if (lastGenre)
+        removeClass(lastGenre,"mdl-button--colored");
+
+    addClass(currentGenre,"mdl-button--colored");
+}
+
+// Keyboard shortcuts
+window.addEventListener("keypress", function(event) {
+    // Play/pause with the spacebar
+    if (event.charCode == 32)
+        playPause();
+
+    // Skipping song with ctrl+right
+    if (event.ctrlKey && event.keyCode == 39)
+        playNext();
+});

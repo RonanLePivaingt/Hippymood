@@ -1,0 +1,20 @@
+hide {
+    display:none;
+}
+button.hide {
+    display:none;
+}
+/*
+.material-icons.md-48 { font-size: 36px; }
+*/
+button.md-48 { 
+    height: 2em;
+    width: 2em;
+}
+.genreList button {
+    display:inline-block;
+    margin: 10px;
+}
+#app span {
+    vertical-align: bottom;
+}
