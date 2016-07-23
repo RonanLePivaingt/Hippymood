@@ -32,13 +32,13 @@ html
                             button#demo-menu-lower-right.mdl-button.mdl-js-button.mdl-button--icon
                                 i.material-icons more_vert
                             ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect(for="demo-menu-lower-right")
-                                li.mdl-menu__item Télécharger la chanson
+                                a#downloadSong(href="{{path}}" download="{{filename}}")
+                                    li.mdl-menu__item Télécharger la chanson
                 div.mdl-grid.genreList
                     each val in genres
                         button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.genreItem(class="genreItem", data-href="/genre/" + val.id)
                             span= val.name
             div.mdl-cell.mdl-cell--3-col
-        div.player
         audio#player(autoplay)
         script(src="/public/js/vue.js")
         script(src="/public/js/mdl/material.min.js")

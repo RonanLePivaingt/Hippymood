@@ -22,6 +22,11 @@ function getAjax(url, success) {
     return xhr;
 }
 
+function filenameFromPath(path) {
+    var filenameStart = path.lastIndexOf("/") + 1;
+    return path.substring(filenameStart);
+}
+
 /*
  * Vue.js
  */
@@ -30,13 +35,17 @@ var playerVue = new Vue({
     data: {
         title: '',
         artist: '',
-        album: ''
+        album: '',
+        path: '',
+        filename: ''
     },
     methods: {
         play: function(data) {
             this.title = data.song
             this.artist = data.artist
             this.album = data.album
+            this.path = data.path
+            this.filename = filenameFromPath(data.path)
         }
     }
 });
@@ -82,6 +91,10 @@ function playNext(){
         });
     }
 }
+function downloadSong() {
+    var songUrl = player.getAttribute("src");
+    location.replace(songUrl);
+}
 
 /*
  * Player functions for the UI
@@ -124,6 +137,9 @@ document.querySelector("#pause").addEventListener("click", playPause, false);
 
 // Skipping to next song
 document.querySelector("#next").addEventListener("click", playNext, false);
+
+// Download current song
+//document.querySelector("#downloadSong").addEventListener("click", downloadSong, false);
 
 function genreButtonStyle() {
     // Check lastGenre as it is undefined on first execution
