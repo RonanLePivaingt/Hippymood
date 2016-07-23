@@ -26,13 +26,16 @@ button.md-48 {
     height: 2em;
     width: 2em;
 }
+#app {
+    align-items: vertically;
+}
 .genreList {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 512px;
 }
 .genreList button {
-    display:inline-block;
     margin: 10px;
 }
 #app span {
