@@ -26,16 +26,47 @@ exports.Genre = function(req, res){
         SQLquery += 'AND songs.id_artists = artists.id ';
         SQLquery += 'AND songs.id_albums = albums.id ';
 
+    // Select song from not played songs
+    if (req.session.playedSongs) {
+        SQLquery += 'AND songs.id NOT IN (';
+        req.session.playedSongs.forEach(function(entry, index) {
+            if (index != req.session.playedSongs.length -1)
+                SQLquery += '"' + entry + '", ';
+            else
+                SQLquery += '"' + entry + '") ';
+
+        });
+    }
+
     connection.query(SQLquery, function(err, rows, fields) {
-        var randomSong = rows[Math.floor(Math.random() * rows.length)];
-        randomSong['path'] = randomSong['path'].substring(25); // 21 pour JLC et 25 en local
+        if (rows.length > 0) {
+            //console.log(rows);
+            var randomSong = rows[Math.floor(Math.random() * rows.length)];
 
-        // Saving song played id
-        if (req.session.playedSongs == undefined) 
-            req.session.playedSongs = [randomSong['id']];
-        else 
-            req.session.playedSongs.push(randomSong['id']);
+            // Saving song played id
+            if (req.session.playedSongs == undefined) 
+                req.session.playedSongs = [randomSong['id']];
+            else 
+                req.session.playedSongs.push(randomSong['id']);
 
-        res.send({randomSong});
+            res.send({randomSong});
+        }
+        else {
+            var error = {"allSongGenrePlayed": 1};
+            res.send({error});
+        }
+    });
+};
+
+// Reset list of songs stored in sessions
+exports.ResetGenre = function(req, res){
+    var genreId = req.params.id;
+    console.log("Reseting session stored played songs for genre " + genreId);
+    connection.query('SELECT * FROM genreAssociation WHERE id = ' + genreId, function(err, rows, fields) {
+        rows.forEach(function(entry, index) {
+            var i = req.session.playedSongs.indexOf(entry.id_songs);
+            req.session.playedSongs.splice(i, 1);
+        });
+        res.send("Genre ID : " + genreId);
     });
 };

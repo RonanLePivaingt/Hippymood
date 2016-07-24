@@ -19,6 +19,7 @@ var files = walk("music");
 // loop through array with all new ids
 var i = 0, l = files.length;
 (function iterator() {
+    console.log("Starting music scan");
     var filename = files[i];
     if (filename.slice(-3) == "mp3") {
         id3tags.scan(filename);
@@ -27,4 +28,6 @@ var i = 0, l = files.length;
     if(++i<l) {
         setTimeout(iterator, 50);
     }
+    else
+        console.log("Music scan done");
 })();

@@ -75,21 +75,33 @@ function playGenre() {
     lastGenre = currentGenre;
     currentGenre = this;
 
-    var dataHref = this.getAttribute("data-href");
+    var dataHref = "/genre/" + this.getAttribute("data-genre-id");
     getAjax(dataHref, function(data){ 
         data = JSON.parse(data);
-        play(data.randomSong);
-        genreButtonStyle();
-        playingStyling();
+        if (data.error) {
+            if (data.error.allSongGenrePlayed == 1) 
+                allSongGenrePlayed();
+        }
+        else {
+            play(data.randomSong);
+            genreButtonStyle();
+            playingStyling();
+        }
     });
 };
 function playNext(){
     if (currentGenre) {
-        var dataHref = currentGenre.getAttribute("data-href");
+        var dataHref = "/genre/" + currentGenre.getAttribute("data-genre-id");
         getAjax(dataHref, function(data){ 
             data = JSON.parse(data);
-            play(data.randomSong);
-            playingStyling();
+            if (data.error) {
+                if (data.error.allSongGenrePlayed == 1) 
+                    allSongGenrePlayed();
+            }
+            else {
+                play(data.randomSong);
+                playingStyling();
+            }
         });
     }
 }
@@ -159,3 +171,25 @@ window.addEventListener("keypress", function(event) {
     if (event.ctrlKey && event.keyCode == 39)
         playNext();
 });
+
+/* Pop up */
+var resetGenre = function(event) {
+    var genreId = currentGenre.getAttribute("data-genre-id");
+    getAjax("/resetGenre/" + genreId, function(data){ 
+        playNext();
+        // Hiding snack bar
+        var snackbarContainer = document.querySelector('#demo-snackbar-example');
+        removeClass(snackbarContainer, "mdl-snackbar--active");
+    });
+};
+function allSongGenrePlayed() {
+    var snackbarContainer = document.querySelector('#demo-snackbar-example');
+    var genreName = currentGenre.getAttribute("data-genre-name");
+    var data = {
+        message: "Toutes les chansons du genre " + genreName + " ont déjà été lues",
+        timeout: 5000,
+        actionHandler: resetGenre,
+        actionText: "Réécouter"
+    };
+    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+}
