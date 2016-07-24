@@ -20,11 +20,11 @@ hide {
  */
 @media screen and (min-resolution: 2dppx) {
     /* Wide card with share menu button */
-    * {
+    #app span {
         font-size: 4rem;
     }
     h1 {
-        font-size: 3em;
+        font-size: 8rem;
     }
     h2 {
         font-size: 4em;
@@ -80,6 +80,16 @@ hide {
     }
     .genreList .mdl-button {
         height: 9rem;
+    }
+    /* Snackbar */
+    #demo-snackbar-example {
+        width: 100%;
+        max-width: 100%;
+        /*height: 10%;*/
+    }
+    
+    #demo-snackbar-example * {
+        font-size: 2rem;
     }
 }
 /* 
