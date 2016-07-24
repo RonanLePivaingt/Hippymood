@@ -30,6 +30,12 @@ exports.Genre = function(req, res){
         var randomSong = rows[Math.floor(Math.random() * rows.length)];
         randomSong['path'] = randomSong['path'].substring(25); // 21 pour JLC et 25 en local
 
+        // Saving song played id
+        if (req.session.playedSongs == undefined) 
+            req.session.playedSongs = [randomSong['id']];
+        else 
+            req.session.playedSongs.push(randomSong['id']);
+
         res.send({randomSong});
     });
 };
