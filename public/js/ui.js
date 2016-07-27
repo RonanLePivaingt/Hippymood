@@ -1,66 +1,48 @@
-/* 
- * Useful generic functions 
+/*
+ * Global vars
  */
-function addClass(el, className) {
-    if (el.classList) el.classList.add(className);
-    else if (!hasClass(el, className)) el.className += ' ' + className;
-}
+var currentSong;
+var genres = document.getElementsByClassName("genreItem");
 
-function removeClass(el, className) {
-    if (el.classList) el.classList.remove(className);
-    else el.className = el.className.replace(new RegExp('\\b'+ className+'\\b', 'g'), '');
-}
+var playerHTML5 = document.getElementById("playerHTML5");
 
-function getAjax(url, success) {
-    var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-    xhr.open('GET', url);
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState>3 && xhr.status==200) success(xhr.responseText);
-    };
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    xhr.send();
-    return xhr;
-}
-
-function filenameFromPath(path) {
-    var filenameStart = path.lastIndexOf("/") + 1;
-    return path.substring(filenameStart);
-}
+var lastGenre = '';
+var currentGenre;
 
 /*
  * Vue.js
  */
-var playerVue = new Vue({
-    el: '#app',
-    data: {
-        title: '',
-        artist: '',
-        album: '',
-        path: '',
-        filename: ''
-    },
-    methods: {
-        play: function(data) {
-            this.title = data.song
-            this.artist = data.artist
-            this.album = data.album
-            this.path = data.path
-            this.filename = filenameFromPath(data.path)
+var playerVue;
+function playerVueInit() {
+    playerVue = new Vue({
+        el: '#app',
+        data: {
+            title: '',
+            artist: '',
+            album: '',
+            path: '',
+            filename: ''
+        },
+        methods: {
+            play: function(data) {
+                this.title = data.song
+                this.artist = data.artist
+                this.album = data.album
+                this.path = data.path
+                this.filename = filenameFromPath(data.path)
+                currentSong = data
+            },
+            updateUi: function() {
+                this.title = currentSong.song
+                this.artist = currentSong.artist
+                this.album = currentSong.album
+                this.path = currentSong.path
+                this.filename = filenameFromPath(currentSong.path)
+            }
         }
-    }
-});
-
-/*
- * Global vars
- */
-var genres = document.getElementsByClassName("genreItem");
-
-var playerHTML5 = document.getElementById("playerHTML5");
-var buttonPause = document.querySelector("#pause");
-var buttonPlay = document.querySelector("#play");
-
-var lastGenre = '';
-var currentGenre;
+    });
+}
+playerVueInit();
 
 /*
  * Player functions
@@ -123,35 +105,15 @@ function playPause(){
         pausedStyling();
     }
 }
+
 function playingStyling(){
-    buttonPlay.style.display = 'none';
-    buttonPause.style.display = 'inline-block';
+    document.querySelector("#pause").style.display = 'inline-block';
+    document.querySelector("#play").style.display = 'none';
 }
 function pausedStyling(){
-    buttonPause.style.display = 'none';
-    buttonPlay.style.display = 'inline-block';
+    document.querySelector("#pause").style.display = 'none';
+    document.querySelector("#play").style.display = 'inline-block';
 }
-
-/*
- * Events
- */
-// Playing genre on click
-for (var i = 0; i < genres.length; i++) {
-    genres[i].addEventListener('click', playGenre, false);
-}
-
-// Playing another song at the end of each songs
-document.querySelector("#playerHTML5").addEventListener("ended", playNext, false);
-
-// Play pause song
-document.querySelector("#play").addEventListener("click", playPause, false);
-document.querySelector("#pause").addEventListener("click", playPause, false);
-
-// Skipping to next song
-document.querySelector("#next").addEventListener("click", playNext, false);
-
-// Download current song
-//document.querySelector("#downloadSong").addEventListener("click", downloadSong, false);
 
 function genreButtonStyle() {
     // Check lastGenre as it is undefined on first execution
@@ -160,17 +122,6 @@ function genreButtonStyle() {
 
     addClass(currentGenre,"mdl-button--colored");
 }
-
-// Keyboard shortcuts
-window.addEventListener("keypress", function(event) {
-    // Play/pause with the spacebar
-    if (event.charCode == 32)
-        playPause();
-
-    // Skipping song with ctrl+right
-    if (event.ctrlKey && event.keyCode == 39)
-        playNext();
-});
 
 /* Pop up */
 var resetGenre = function(event) {
@@ -192,4 +143,46 @@ function allSongGenrePlayed() {
         actionText: "Réécouter"
     };
     snackbarContainer.MaterialSnackbar.showSnackbar(data);
+}
+
+// Duplicated to make it work when admin mode is on
+function keyboardEvents1() {
+    window.addEventListener("keypress", function(event) {
+        switch (event.key) {
+            case ' ':
+                // Pausing/playing song on space press
+                playPause();
+                break;
+            case 'ArrowRight':
+                // Skipping song with ctrl+right
+                if (event.ctrlKey)
+                    playNext();
+                break;
+            default:
+                break;
+        }
+    });
+}
+function playerEventsInit1() {
+    // Play pause song
+    document.querySelector("#play").addEventListener("click", playPause, false);
+    document.querySelector("#pause").addEventListener("click", playPause, false);
+
+    // Skipping to next song
+    document.querySelector("#next").addEventListener("click", playNext, false);
+}
+
+
+/* Interface d'admin */
+function setAdmin() {
+    getAjax("/admin", function(data){ 
+        var player = document.getElementById("app");
+        player.innerHTML = data;
+        // Getting MDL working with the new elements
+        componentHandler.upgradeDom();
+        playerVueInit();
+        playerVue.updateUi();
+        keyboardEvents1();
+        playerEventsInit1();
+    });
 }

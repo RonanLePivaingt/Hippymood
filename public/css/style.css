@@ -74,6 +74,10 @@ hide {
         width: unset;
         line-height: unset;
     }
+    #admin {
+        width: 90%;
+        margin: auto;
+    }
     /* Genres list */
     .genreList button span {
         font-size: 3rem;
@@ -146,6 +150,11 @@ hide {
         width: unset;
         line-height: unset;
         transform: translate(-50%, -50%);
+    }
+    /* Interface d'admin */
+    #admin {
+        width: 512px;
+        margin: auto;
     }
     /*
     #menu > div > div, #menu > div > ul {

@@ -1,0 +1,8 @@
+div.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
+    div.mdl-tabs__tab-bar
+        a.mdl-tabs__tab(href="#player-panel") Player
+        a.mdl-tabs__tab.is-active(href="#admin-panel") Admin
+    div#player-panel.mdl-tabs__panel
+        include ./includes/player.pug
+    div#admin-panel.mdl-tabs__panel.is-active
+        include ./includes/admin.pug

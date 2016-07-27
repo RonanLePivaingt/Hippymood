@@ -18,8 +18,8 @@ var walk = function(dir) {
 var files = walk("music");
 // loop through array with all new ids
 var i = 0, l = files.length;
+console.log("Starting music scan");
 (function iterator() {
-    console.log("Starting music scan");
     var filename = files[i];
     if (filename.slice(-3) == "mp3") {
         id3tags.scan(filename);

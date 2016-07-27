@@ -11,8 +11,11 @@ var connection = mysql.createConnection({
 
 exports.Index = function(req, res){
     connection.query('SELECT * FROM genres', function(err, rows, fields) {
-        res.render('index', { title: 'Hippymood', genres: rows});
+        res.render('index', {genres: rows});
     });
+};
+exports.Admin = function(req, res){
+    res.render('admin');
 };
 
 // Function to get song infos by submitting a genre
@@ -27,7 +30,7 @@ exports.Genre = function(req, res){
         SQLquery += 'AND songs.id_albums = albums.id ';
 
     // Select song from not played songs
-    if (req.session.playedSongs) {
+    if (req.session.playedSongs && req.session.playedSongs.length != 0) {
         SQLquery += 'AND songs.id NOT IN (';
         req.session.playedSongs.forEach(function(entry, index) {
             if (index != req.session.playedSongs.length -1)
@@ -38,7 +41,11 @@ exports.Genre = function(req, res){
         });
     }
 
+    console.log(SQLquery);
+
     connection.query(SQLquery, function(err, rows, fields) {
+        if (err) throw err;
+
         if (rows.length > 0) {
             //console.log(rows);
             var randomSong = rows[Math.floor(Math.random() * rows.length)];
