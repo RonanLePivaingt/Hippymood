@@ -7,7 +7,7 @@ var genres = document.getElementsByClassName("genreItem");
 var playerHTML5 = document.getElementById("playerHTML5");
 
 var lastGenre = '';
-var currentGenre;
+var currentGenre = null;
 
 /*
  * Vue.js
@@ -57,6 +57,22 @@ function playGenre() {
     lastGenre = currentGenre;
     currentGenre = this;
 
+    // Playing next song if genre was already selected or if it's the first song
+    if (lastGenre == this || lastGenre == null) {
+        console.log("C'est le même genre !");
+        playNext();
+        genreButtonStyle();
+    }
+    else {
+        var snackbarContainer = document.querySelector('#demo-snackbar-example');
+        var genreName = currentGenre.getAttribute("data-genre-name");
+        var data = {
+            message: "Appuyer une deuxième fois sur le genre l'écouter avant la fin de la chanson",
+            timeout: 5000
+        };
+        snackbarContainer.MaterialSnackbar.showSnackbar(data);
+    }
+    /*
     var dataHref = "/genre/" + this.getAttribute("data-genre-id");
     getAjax(dataHref, function(data){ 
         data = JSON.parse(data);
@@ -69,7 +85,8 @@ function playGenre() {
             genreButtonStyle();
             playingStyling();
         }
-    });
+        });
+        */
 };
 function playNext(){
     if (currentGenre) {
@@ -117,8 +134,10 @@ function pausedStyling(){
 
 function genreButtonStyle() {
     // Check lastGenre as it is undefined on first execution
-    if (lastGenre)
-        removeClass(lastGenre,"mdl-button--colored");
+    if (lastGenre) {
+        var button = document.querySelectorAll("div.genreList button.mdl-button--colored");
+        removeClass(button[0],"mdl-button--colored");
+    }
 
     addClass(currentGenre,"mdl-button--colored");
 }
