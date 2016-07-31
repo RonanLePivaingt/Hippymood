@@ -8,4 +8,5 @@ module.exports = function(app){
     app.get('/genre/:id', HomeController.Genre);
     app.get('/resetGenre/:id', HomeController.ResetGenre);
     app.get('/admin', HomeController.Admin);
+    app.get('/admin/resetSessions', HomeController.ResetSessions);
 };
