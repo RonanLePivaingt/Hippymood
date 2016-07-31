@@ -215,3 +215,12 @@ h1 {
     text-decoration: none;
     decoration: none;
 }
+/* General class to display/hide elements with opacity animations */
+.hideOpacity {
+    opacity: 0;
+    transition: opacity .25s ease-in-out;
+}
+
+.showOpacity {
+    opacity: 1;
+}

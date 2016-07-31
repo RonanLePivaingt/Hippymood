@@ -77,3 +77,9 @@ exports.ResetGenre = function(req, res){
         res.send("Genre ID : " + genreId);
     });
 };
+
+// Reset sessions
+exports.ResetSessions = function(req, res){
+    req.session.playedSongs = [];
+    res.send("Done");
+};

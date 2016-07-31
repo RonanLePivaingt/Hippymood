@@ -59,7 +59,6 @@ function playGenre() {
 
     // Playing next song if genre was already selected or if it's the first song
     if (lastGenre == this || lastGenre == null) {
-        console.log("C'est le même genre !");
         playNext();
         genreButtonStyle();
     }
@@ -203,5 +202,17 @@ function setAdmin() {
         playerVue.updateUi();
         keyboardEvents1();
         playerEventsInit1();
+        document.querySelector("#resetSessions").addEventListener("click", resetSessions, false);
+    });
+}
+
+function resetSessions() {
+    var resetSessionsSpinner = document.getElementById("resetSessionsSpinner");
+    removeClass(resetSessionsSpinner,"hideOpacity");
+    addClass(resetSessionsSpinner,"showOpacity");
+
+    getAjax("/admin/resetSessions", function(data){ 
+        removeClass(resetSessionsSpinner,"showOpacity");
+        addClass(resetSessionsSpinner,"hideOpacity");
     });
 }
