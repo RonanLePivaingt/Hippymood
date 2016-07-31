@@ -208,11 +208,11 @@ function setAdmin() {
 
 function resetSessions() {
     var resetSessionsSpinner = document.getElementById("resetSessionsSpinner");
-    removeClass(resetSessionsSpinner,"hide");
-    addClass(resetSessionsSpinner,"show");
+    removeClass(resetSessionsSpinner,"hideOpacity");
+    addClass(resetSessionsSpinner,"showOpacity");
 
     getAjax("/admin/resetSessions", function(data){ 
-        removeClass(resetSessionsSpinner,"show");
-        addClass(resetSessionsSpinner,"hide");
+        removeClass(resetSessionsSpinner,"showOpacity");
+        addClass(resetSessionsSpinner,"hideOpacity");
     });
 }

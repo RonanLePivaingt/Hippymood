@@ -216,11 +216,11 @@ h1 {
     decoration: none;
 }
 /* General class to display/hide elements with opacity animations */
-.hide {
+.hideOpacity {
     opacity: 0;
     transition: opacity .25s ease-in-out;
 }
 
-.show {
+.showOpacity {
     opacity: 1;
 }
