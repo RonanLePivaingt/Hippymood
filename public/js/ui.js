@@ -1,7 +1,12 @@
 /*
  * Global vars
  */
-var currentSong;
+var currentSong = {};
+currentSong['song'] = '';
+currentSong['artist'] = '';
+currentSong['album'] = '';
+currentSong['path'] = '';
+
 var genres = document.getElementsByClassName("genreItem");
 
 var playerHTML5 = document.getElementById("playerHTML5");
@@ -203,6 +208,8 @@ function setAdmin() {
         keyboardEvents1();
         playerEventsInit1();
         document.querySelector("#resetSessions").addEventListener("click", resetSessions, false);
+        document.querySelector("#resetDatabase").addEventListener("click", resetDatabase, false);
+        document.querySelector("#scanMusic").addEventListener("click", scanMusic, false);
     });
 }
 
@@ -214,5 +221,27 @@ function resetSessions() {
     getAjax("/admin/resetSessions", function(data){ 
         removeClass(resetSessionsSpinner,"showOpacity");
         addClass(resetSessionsSpinner,"hideOpacity");
+    });
+}
+
+function resetDatabase() {
+    var resetDatabaseSpinner = document.getElementById("resetDatabaseSpinner");
+    removeClass(resetDatabaseSpinner,"hideOpacity");
+    addClass(resetDatabaseSpinner,"showOpacity");
+
+    getAjax("/admin/resetDatabase", function(data){ 
+        removeClass(resetDatabaseSpinner,"showOpacity");
+        addClass(resetDatabaseSpinner,"hideOpacity");
+    });
+}
+
+function scanMusic() {
+    var scanMusicSpinner = document.getElementById("scanMusicSpinner");
+    removeClass(scanMusicSpinner,"hideOpacity");
+    addClass(scanMusicSpinner,"showOpacity");
+
+    getAjax("/admin/scanMusic", function(data){ 
+        removeClass(scanMusicSpinner,"showOpacity");
+        addClass(scanMusicSpinner,"hideOpacity");
     });
 }

@@ -17,7 +17,7 @@ exports.scan = function(path) {
                 db.insertSong(path, metadata);
             }
             else {
-                console.log("Artist metadata not found for song : " + metadata.title + ", path : " + path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
+                //console.log("Artist metadata not found for song : " + metadata.title + ", path : " + path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
             }
         }
         
