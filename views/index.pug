@@ -1,26 +1,18 @@
 html
     head
         title HippyMood
+        style
+            include ../public/css/intro.css
     body
-        div.mdl-grid
-            h1 Hippy Mood
-        div#app.mdl-grid
-            include ./includes/player.pug
-        div.mdl-grid
-            div.mdl-grid.genreList
-                each val in genres
-                    button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.genreItem(class="genreItem", data-genre-id=val.id, data-genre-name=val.name)
-                        span= val.name
-        div#demo-snackbar-example.mdl-js-snackbar.mdl-snackbar
-            div.mdl-snackbar__text
-            button.mdl-snackbar__action(type="button")
-        audio#playerHTML5(autoplay)
-        script(src="/public/js/vue.js")
-        script(src="/public/js/mdl/material.min.js")
-        script(src="/public/js/events.js")
-        script(src="/public/js/genericFunctions.js")
-        script(src="/public/js/ui.js")
-        link(href="/public/css/mdl/material.min.css", rel="stylesheet")
-        link(href="/public/css/style.css", rel="stylesheet")
-        link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")
-        link(href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700", rel="stylesheet")
+        include ./includes/intro.pug
+        script
+            include ../public/js/intro.js
+        div#appData
+
+        //script(src="/public/js/vue.js")
+        //script(src="/public/js/events.js")
+        //script(src="/public/js/genericFunctions.js")
+        //script(src="/public/js/ui.js")
+        //link(href="/public/css/style.css", rel="stylesheet")
+        //link(href="https://fonts.googleapis.com/icon?family=Material+Icons", rel="stylesheet")
+        //link(href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700", rel="stylesheet")

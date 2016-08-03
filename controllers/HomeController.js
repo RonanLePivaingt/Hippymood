@@ -15,6 +15,11 @@ exports.Index = function(req, res){
         res.render('index', {genres: rows});
     });
 };
+exports.App = function(req, res){
+    connection.query('SELECT * FROM genres', function(err, rows, fields) {
+        res.render('app', {genres: rows});
+    });
+};
 exports.Admin = function(req, res){
     res.render('admin');
 };
