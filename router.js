@@ -9,4 +9,6 @@ module.exports = function(app){
     app.get('/resetGenre/:id', HomeController.ResetGenre);
     app.get('/admin', HomeController.Admin);
     app.get('/admin/resetSessions', HomeController.ResetSessions);
+    app.get('/admin/resetDatabase', HomeController.ResetDatabase);
+    app.get('/admin/scanMusic', HomeController.ScanMusic);
 };

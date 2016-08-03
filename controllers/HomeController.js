@@ -6,7 +6,8 @@ var connection = mysql.createConnection({
     host     : config.db.host,
     user     : config.db.user,
     password : config.db.password,
-    database : config.db.database
+    database : config.db.database,
+    multipleStatements: true
 });
 
 exports.Index = function(req, res){
@@ -30,7 +31,7 @@ exports.Genre = function(req, res){
         SQLquery += 'AND songs.id_albums = albums.id ';
 
     // Select song from not played songs
-    if (req.session.playedSongs && req.session.playedSongs.length != 0) {
+    if (req.session.playedSongs && req.session.playedSongs.length != 0 && req.session.playedSongs != []) {
         SQLquery += 'AND songs.id NOT IN (';
         req.session.playedSongs.forEach(function(entry, index) {
             if (index != req.session.playedSongs.length -1)
@@ -41,13 +42,10 @@ exports.Genre = function(req, res){
         });
     }
 
-    console.log(SQLquery);
-
     connection.query(SQLquery, function(err, rows, fields) {
         if (err) throw err;
 
         if (rows.length > 0) {
-            //console.log(rows);
             var randomSong = rows[Math.floor(Math.random() * rows.length)];
 
             // Saving song played id
@@ -82,4 +80,50 @@ exports.ResetGenre = function(req, res){
 exports.ResetSessions = function(req, res){
     req.session.playedSongs = [];
     res.send("Done");
+};
+
+// Reset list of songs stored in sessions
+exports.ResetDatabase = function(req, res){
+    connection.query("DELETE FROM genreAssociation; DELETE FROM genres; DELETE FROM songs; DELETE FROM artists; DELETE FROM albums; DELETE FROM sessions;", function(err, results) {
+        res.send("Bim bim");
+    });
+};
+
+exports.ScanMusic = function(req, res){
+
+    // Loading tags processing
+    var id3tags = require('../id3tags');
+
+    var fs = require('fs');
+    var path = require('path');
+
+    var walk = function(dir) {
+        var results = []
+        var list = fs.readdirSync(dir)
+        list.forEach(function(file) {
+            file = dir + '/' + file
+            var stat = fs.statSync(file)
+            if (stat && stat.isDirectory()) results = results.concat(walk(file))
+            else results.push(file)
+        })
+        return results
+    }
+    var files = walk("music");
+    // loop through array with all new ids
+    var i = 0, l = files.length;
+    console.log("Starting music scan");
+    (function iterator() {
+        var filename = files[i];
+        if (filename.slice(-3) == "mp3") {
+            id3tags.scan(filename);
+        }
+
+        if(++i<l) {
+            setTimeout(iterator, 50);
+        }
+        else {
+            console.log("Music scan done");
+            res.send("Done");
+        }
+    })();
 };
