@@ -50,48 +50,19 @@ function playerVueInit() {
 playerVueInit();
 
 /*
+ * SnackBar functions
+ */
+var snackbarContainer = document.querySelector('#demo-snackbar-example');
+var snackBarData = '';
+function showSnackBar() {
+    snackbarContainer.MaterialSnackbar.showSnackbar(snackBarData);
+}
+function showSnackClickAgain() {
+    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+}
+/*
  * Player functions
  */
-function play(songData) {
-    playerHTML5.setAttribute("src", songData.path);
-
-    playerVue.play(songData);
-}
-function playGenre() {
-    // Saving genre information
-    lastGenre = currentGenre;
-    currentGenre = this;
-
-    // Playing next song if genre was already selected or if it's the first song
-    if (lastGenre == this || lastGenre == null) {
-        playNext();
-        genreButtonStyle();
-    }
-    else {
-        var snackbarContainer = document.querySelector('#demo-snackbar-example');
-        var genreName = currentGenre.getAttribute("data-genre-name");
-        var data = {
-            message: "Appuyer une deuxième fois sur le genre l'écouter avant la fin de la chanson",
-            timeout: 5000
-        };
-        snackbarContainer.MaterialSnackbar.showSnackbar(data);
-    }
-    /*
-    var dataHref = "/genre/" + this.getAttribute("data-genre-id");
-    getAjax(dataHref, function(data){ 
-        data = JSON.parse(data);
-        if (data.error) {
-            if (data.error.allSongGenrePlayed == 1) 
-                allSongGenrePlayed();
-        }
-        else {
-            play(data.randomSong);
-            genreButtonStyle();
-            playingStyling();
-        }
-        });
-        */
-};
 function playNext(){
     if (currentGenre) {
         var dataHref = "/genre/" + currentGenre.getAttribute("data-genre-id");
@@ -108,6 +79,36 @@ function playNext(){
         });
     }
 }
+function play(songData) {
+    playerHTML5.setAttribute("src", songData.path);
+
+    playerVue.play(songData);
+}
+function playGenre() {
+    // Saving genre information
+    lastGenre = currentGenre;
+    currentGenre = this;
+
+    // Playing next song if genre was already selected or if it's the first song
+    if (lastGenre == this || lastGenre == null) {
+        playNext();
+        genreButtonStyle();
+    }
+    else {
+        snackBarData = {
+            message: "Appuyer une deuxième fois sur le genre l'écouter avant la fin de la chanson",
+            timeout: 5000
+        };
+        // Hiding current snackbar before showing another
+        if (hasClass(snackbarContainer, "mdl-snackbar--active")) {
+            snackbarContainer.MaterialSnackbar.cleanup_();
+            window.setTimeout(showSnackBar, 250);
+        }
+        else {
+            showSnackBar();
+        }
+    }
+};
 function downloadSong() {
     var songUrl = playerHTML5.getAttribute("src");
     location.replace(songUrl);
@@ -126,7 +127,6 @@ function playPause(){
         pausedStyling();
     }
 }
-
 function playingStyling(){
     document.querySelector("#pause").style.display = 'inline-block';
     document.querySelector("#play").style.display = 'none';
@@ -159,13 +159,21 @@ var resetGenre = function(event) {
 function allSongGenrePlayed() {
     var snackbarContainer = document.querySelector('#demo-snackbar-example');
     var genreName = currentGenre.getAttribute("data-genre-name");
-    var data = {
+    snackBarData = {
         message: "Toutes les chansons du genre " + genreName + " ont déjà été lues",
         timeout: 5000,
         actionHandler: resetGenre,
         actionText: "Réécouter"
     };
-    snackbarContainer.MaterialSnackbar.showSnackbar(data);
+    //snackbarContainer.MaterialSnackbar.showSnackbar(data);
+    // Hiding current snackbar before showing another
+    if (hasClass(snackbarContainer, "mdl-snackbar--active")) {
+        snackbarContainer.MaterialSnackbar.cleanup_();
+        window.setTimeout(showSnackBar, 250);
+    }
+    else {
+        showSnackBar();
+    }
 }
 
 // Duplicated to make it work when admin mode is on
@@ -175,6 +183,8 @@ function keyboardEvents1() {
             case ' ':
                 // Pausing/playing song on space press
                 playPause();
+                event.stopPropagation();
+                event.preventDefault();
                 break;
             case 'ArrowRight':
                 // Skipping song with ctrl+right

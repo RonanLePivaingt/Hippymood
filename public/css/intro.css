@@ -3,11 +3,11 @@
     max-width: 50em;
     font-family: "Helvetica", "Arial", sans-serif;
 }
-#intro h1 { 
+/* General class to display/hide elements with opacity animations */
+.hideOpacity {
+    opacity: 0;
+    transition: opacity .25s ease-in-out;
 }
-#app {
-    display:none;
-}
-#demo-snackbar-example {
-    display:none;
+.showOpacity {
+    opacity: 1;
 }
