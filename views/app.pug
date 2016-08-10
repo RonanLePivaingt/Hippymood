@@ -1,0 +1,13 @@
+div#title.mdl-grid(style="display:none")
+    h1 Hippy Mood
+div#app.mdl-grid(style="display:none")
+    include ./includes/player.pug
+div.mdl-grid
+    div.mdl-grid.genreList
+        each val in genres
+            button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.genreItem(class="genreItem", data-genre-id=val.id, data-genre-name=val.name)
+                span= val.name
+div#demo-snackbar-example.mdl-js-snackbar.mdl-snackbar
+    div.mdl-snackbar__text
+    button.mdl-snackbar__action(type="button")
+audio#playerHTML5(autoplay)

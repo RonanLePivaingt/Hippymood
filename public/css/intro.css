@@ -1,0 +1,13 @@
+#intro { 
+    margin: 0 auto;
+    max-width: 50em;
+    font-family: "Helvetica", "Arial", sans-serif;
+}
+/* General class to display/hide elements with opacity animations */
+.hideOpacity {
+    opacity: 0;
+    transition: opacity .25s ease-in-out;
+}
+.showOpacity {
+    opacity: 1;
+}
