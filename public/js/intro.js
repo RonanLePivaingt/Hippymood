@@ -18,6 +18,10 @@ function loadStyleSheet( path, fn, scope ) {
     var interval_id = setInterval( function() {
         try {
             // SUCCESS! our style sheet has loaded
+            if (path.indexOf("style.css") !== -1 || path.indexOf("fonts.googleapis.com") !== -1) 
+                console.log(path);
+                console.log(link[sheet]);
+                console.log(link[sheet][cssRules].length);
             if ( link[sheet] && link[sheet][cssRules].length ) {
                 // clear the counters
                 clearInterval( interval_id );
@@ -31,8 +35,13 @@ function loadStyleSheet( path, fn, scope ) {
         clearInterval( interval_id );             // clear the counters
         clearTimeout( timeout_id );
         //head.removeChild( link );                // since the style sheet didn't load, remove the link node from the DOM
-        //fn.call( scope || window, false, link ); // fire the callback with success == false
-    }, 15000 );                                 // how long to wait before failing
+        // Hack to fire a success when loading fonts or icons from Google APIs
+        if (path.indexOf("fonts.googleapis.com") !== -1) 
+            fn.call( scope || window, true, link ); // fire the callback with success == false
+        else
+            fn.call( scope || window, false, link ); // fire the callback with success == false
+    //}, 15000 );                                 // how long to wait before failing
+    }, 2000 );                                 // how long to wait before failing
 
     head.appendChild( link );  // insert the link node into the DOM and start loading the style sheet
 

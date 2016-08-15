@@ -15,6 +15,9 @@
 hide {
     display:none;
 }
+#player {
+    font-family: Roboto, sans-serif;
+}
 /* 
  * Hi-resolution handling
  */
@@ -193,6 +196,10 @@ h1 {
 #playerButtons > span {
     width: 5%;
 }
+#playerArtist {
+    font-face: "Roboto";
+    font-weight: 500;
+}
 .genreList button {
     margin: 10px;
 }
@@ -214,4 +221,65 @@ h1 {
 #downloadSong {
     text-decoration: none;
     decoration: none;
+}
+
+/* Font stuff */
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(/public/fonts/MD-icons/MaterialIcons-Regular.eot); /* For IE6-8 */
+    src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(/public/fonts/MD-icons/MaterialIcons-Regular.woff2) format('woff2'),
+    url(/public/fonts/MD-icons/MaterialIcons-Regular.woff) format('woff'),
+    url(/public/fonts/MD-icons/MaterialIcons-Regular.ttf) format('truetype');
+}
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;  /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Roboto Light'),
+    local('Roboto Light'),
+    url(/public/fonts/Roboto/Roboto-Light.ttf) format('truetype');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Roboto Regular'),
+    local('Roboto Regular'),
+    url(/public/fonts/Roboto/Roboto-Regular.ttf) format('truetype');
+}
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Roboto Medium'),
+    local('Roboto Medium'),
+    url(/public/fonts/Roboto/Roboto-Medium.ttf) format('truetype');
 }

@@ -1,13 +1,3 @@
-loadStyleSheet("https://fonts.googleapis.com/icon?family=Material+Icons", function( success, link ) {
-    if ( success ) {
-        console.log("MDL Icons Loaded");
-    }
-});
-loadStyleSheet("http://fonts.googleapis.com/css?family=Roboto:300,400,500,700", function( success, link ) {
-    if ( success ) {
-        console.log("Roboto Font Loaded");
-    }
-});
 loadScript("/public/js/vue.js", vueCallback);
 function vueCallback (e) {
     loadScript("/public/js/genericFunctions.js", daFunc);

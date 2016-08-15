@@ -89,8 +89,12 @@ function playGenre() {
     lastGenre = currentGenre;
     currentGenre = this;
 
-    // Playing next song if genre was already selected or if it's the first song
-    if (lastGenre == this || lastGenre == null) {
+    /* Playing next song if :
+     * - It's the first song played
+     * - Genre was already selected
+     * - Player is paused
+     */
+    if (lastGenre == this || lastGenre == null || playerHTML5.paused) {
         playNext();
         genreButtonStyle();
     }
