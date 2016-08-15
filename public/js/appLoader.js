@@ -1,30 +1,23 @@
-loadScript("/public/js/vue.js", vueCallback);
-function vueCallback (e) {
-    loadScript("/public/js/genericFunctions.js", daFunc);
-}
-/* Function to display player and hide intro text */
-var playerInit = function (event) {
-    console.log("Intro message hidden and player displayed");
-    var intro = document.getElementById("intro");
-    intro.setAttribute("style", "display: none");
-    var app = document.getElementById("app");
-    app.style.display = "";
-    var title = document.getElementById("title");
-    title.style.display = "";
-
-    window.removeEventListener('click',playerInit, false );
-};
-function daFunc() {
-    getAjax("/app", function(data){ 
+var robotoLoaded = 0
+    materialIconsLoaded = 0
+    genericFunctionsLoaded = 0
+    appHTMLLoaded = 0
+    appHTML = "";
+    ;
+function initGenrePlayer() {
+    if (robotoLoaded && materialIconsLoaded && genericFunctionsLoaded && appHTMLLoaded) {
+        // Load app HTML
         var appData = document.getElementById("appData");
-        appData.innerHTML = data;
+        appData.innerHTML = appHTML;
         // Getting MDL working with the new elements
         componentHandler.upgradeDom();
 
-        loadScript("/public/js/ui.js", vueCallback2);
-        function vueCallback2 (e) {
-            loadScript("/public/js/events.js");
-        }
+        loadScript(
+            "/public/js/ui.js", 
+            function() {
+                loadScript("/public/js/events.js");
+            }
+        );
 
         // Hide spinner when app is loaded
         var appSpinner = document.getElementById("appLoadSpinner");
@@ -36,7 +29,60 @@ function daFunc() {
         Array.prototype.forEach.call(buttons, function(el) {
             el.addEventListener("click", playerInit, false);
         });
+    }
+}
+loadScript("/public/js/fontdetect.js", function() {
+    FontDetect.onFontLoaded (
+        'Roboto', 
+        function() {
+            robotoLoaded = 1;
+            initGenrePlayer();
+        },
+        onItDidntLoad, 
+        {msTimeout: 3000}
+    );
+    FontDetect.onFontLoaded (
+        'Material Icons', 
+        function() {
+            materialIconsLoaded = 1;
+            initGenrePlayer();
+        },
+        onItDidntLoad, 
+        {msTimeout: 3000}
+    );
+    function onItDidntLoad (fontname) {
+        console.log(fontname + " didn't load within 3 seconds");
+    }
+});
+loadScript(
+    "/public/js/vue.js", 
+    function() {
+        loadScript(
+            "/public/js/genericFunctions.js", 
+            function() {
+                genericFunctionsLoaded = 1;
+                retrieveAppHTML();
+                initGenrePlayer();
+            }
+        );
+    }
+);
+/* Function to display player and hide intro text */
+var playerInit = function (event) {
+    var intro = document.getElementById("intro");
+    intro.setAttribute("style", "display: none");
+    var app = document.getElementById("app");
+    app.style.display = "";
+    var title = document.getElementById("title");
+    title.style.display = "";
+
+    window.removeEventListener('click',playerInit, false );
+};
+function retrieveAppHTML() {
+    getAjax("/app", function(data){ 
+        appHTML = data;
+        appHTMLLoaded = 1;
+        initGenrePlayer();
     });
 }
-loadStyleSheet("/public/css/style.css", function( success, link ) {
-});
+loadStyleSheet("/public/css/style.css", function() {});

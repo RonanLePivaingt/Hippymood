@@ -18,10 +18,6 @@ function loadStyleSheet( path, fn, scope ) {
     var interval_id = setInterval( function() {
         try {
             // SUCCESS! our style sheet has loaded
-            if (path.indexOf("style.css") !== -1 || path.indexOf("fonts.googleapis.com") !== -1) 
-                console.log(path);
-                console.log(link[sheet]);
-                console.log(link[sheet][cssRules].length);
             if ( link[sheet] && link[sheet][cssRules].length ) {
                 // clear the counters
                 clearInterval( interval_id );
@@ -59,12 +55,10 @@ function loadScript(url, callback = null) {
 
 loadStyleSheet( "/public/css/mdl/material.min.css", function( success, link ) {
     if ( success ) {
-        console.log("MDL CSS Loaded");
         loadScript("/public/js/mdl/material.min.js", CallBackForAfterFileLoaded);
     }
 });
 function CallBackForAfterFileLoaded (e) {
-    console.log("MDL js loaded");
     componentHandler.upgradeDom();
     loadScript("/public/js/appLoader.js");
 }

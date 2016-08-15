@@ -259,6 +259,10 @@ h1 {
     /* Support for IE. */
     font-feature-settings: 'liga';
 }
+#fontdetectHelper {
+    display: inline;
+    visibility: visible;
+}
 @font-face {
     font-family: 'Roboto';
     font-style: normal;
