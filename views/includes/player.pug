@@ -15,9 +15,17 @@ div#player.demo-card-wide.mdl-card.mdl-shadow--2dp
             i.material-icons pause
         button#play.hide.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect.mdl-button--colored.mdl-button--fab
             i.material-icons play_arrow
-        span
+        span.separator
         button#next.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect.mdl-button--fab
             i.material-icons skip_next
+    div#playerGenre.mdl-card__supporting-text
+        span.mdl-chip
+            span.mdl-chip__text {{genre}}
+        //span.separator
+        //span.mdl-chip
+            span.mdl-chip__text {{nextGenre}}
+            button.mdl-chip__action(type="button")
+                i.material-icons cancel
     div#menu.mdl-card__menu
         button#demo-menu-lower-right.mdl-button.mdl-js-button.mdl-button--icon
             i.material-icons more_vert

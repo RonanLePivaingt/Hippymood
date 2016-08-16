@@ -26,7 +26,9 @@ function playerVueInit() {
             artist: '',
             album: '',
             path: '',
-            filename: ''
+            filename: '',
+            genre: '',
+            nextGenre: ''
         },
         methods: {
             play: function(data) {
@@ -34,14 +36,16 @@ function playerVueInit() {
                 this.artist = data.artist
                 this.album = data.album
                 this.path = data.path
+                this.genre = "Genre : " + currentGenre.getAttribute("data-genre-name")
                 this.filename = filenameFromPath(data.path)
-                currentSong = data
             },
             updateUi: function() {
                 this.title = currentSong.song
                 this.artist = currentSong.artist
                 this.album = currentSong.album
                 this.path = currentSong.path
+                this.genre = "Genre : " + currentGenre.getAttribute("data-genre-name")
+                if (nextGenre) this.nextGenre = "Prochain : " + nextGenre.getAttribute("data-genre-name")
                 this.filename = filenameFromPath(currentSong.path)
             }
         }

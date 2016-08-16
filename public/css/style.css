@@ -193,8 +193,16 @@ h1 {
     align-items: center;
     justify-content: center;
 }
-#playerButtons > span {
+#player span.separator {
     width: 5%;
+}
+#playerGenre {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#playerGenre i.material-icons {
+    font-size: 1rem;
 }
 #playerArtist {
     font-face: "Roboto";
