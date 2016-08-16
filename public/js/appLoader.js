@@ -19,6 +19,25 @@ function initGenrePlayer() {
             }
         );
 
+        /* Loading dialog polyfill */
+        loadScript(
+            "/public/js/dialog-polyfill/dialog-polyfill.js",
+            function () {
+                var button = document.getElementById('show-dialog');
+                var dialog = document.getElementsByClassName('mdl-dialog')[0];
+
+                if (! dialog.showModal)
+                    dialogPolyfill.registerDialog(dialog);
+
+                button.addEventListener('click', function() {
+                    dialog.showModal();
+                });
+                dialog.querySelector('.close').addEventListener('click', function() {
+                    dialog.close();
+                });
+            }
+        );
+
         // Hide spinner when app is loaded
         var appSpinner = document.getElementById("appLoadSpinner");
         addClass(appSpinner,"hideOpacity");
@@ -86,3 +105,4 @@ function retrieveAppHTML() {
     });
 }
 loadStyleSheet("/public/css/style.css", function() {});
+loadStyleSheet("/public/js/dialog-polyfill/dialog-polyfill.css", function() {});
