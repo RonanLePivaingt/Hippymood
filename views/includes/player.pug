@@ -21,8 +21,8 @@ div#player.demo-card-wide.mdl-card.mdl-shadow--2dp
     div#playerGenre.mdl-card__supporting-text
         span.mdl-chip
             span.mdl-chip__text {{genre}}
-        //span.separator
-        //span.mdl-chip
+        span.separator(v-if="nextGenre")
+        span.mdl-chip(v-if="nextGenre")
             span.mdl-chip__text {{nextGenre}}
             button.mdl-chip__action(type="button")
                 i.material-icons cancel

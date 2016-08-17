@@ -7,12 +7,17 @@ currentSong['artist'] = '';
 currentSong['album'] = '';
 currentSong['path'] = '';
 
+var tracklist = [];
+// Used to play back a song
+var currentSongReverseIndex = 1;
+
 var genres = document.getElementsByClassName("genreItem");
 
 var playerHTML5 = document.getElementById("playerHTML5");
 
 var lastGenre = '';
 var currentGenre = null;
+var nextGenre = '';
 
 /*
  * Vue.js
@@ -38,14 +43,25 @@ function playerVueInit() {
                 this.path = data.path
                 this.genre = "Genre : " + currentGenre.getAttribute("data-genre-name")
                 this.filename = filenameFromPath(data.path)
+                if (nextGenre != '')
+                    this.nextGenre = "Prochain : " + nextGenre
+                else 
+                    this.nextGenre = ''
+                currentSong['song'] = data.song;
+                currentSong['artist'] = data.artist;
+                currentSong['album'] = data.album;
+                currentSong['path'] = data.path;
             },
             updateUi: function() {
                 this.title = currentSong.song
                 this.artist = currentSong.artist
                 this.album = currentSong.album
                 this.path = currentSong.path
-                this.genre = "Genre : " + currentGenre.getAttribute("data-genre-name")
-                if (nextGenre) this.nextGenre = "Prochain : " + nextGenre.getAttribute("data-genre-name")
+                this.genre = "Genre : " + lastGenre.getAttribute("data-genre-name")
+                if (nextGenre != '')
+                    this.nextGenre = "Prochain : " + nextGenre
+                else 
+                    this.nextGenre = ''
                 this.filename = filenameFromPath(currentSong.path)
             }
         }
@@ -69,6 +85,8 @@ function showSnackClickAgain() {
  */
 function playNext(){
     if (currentGenre) {
+        // Reseting the index if a song is played "normally"
+        currentSongReverseIndex = 1;
         var dataHref = "/genre/" + currentGenre.getAttribute("data-genre-id");
         getAjax(dataHref, function(data){ 
             data = JSON.parse(data);
@@ -77,10 +95,34 @@ function playNext(){
                     allSongGenrePlayed();
             }
             else {
+                data['randomSong']['genreName'] = currentGenre.getAttribute("data-genre-name");
+                data['randomSong']['genreId'] = currentGenre.getAttribute("data-genre-id");
+                tracklist.push(data['randomSong']);
                 play(data.randomSong);
                 playingStyling();
             }
         });
+    }
+}
+function playPrevious() {
+    if (tracklist.length > currentSongReverseIndex - 1) {
+        // Increasing index
+        currentSongReverseIndex++;
+        // Playing next song
+        var o = tracklist.length - currentSongReverseIndex;
+        var previousSong = tracklist[o];
+        play(previousSong);
+        // Checking if the previous song is from a different genre, update genre styling if so 
+        lastSongGenre = tracklist[o+1]["genreName"];
+        currentSongGenre = tracklist[o]["genreName"];
+        currentSongGenreId = tracklist[o]["genreId"];
+        if (lastSongGenre !== currentSongGenre) {
+            currentGenre.setAttribute("data-genre-id", currentSongGenreId);
+            currentGenre.setAttribute("data-genre-name", currentSongGenre);
+            playerVue.updateUi();
+            genreButtonStyle();
+        }
+        playingStyling();
     }
 }
 function play(songData) {
@@ -103,6 +145,11 @@ function playGenre() {
         genreButtonStyle();
     }
     else {
+        // Displaying next genre 
+        nextGenre = this.getAttribute("data-genre-name");
+        playerVue.updateUi();
+        nextGenre = '';
+        // Display a snackbar to tell the user the genre will be played at next song
         snackBarData = {
             message: "Appuyer une deuxième fois sur le genre l'écouter avant la fin de la chanson",
             timeout: 5000
@@ -151,7 +198,10 @@ function genreButtonStyle() {
         removeClass(button[0],"mdl-button--colored");
     }
 
-    addClass(currentGenre,"mdl-button--colored");
+    // Faire fonctionner avec un id sur les boutons du style btnGenre352
+    var id = currentGenre.getAttribute("data-genre-id");
+    var currentButton = document.getElementById("genreBtn" + id);
+    addClass(currentButton,"mdl-button--colored");
 }
 
 /* Pop up */
@@ -198,6 +248,11 @@ function keyboardEvents1() {
                 // Skipping song with ctrl+right
                 if (event.ctrlKey)
                     playNext();
+                break;
+            case 'ArrowLeft':
+                // Skipping song with ctrl+right
+                if (event.ctrlKey)
+                    playPrevious();
                 break;
             default:
                 break;

@@ -44,7 +44,6 @@ function initGenrePlayer() {
 
         // Update UI on first genre click
         var buttons = document.querySelectorAll("div.genreList button");
-        console.log("Combien de boutons : " + buttons.length);
         Array.prototype.forEach.call(buttons, function(el) {
             el.addEventListener("click", playerInit, false);
         });
