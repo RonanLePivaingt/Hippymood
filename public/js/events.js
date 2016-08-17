@@ -30,6 +30,11 @@ function keyboardEvents() {
                 if (event.ctrlKey)
                     playNext();
                 break;
+            case 'ArrowLeft':
+                // Skipping song with ctrl+right
+                if (event.ctrlKey)
+                    playPrevious();
+                break;
             default:
                 break;
         }

@@ -7,6 +7,10 @@ currentSong['artist'] = '';
 currentSong['album'] = '';
 currentSong['path'] = '';
 
+var tracklist = [];
+// Used to play back a song
+var currentSongReverseIndex = 1;
+
 var genres = document.getElementsByClassName("genreItem");
 
 var playerHTML5 = document.getElementById("playerHTML5");
@@ -45,7 +49,6 @@ function playerVueInit() {
                 this.album = currentSong.album
                 this.path = currentSong.path
                 this.genre = "Genre : " + currentGenre.getAttribute("data-genre-name")
-                if (nextGenre) this.nextGenre = "Prochain : " + nextGenre.getAttribute("data-genre-name")
                 this.filename = filenameFromPath(currentSong.path)
             }
         }
@@ -77,10 +80,35 @@ function playNext(){
                     allSongGenrePlayed();
             }
             else {
+                data['randomSong']['genreName'] = currentGenre.getAttribute("data-genre-name");
+                data['randomSong']['genreId'] = currentGenre.getAttribute("data-genre-id");
+                tracklist.push(data['randomSong']);
+                // Reseting the index if a song is played "normally"
+                currentSongReverseIndex = 1;
                 play(data.randomSong);
                 playingStyling();
             }
         });
+    }
+}
+function playPrevious() {
+    if (tracklist.length > currentSongReverseIndex) {
+        // Increasing index
+        currentSongReverseIndex++;
+        // Playing next song
+        var o = tracklist.length - currentSongReverseIndex;
+        var previousSong = tracklist[o];
+        play(previousSong);
+        // Checking if the previous song is from a different genre, update genre styling if so 
+        lastSongGenre = tracklist[o+1]["genreName"];
+        currentSongGenre = tracklist[o]["genreName"];
+        currentSongGenreId = tracklist[o]["genreId"];
+        if (lastSongGenre !== currentSongGenre) {
+            currentGenre.setAttribute("data-genre-id", currentSongGenreId);
+            currentGenre.setAttribute("data-genre-name", currentSongGenre);
+            playerVue.updateUi();
+        }
+        playingStyling();
     }
 }
 function play(songData) {
@@ -198,6 +226,11 @@ function keyboardEvents1() {
                 // Skipping song with ctrl+right
                 if (event.ctrlKey)
                     playNext();
+                break;
+            case 'ArrowLeft':
+                // Skipping song with ctrl+right
+                if (event.ctrlKey)
+                    playPrevious();
                 break;
             default:
                 break;
