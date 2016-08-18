@@ -11,7 +11,7 @@ div#app.mdl-grid(style="display:none")
 div.mdl-grid
     div.mdl-grid.genreList
         each val in genres
-            button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.genreItem(class="genreItem", data-genre-id=val.id, data-genre-name=val.name)
+            button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.genreItem(id="genreBtn" + val.id, class="genreItem", data-genre-id=val.id, data-genre-name=val.name)
                 span= val.name
 div#demo-snackbar-example.mdl-js-snackbar.mdl-snackbar
     div.mdl-snackbar__text
