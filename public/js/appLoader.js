@@ -5,7 +5,7 @@ var robotoLoaded = 0
     appHTML = "";
     ;
 function initGenrePlayer() {
-    if (robotoLoaded && materialIconsLoaded && genericFunctionsLoaded && appHTMLLoaded) {
+    function display() {
         // Load app HTML
         var appData = document.getElementById("appData");
         appData.innerHTML = appHTML;
@@ -47,6 +47,16 @@ function initGenrePlayer() {
         Array.prototype.forEach.call(buttons, function(el) {
             el.addEventListener("click", playerInit, false);
         });
+    }
+    if (robotoLoaded && materialIconsLoaded && genericFunctionsLoaded && appHTMLLoaded) {
+        // Stopping timeout and loading
+        window.clearTimeout(loaderTimeout);
+        display();
+    }
+    else {
+        // Starting 
+        if (typeof loaderTimeout == 'undefined')
+            loaderTimeout = window.setTimeout(display, 5000);
     }
 }
 loadScript("/public/js/fontdetect.js", function() {
