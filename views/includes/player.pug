@@ -4,7 +4,7 @@ div#player.demo-card-wide.mdl-card.mdl-shadow--2dp
             i.material-icons audiotrack
             span {{title}}
     div.mdl-card__supporting-text
-        p 
+        p(v-show="album")
             i.material-icons album
             span {{album}}
         p 
@@ -19,13 +19,16 @@ div#player.demo-card-wide.mdl-card.mdl-shadow--2dp
         button#next.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect.mdl-button--fab
             i.material-icons skip_next
     div#playerGenre.mdl-card__supporting-text
-        span.mdl-chip
+        //span.mdl-chip(v-bind:class="{ 'class-a': allSongGenrePlayed, 'class-b': isB }")
             span.mdl-chip__text {{genre}}
-        span.separator(v-if="nextGenre")
-        span.mdl-chip(v-if="nextGenre")
+        |<span class="mdl-chip" v-bind:class="{ 'class-a': allSongGenrePlayed, 'class-b': isB }">
+        |<span class="mdl-chip__text"> Yop {{genre}} </span>
+        |</span>
+        span.separator(v-show="nextGenre")
+        span.mdl-chip(v-show="nextGenre")
             span.mdl-chip__text {{nextGenre}}
-            button.mdl-chip__action(type="button")
-                i.material-icons cancel
+                button#cancelGenre.mdl-chip__action(type="button")
+                    i.material-icons cancel
     div#menu.mdl-card__menu
         button#demo-menu-lower-right.mdl-button.mdl-js-button.mdl-button--icon
             i.material-icons more_vert

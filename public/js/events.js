@@ -8,6 +8,9 @@ function playerEventsInit() {
 
     // Skipping to next song
     document.querySelector("#next").addEventListener("click", playNext, false);
+
+    // Cancel next genre choice
+    document.querySelector("#cancelGenre").addEventListener("click", cancelNextGenre, false);
 }
 playerEventsInit();
 

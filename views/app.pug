@@ -1,11 +1,6 @@
 div#title.mdl-grid(style="display:none")
     h1 Hippy Mood
-dialog.mdl-dialog
-    h4.mdl-dialog__title À propos
-    div.mdl-dialog__content
-        p To be filled
-    div.mdl-dialog__actions.mdl-dialog__actions--full-width
-        button.mdl-button.close(type="button") Fermer
+include ./includes/about.pug
 div#app.mdl-grid(style="display:none")
     include ./includes/player.pug
 div.mdl-grid

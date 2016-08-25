@@ -295,3 +295,12 @@ h1 {
     local('Roboto Medium'),
     url(/public/fonts/Roboto/Roboto-Medium.ttf) format('truetype');
 }
+/* About */
+img {
+    max-width: 20%;
+    max-height: 20%;
+}
+/* Player genre and next genre */
+#cancelGenre i.material-icons {
+    font-size: 1.3rem;
+}

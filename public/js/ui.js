@@ -10,6 +10,7 @@ currentSong['path'] = '';
 var tracklist = [];
 // Used to play back a song
 var currentSongReverseIndex = 1;
+var allSongGenrePlayed = 0;
 
 var genres = document.getElementsByClassName("genreItem");
 
@@ -51,6 +52,8 @@ function playerVueInit() {
                 currentSong['artist'] = data.artist;
                 currentSong['album'] = data.album;
                 currentSong['path'] = data.path;
+                // Resetting all song genre played
+                allSongGenrePlayed = 1;
             },
             updateUi: function() {
                 this.title = currentSong.song
@@ -164,6 +167,11 @@ function playGenre() {
         }
     }
 };
+function cancelNextGenre() {
+    console.log("Coucou");
+    currentGenre = lastGenre;
+    playerVue.updateUi();
+}
 function downloadSong() {
     var songUrl = playerHTML5.getAttribute("src");
     location.replace(songUrl);
@@ -215,6 +223,7 @@ var resetGenre = function(event) {
     });
 };
 function allSongGenrePlayed() {
+    allSongGenrePlayed = 1;
     var snackbarContainer = document.querySelector('#demo-snackbar-example');
     var genreName = currentGenre.getAttribute("data-genre-name");
     snackBarData = {

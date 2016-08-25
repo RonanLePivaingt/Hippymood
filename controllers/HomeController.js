@@ -1,5 +1,19 @@
 var mysql = require('mysql');
 
+/**
+ * Randomize array element order in-place.
+ * Using Durstenfeld shuffle algorithm.
+ */
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
+
 // Loading configuration file with database credentials
 var config = require('./../config');
 var connection = mysql.createConnection({
@@ -11,13 +25,28 @@ var connection = mysql.createConnection({
 });
 
 exports.Index = function(req, res){
-    connection.query('SELECT * FROM genres', function(err, rows, fields) {
-        res.render('index', {genres: rows});
-    });
+    res.render('index');
 };
 exports.App = function(req, res){
-    connection.query('SELECT * FROM genres', function(err, rows, fields) {
-        res.render('app', {genres: rows});
+    var SQLquery = 'SELECT genres.id, genres.name, COUNT(songs.id) AS nbSongs ';
+        SQLquery += 'FROM songs ';
+        SQLquery += 'JOIN genreAssociation ON songs.id = genreAssociation.id_songs ';
+        SQLquery += 'JOIN genres ON genreAssociation.id = genres.id ';
+        SQLquery += 'GROUP BY genres.id ';
+        SQLquery += 'ORDER BY nbSongs DESC ';
+
+    connection.query(SQLquery, function(err, rows, fields) {
+        if (err)
+            console.log(err);
+        else {
+            var topGenre = [];
+            for (var o = 0; o < config.nbTopGenre; o++) {
+                topGenre.push(rows.shift());
+            }
+            var randomRows = topGenre.concat(shuffleArray(rows));
+            console.log(randomRows);
+            res.render('app', {genres: randomRows});
+        }
     });
 };
 exports.Admin = function(req, res){
