@@ -1,5 +1,4 @@
 var robotoLoaded = 0
-    materialIconsLoaded = 0
     genericFunctionsLoaded = 0
     appHTMLLoaded = 0
     appHTML = "";
@@ -48,7 +47,7 @@ function initGenrePlayer() {
             el.addEventListener("click", playerInit, false);
         });
     }
-    if (robotoLoaded && materialIconsLoaded && genericFunctionsLoaded && appHTMLLoaded) {
+    if (robotoLoaded && genericFunctionsLoaded && appHTMLLoaded) {
         // Stopping timeout and loading
         window.clearTimeout(loaderTimeout);
         display();
@@ -64,15 +63,6 @@ loadScript("/public/js/fontdetect.js", function() {
         'Roboto', 
         function() {
             robotoLoaded = 1;
-            initGenrePlayer();
-        },
-        onItDidntLoad, 
-        {msTimeout: 3000}
-    );
-    FontDetect.onFontLoaded (
-        'Material Icons', 
-        function() {
-            materialIconsLoaded = 1;
             initGenrePlayer();
         },
         onItDidntLoad, 

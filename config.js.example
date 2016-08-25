@@ -8,4 +8,6 @@ config.db.user = "dbUser";
 config.db.password = "dbPassword";
 config.db.database = "dbName";
 
+config.nbTopGenre = 5;
+
 module.exports = config;
