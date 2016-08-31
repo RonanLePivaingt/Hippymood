@@ -44,7 +44,6 @@ exports.App = function(req, res){
                 topGenre.push(rows.shift());
             }
             var randomRows = topGenre.concat(shuffleArray(rows));
-            console.log(randomRows);
             res.render('app', {genres: randomRows});
         }
     });
@@ -82,13 +81,35 @@ exports.Genre = function(req, res){
         if (rows.length > 0) {
             var randomSong = rows[Math.floor(Math.random() * rows.length)];
 
+            var randomIndex1 = Math.floor(Math.random() * rows.length);
+
+            var randomSongs = [];
+            randomSongs.push(rows[randomIndex1]);
+
+            // Selecting next song as well if possible
+            if (rows.length > 1) {
+                var randomIndex2 = randomIndex1;
+                do {
+                    randomIndex2 = Math.floor(Math.random() * rows.length);
+                } while (randomIndex1 == randomIndex2);
+                randomSongs.push(rows[randomIndex2]);
+            }
+
+            // -1 to count the one being played
+            var infos = {nbSongLeft: rows.length - 1};
+
             // Saving song played id
             if (req.session.playedSongs == undefined) 
                 req.session.playedSongs = [randomSong['id']];
             else 
                 req.session.playedSongs.push(randomSong['id']);
 
-            res.send({randomSong});
+            var response = {
+                songs: randomSongs,
+                infos: infos
+            };
+
+            res.send(response);
         }
         else {
             var error = {"allSongGenrePlayed": 1};

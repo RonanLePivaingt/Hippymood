@@ -35,15 +35,16 @@ function playerVueInit() {
             filename: '',
             genre: '',
             nextGenre: '',
-            allSongGenrePlayed: 0
+            allSongGenrePlayed: 0,
+            nbSongLeft: 999
         },
         methods: {
-            play: function(data) {
+            play: function(data, infos) {
                 this.title = data.song
                 this.artist = data.artist
                 this.album = data.album
                 this.path = data.path
-                this.genre = "Genre : " + currentGenre.getAttribute("data-genre-name")
+                this.genre = "Mood : " + currentGenre.getAttribute("data-genre-name")
                 this.filename = filenameFromPath(data.path)
                 if (nextGenre != '')
                     this.nextGenre = "Prochain : " + nextGenre
@@ -56,6 +57,7 @@ function playerVueInit() {
                 // Resetting all song genre played
                 allSongGenrePlayed = 0;
                 this.allSongGenrePlayed = allSongGenrePlayed;
+                this.nbSongLeft = currentGenre.getAttribute("data-genre-nbsongleft")
             },
             updateUi: function() {
                 this.title = currentSong.song
@@ -103,10 +105,13 @@ function playNext(){
                     allSongGenrePlayedFn();
             }
             else {
-                data['randomSong']['genreName'] = currentGenre.getAttribute("data-genre-name");
-                data['randomSong']['genreId'] = currentGenre.getAttribute("data-genre-id");
-                tracklist.push(data['randomSong']);
-                play(data.randomSong);
+                data.songs[0]['genreName'] = currentGenre.getAttribute("data-genre-name");
+                data.songs[0]['genreId'] = currentGenre.getAttribute("data-genre-id");
+                tracklist.push(data.songs[0]);
+
+                currentGenre.setAttribute("data-genre-nbsongleft",data.infos.nbSongLeft);
+
+                play(data.songs[0]);
                 playingStyling();
             }
         });
