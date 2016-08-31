@@ -19,11 +19,16 @@ div#player.demo-card-wide.mdl-card.mdl-shadow--2dp
         button#next.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect.mdl-button--fab
             i.material-icons skip_next
     div#playerGenre.mdl-card__supporting-text
-        //span.mdl-chip(v-bind:class="{ 'class-a': allSongGenrePlayed, 'class-b': isB }")
+        //- Conditional genre display depending on the number of song left, only one span must appear
+        span.mdl-chip(v-show="nbSongLeft > 4")
             span.mdl-chip__text {{genre}}
-        |<span class="mdl-chip" v-bind:class="{ 'class-a': allSongGenrePlayed, 'class-b': isB }">
-        |<span class="mdl-chip__text"> {{genre}} </span>
-        |</span>
+        span#tt1.mdl-chip(v-show="5 > nbSongLeft && nbSongLeft > 0")
+            span.mdl-chip__text.mdl-badge(data-badge="{{nbSongLeft}}") {{genre}}
+            div.mdl-tooltip.mdl-tooltip--large(data-mdl-for="tt1") {{nbSongLeft}} chansons restantes
+        span#tt2.mdl-chip.allSongGenrePlayed(v-show="nbSongLeft < 1")
+            span.mdl-chip__text.mdl-badge(data-badge="{{nbSongLeft}}") {{genre}}
+            div.mdl-tooltip.mdl-tooltip--large(data-mdl-for="tt2") Toutes les chansons de la </br> mood ont déjà été lues
+        //- Current and next genre separator + next genre
         span.separator(v-show="nextGenre")
         span.mdl-chip(v-show="nextGenre")
             span.mdl-chip__text {{nextGenre}}
