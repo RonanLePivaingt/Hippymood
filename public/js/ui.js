@@ -34,15 +34,17 @@ function playerVueInit() {
             path: '',
             filename: '',
             genre: '',
-            nextGenre: ''
+            nextGenre: '',
+            allSongGenrePlayed: 0,
+            nbSongLeft: 999
         },
         methods: {
-            play: function(data) {
+            play: function(data, infos) {
                 this.title = data.song
                 this.artist = data.artist
                 this.album = data.album
                 this.path = data.path
-                this.genre = "Genre : " + currentGenre.getAttribute("data-genre-name")
+                this.genre = "Mood : " + currentGenre.getAttribute("data-genre-name")
                 this.filename = filenameFromPath(data.path)
                 if (nextGenre != '')
                     this.nextGenre = "Prochain : " + nextGenre
@@ -53,19 +55,24 @@ function playerVueInit() {
                 currentSong['album'] = data.album;
                 currentSong['path'] = data.path;
                 // Resetting all song genre played
-                allSongGenrePlayed = 1;
+                allSongGenrePlayed = 0;
+                this.allSongGenrePlayed = allSongGenrePlayed;
+                this.nbSongLeft = currentGenre.getAttribute("data-genre-nbsongleft")
             },
             updateUi: function() {
                 this.title = currentSong.song
                 this.artist = currentSong.artist
                 this.album = currentSong.album
                 this.path = currentSong.path
-                this.genre = "Genre : " + lastGenre.getAttribute("data-genre-name")
+                if (lastGenre)
+                    this.genre = "Genre : " + lastGenre.getAttribute("data-genre-name")
                 if (nextGenre != '')
                     this.nextGenre = "Prochain : " + nextGenre
                 else 
                     this.nextGenre = ''
-                this.filename = filenameFromPath(currentSong.path)
+                this.filename = filenameFromPath(currentSong.path);
+                // Resetting all song genre played
+                this.allSongGenrePlayed = allSongGenrePlayed;
             }
         }
     });
@@ -95,13 +102,16 @@ function playNext(){
             data = JSON.parse(data);
             if (data.error) {
                 if (data.error.allSongGenrePlayed == 1) 
-                    allSongGenrePlayed();
+                    allSongGenrePlayedFn();
             }
             else {
-                data['randomSong']['genreName'] = currentGenre.getAttribute("data-genre-name");
-                data['randomSong']['genreId'] = currentGenre.getAttribute("data-genre-id");
-                tracklist.push(data['randomSong']);
-                play(data.randomSong);
+                data.songs[0]['genreName'] = currentGenre.getAttribute("data-genre-name");
+                data.songs[0]['genreId'] = currentGenre.getAttribute("data-genre-id");
+                tracklist.push(data.songs[0]);
+
+                currentGenre.setAttribute("data-genre-nbsongleft",data.infos.nbSongLeft);
+
+                play(data.songs[0]);
                 playingStyling();
             }
         });
@@ -222,8 +232,9 @@ var resetGenre = function(event) {
         removeClass(snackbarContainer, "mdl-snackbar--active");
     });
 };
-function allSongGenrePlayed() {
+function allSongGenrePlayedFn() {
     allSongGenrePlayed = 1;
+    playerVue.updateUi();
     var snackbarContainer = document.querySelector('#demo-snackbar-example');
     var genreName = currentGenre.getAttribute("data-genre-name");
     snackBarData = {
