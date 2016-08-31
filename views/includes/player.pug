@@ -22,7 +22,7 @@ div#player.demo-card-wide.mdl-card.mdl-shadow--2dp
         //span.mdl-chip(v-bind:class="{ 'class-a': allSongGenrePlayed, 'class-b': isB }")
             span.mdl-chip__text {{genre}}
         |<span class="mdl-chip" v-bind:class="{ 'class-a': allSongGenrePlayed, 'class-b': isB }">
-        |<span class="mdl-chip__text"> Yop {{genre}} </span>
+        |<span class="mdl-chip__text"> {{genre}} </span>
         |</span>
         span.separator(v-show="nextGenre")
         span.mdl-chip(v-show="nextGenre")
