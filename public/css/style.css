@@ -300,6 +300,10 @@ img {
     max-width: 20%;
     max-height: 20%;
 }
+img.bigger {
+    max-width: 50%;
+    max-height: 50%;
+}
 /* Player genre and next genre */
 #cancelGenre i.material-icons {
     font-size: 1.3rem;
