@@ -34,7 +34,8 @@ function playerVueInit() {
             path: '',
             filename: '',
             genre: '',
-            nextGenre: ''
+            nextGenre: '',
+            allSongGenrePlayed: 0
         },
         methods: {
             play: function(data) {
@@ -53,19 +54,23 @@ function playerVueInit() {
                 currentSong['album'] = data.album;
                 currentSong['path'] = data.path;
                 // Resetting all song genre played
-                allSongGenrePlayed = 1;
+                allSongGenrePlayed = 0;
+                this.allSongGenrePlayed = allSongGenrePlayed;
             },
             updateUi: function() {
                 this.title = currentSong.song
                 this.artist = currentSong.artist
                 this.album = currentSong.album
                 this.path = currentSong.path
-                this.genre = "Genre : " + lastGenre.getAttribute("data-genre-name")
+                if (lastGenre)
+                    this.genre = "Genre : " + lastGenre.getAttribute("data-genre-name")
                 if (nextGenre != '')
                     this.nextGenre = "Prochain : " + nextGenre
                 else 
                     this.nextGenre = ''
-                this.filename = filenameFromPath(currentSong.path)
+                this.filename = filenameFromPath(currentSong.path);
+                // Resetting all song genre played
+                this.allSongGenrePlayed = allSongGenrePlayed;
             }
         }
     });
@@ -95,7 +100,7 @@ function playNext(){
             data = JSON.parse(data);
             if (data.error) {
                 if (data.error.allSongGenrePlayed == 1) 
-                    allSongGenrePlayed();
+                    allSongGenrePlayedFn();
             }
             else {
                 data['randomSong']['genreName'] = currentGenre.getAttribute("data-genre-name");
@@ -222,8 +227,9 @@ var resetGenre = function(event) {
         removeClass(snackbarContainer, "mdl-snackbar--active");
     });
 };
-function allSongGenrePlayed() {
+function allSongGenrePlayedFn() {
     allSongGenrePlayed = 1;
+    playerVue.updateUi();
     var snackbarContainer = document.querySelector('#demo-snackbar-example');
     var genreName = currentGenre.getAttribute("data-genre-name");
     snackBarData = {

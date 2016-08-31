@@ -19,9 +19,7 @@ div#player.demo-card-wide.mdl-card.mdl-shadow--2dp
         button#next.mdl-button.mdl-js-button.mdl-button--icon.mdl-js-ripple-effect.mdl-button--fab
             i.material-icons skip_next
     div#playerGenre.mdl-card__supporting-text
-        //span.mdl-chip(v-bind:class="{ 'class-a': allSongGenrePlayed, 'class-b': isB }")
-            span.mdl-chip__text {{genre}}
-        |<span class="mdl-chip" v-bind:class="{ 'class-a': allSongGenrePlayed, 'class-b': isB }">
+        |<span class="mdl-chip" v-bind:class="{ 'allSongGenrePlayed': allSongGenrePlayed, 'class-b': isB }">
         |<span class="mdl-chip__text"> {{genre}} </span>
         |</span>
         span.separator(v-show="nextGenre")
