@@ -65,9 +65,9 @@ function playerVueInit() {
                 this.album = currentSong.album
                 this.path = currentSong.path
                 if (lastGenre)
-                    this.genre = "Genre : " + lastGenre.getAttribute("data-genre-name")
+                    this.genre = "Mood : " + lastGenre.getAttribute("data-genre-name")
                 if (nextGenre != '')
-                    this.nextGenre = "Prochain : " + nextGenre
+                    this.nextGenre = "Prochaine : " + nextGenre
                 else 
                     this.nextGenre = ''
                 this.filename = filenameFromPath(currentSong.path);

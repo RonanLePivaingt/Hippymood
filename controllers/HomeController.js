@@ -79,7 +79,22 @@ exports.Genre = function(req, res){
         if (err) throw err;
 
         if (rows.length > 0) {
-            var randomSong = rows[Math.floor(Math.random() * rows.length)];
+            var randomIndex1 = Math.floor(Math.random() * rows.length);
+
+            var randomSongs = [];
+            randomSongs.push(rows[randomIndex1]);
+
+            // Selecting next song as well if possible
+            if (rows.length > 1) {
+                var randomIndex2 = randomIndex1;
+                do {
+                    randomIndex2 = Math.floor(Math.random() * rows.length);
+                } while (randomIndex1 == randomIndex2);
+                randomSongs.push(rows[randomIndex2]);
+            }
+
+            // -1 to count the one being played
+            var infos = {nbSongLeft: rows.length - 1};
 
             var randomIndex1 = Math.floor(Math.random() * rows.length);
 
@@ -100,9 +115,14 @@ exports.Genre = function(req, res){
 
             // Saving song played id
             if (req.session.playedSongs == undefined) 
-                req.session.playedSongs = [randomSong['id']];
+                req.session.playedSongs = [randomSongs[0]['id']];
             else 
-                req.session.playedSongs.push(randomSong['id']);
+                req.session.playedSongs.push(randomSongs[0]['id']);
+
+            var response = {
+                songs: randomSongs,
+                infos: infos
+            };
 
             var response = {
                 songs: randomSongs,
