@@ -79,8 +79,6 @@ exports.Genre = function(req, res){
         if (err) throw err;
 
         if (rows.length > 0) {
-            var randomSong = rows[Math.floor(Math.random() * rows.length)];
-
             var randomIndex1 = Math.floor(Math.random() * rows.length);
 
             var randomSongs = [];
@@ -100,9 +98,9 @@ exports.Genre = function(req, res){
 
             // Saving song played id
             if (req.session.playedSongs == undefined) 
-                req.session.playedSongs = [randomSong['id']];
+                req.session.playedSongs = [randomSongs[0]['id']];
             else 
-                req.session.playedSongs.push(randomSong['id']);
+                req.session.playedSongs.push(randomSongs[0]['id']);
 
             var response = {
                 songs: randomSongs,
