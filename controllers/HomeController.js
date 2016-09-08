@@ -54,6 +54,11 @@ exports.Admin = function(req, res){
 
 // Function to get song infos by submitting a genre
 exports.Genre = function(req, res){
+    // Disabling cache for myurl.com/genre/id URLs to prevent some browser to play the same song again and again and again...
+    res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.header("Pragma", "no-cache");
+    res.header("Expires", 0);
+
     var genre = req.params.id;
 
     var SQLquery = 'SELECT songs.id, songs.name AS song, artists.name AS artist, songs.path, albums.name AS album ';
