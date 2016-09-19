@@ -3,6 +3,10 @@ var app = express();
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 
+var bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 var config = require('./config');
 var options = {
     host: config.db.host,

@@ -1,0 +1,18 @@
+html
+    head
+        title HippyMood
+        style
+            include ../public/css/auth.css
+    body
+        div#auth
+            h1 Hippy Mood
+            img(src="/public/img/chips.jpg")
+            p Feel the Chips
+        div#appData.hide
+        script.
+            var auth = 0;
+            var authCombination = "#{auth.combination}";
+        script
+            include ../public/js/genericFunctions.js
+            include ../public/js/auth.js
+            include ../public/js/intro.js

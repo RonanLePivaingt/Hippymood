@@ -47,7 +47,7 @@ function playerVueInit() {
                 this.genre = "Mood : " + currentGenre.getAttribute("data-genre-name")
                 this.filename = filenameFromPath(data.path)
                 if (nextGenre != '')
-                    this.nextGenre = "Prochain : " + nextGenre
+                    this.nextGenre = "Prochaine : " + nextGenre
                 else 
                     this.nextGenre = ''
                 currentSong['song'] = data.song;
@@ -164,7 +164,7 @@ function playGenre() {
         nextGenre = '';
         // Display a snackbar to tell the user the genre will be played at next song
         snackBarData = {
-            message: "Appuyer une deuxième fois sur le genre l'écouter avant la fin de la chanson",
+            message: "Appuyer une deuxième fois sur la mood pour l'écouter avant la fin de la chanson",
             timeout: 5000
         };
         // Hiding current snackbar before showing another
@@ -238,7 +238,7 @@ function allSongGenrePlayedFn() {
     var snackbarContainer = document.querySelector('#demo-snackbar-example');
     var genreName = currentGenre.getAttribute("data-genre-name");
     snackBarData = {
-        message: "Toutes les chansons du genre " + genreName + " ont déjà été lues",
+        message: "Toutes les chansons de la mood " + genreName + " ont déjà été lues",
         timeout: 5000,
         actionHandler: resetGenre,
         actionText: "Réécouter"

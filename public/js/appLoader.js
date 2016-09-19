@@ -1,7 +1,7 @@
 var robotoLoaded = 0
     genericFunctionsLoaded = 0
     appHTMLLoaded = 0
-    appHTML = "";
+    appHTML = ""
     ;
 function initGenrePlayer() {
     function display() {
@@ -39,7 +39,8 @@ function initGenrePlayer() {
 
         // Hide spinner when app is loaded
         var appSpinner = document.getElementById("appLoadSpinner");
-        addClass(appSpinner,"hideOpacity");
+        if (appSpinner)
+            addClass(appSpinner,"hideOpacity");
 
         // Update UI on first genre click
         var buttons = document.querySelectorAll("div.genreList button");
@@ -49,13 +50,13 @@ function initGenrePlayer() {
     }
     if (robotoLoaded && genericFunctionsLoaded && appHTMLLoaded) {
         // Stopping timeout and loading
-        window.clearTimeout(loaderTimeout);
+        //window.clearTimeout(loaderTimeout);
         display();
     }
     else {
         // Starting 
-        if (typeof loaderTimeout == 'undefined')
-            loaderTimeout = window.setTimeout(display, 5000);
+        //if (typeof loaderTimeout == 'undefined')
+            //loaderTimeout = window.setTimeout(display, 5000);
     }
 }
 loadScript("/public/js/fontdetect.js", function() {

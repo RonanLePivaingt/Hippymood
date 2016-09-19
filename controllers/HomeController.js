@@ -25,8 +25,30 @@ var connection = mysql.createConnection({
 });
 
 exports.Index = function(req, res){
-    res.render('index');
+    if (config.auth.activate) {
+        if (req.session.auth)
+            res.render('index');
+        else {
+            var data = {
+                auth: {
+                    combination: config.auth.combination
+                }
+            };
+            res.render('auth', data);
+        }
+    }
+    else
+        res.render('index');
 };
+
+// Registering session as authentified
+exports.Auth = function(req, res){
+    if (req.body.combination == config.auth.combination) {
+        req.session.auth = 1;
+        res.send("OK");
+    }
+};
+
 exports.App = function(req, res){
     var SQLquery = 'SELECT genres.id, genres.name, COUNT(songs.id) AS nbSongs ';
         SQLquery += 'FROM songs ';
@@ -54,93 +76,95 @@ exports.Admin = function(req, res){
 
 // Function to get song infos by submitting a genre
 exports.Genre = function(req, res){
-    // Disabling cache for myurl.com/genre/id URLs to prevent some browser to play the same song again and again and again...
-    res.header("Cache-Control", "no-cache, no-store, must-revalidate");
-    res.header("Pragma", "no-cache");
-    res.header("Expires", 0);
+    if (req.session.auth || config.auth.activate === 0) {
+        // Disabling cache for myurl.com/genre/id URLs to prevent some browser to play the same song again and again and again...
+        res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+        res.header("Pragma", "no-cache");
+        res.header("Expires", 0);
 
-    var genre = req.params.id;
+        var genre = req.params.id;
 
-    var SQLquery = 'SELECT songs.id, songs.name AS song, artists.name AS artist, songs.path, albums.name AS album ';
-        SQLquery += 'FROM songs, genreAssociation, artists, albums ';
-        SQLquery += 'WHERE songs.id = genreAssociation.id_songs ';
-        SQLquery += 'AND genreAssociation.id = "' + req.params.id + '"';
-        SQLquery += 'AND songs.id_artists = artists.id ';
-        SQLquery += 'AND songs.id_albums = albums.id ';
+        var SQLquery = 'SELECT songs.id, songs.name AS song, artists.name AS artist, songs.path, albums.name AS album ';
+            SQLquery += 'FROM songs, genreAssociation, artists, albums ';
+            SQLquery += 'WHERE songs.id = genreAssociation.id_songs ';
+            SQLquery += 'AND genreAssociation.id = "' + req.params.id + '"';
+            SQLquery += 'AND songs.id_artists = artists.id ';
+            SQLquery += 'AND songs.id_albums = albums.id ';
 
-    // Select song from not played songs
-    if (req.session.playedSongs && req.session.playedSongs.length != 0 && req.session.playedSongs != []) {
-        SQLquery += 'AND songs.id NOT IN (';
-        req.session.playedSongs.forEach(function(entry, index) {
-            if (index != req.session.playedSongs.length -1)
-                SQLquery += '"' + entry + '", ';
-            else
-                SQLquery += '"' + entry + '") ';
+        // Select song from not played songs
+        if (req.session.playedSongs && req.session.playedSongs.length != 0 && req.session.playedSongs != []) {
+            SQLquery += 'AND songs.id NOT IN (';
+            req.session.playedSongs.forEach(function(entry, index) {
+                if (index != req.session.playedSongs.length -1)
+                    SQLquery += '"' + entry + '", ';
+                else
+                    SQLquery += '"' + entry + '") ';
 
+            });
+        }
+
+        connection.query(SQLquery, function(err, rows, fields) {
+            if (err) throw err;
+
+            if (rows.length > 0) {
+                var randomIndex1 = Math.floor(Math.random() * rows.length);
+
+                var randomSongs = [];
+                randomSongs.push(rows[randomIndex1]);
+
+                // Selecting next song as well if possible
+                if (rows.length > 1) {
+                    var randomIndex2 = randomIndex1;
+                    do {
+                        randomIndex2 = Math.floor(Math.random() * rows.length);
+                    } while (randomIndex1 == randomIndex2);
+                    randomSongs.push(rows[randomIndex2]);
+                }
+
+                // -1 to count the one being played
+                var infos = {nbSongLeft: rows.length - 1};
+
+                var randomIndex1 = Math.floor(Math.random() * rows.length);
+
+                var randomSongs = [];
+                randomSongs.push(rows[randomIndex1]);
+
+                // Selecting next song as well if possible
+                if (rows.length > 1) {
+                    var randomIndex2 = randomIndex1;
+                    do {
+                        randomIndex2 = Math.floor(Math.random() * rows.length);
+                    } while (randomIndex1 == randomIndex2);
+                    randomSongs.push(rows[randomIndex2]);
+                }
+
+                // -1 to count the one being played
+                var infos = {nbSongLeft: rows.length - 1};
+
+                // Saving song played id
+                if (req.session.playedSongs == undefined) 
+                    req.session.playedSongs = [randomSongs[0]['id']];
+                else 
+                    req.session.playedSongs.push(randomSongs[0]['id']);
+
+                var response = {
+                    songs: randomSongs,
+                    infos: infos
+                };
+
+                var response = {
+                    songs: randomSongs,
+                    infos: infos
+                };
+
+                res.send(response);
+            }
+            else {
+                var error = {"allSongGenrePlayed": 1};
+                res.send({error});
+            }
         });
     }
-
-    connection.query(SQLquery, function(err, rows, fields) {
-        if (err) throw err;
-
-        if (rows.length > 0) {
-            var randomIndex1 = Math.floor(Math.random() * rows.length);
-
-            var randomSongs = [];
-            randomSongs.push(rows[randomIndex1]);
-
-            // Selecting next song as well if possible
-            if (rows.length > 1) {
-                var randomIndex2 = randomIndex1;
-                do {
-                    randomIndex2 = Math.floor(Math.random() * rows.length);
-                } while (randomIndex1 == randomIndex2);
-                randomSongs.push(rows[randomIndex2]);
-            }
-
-            // -1 to count the one being played
-            var infos = {nbSongLeft: rows.length - 1};
-
-            var randomIndex1 = Math.floor(Math.random() * rows.length);
-
-            var randomSongs = [];
-            randomSongs.push(rows[randomIndex1]);
-
-            // Selecting next song as well if possible
-            if (rows.length > 1) {
-                var randomIndex2 = randomIndex1;
-                do {
-                    randomIndex2 = Math.floor(Math.random() * rows.length);
-                } while (randomIndex1 == randomIndex2);
-                randomSongs.push(rows[randomIndex2]);
-            }
-
-            // -1 to count the one being played
-            var infos = {nbSongLeft: rows.length - 1};
-
-            // Saving song played id
-            if (req.session.playedSongs == undefined) 
-                req.session.playedSongs = [randomSongs[0]['id']];
-            else 
-                req.session.playedSongs.push(randomSongs[0]['id']);
-
-            var response = {
-                songs: randomSongs,
-                infos: infos
-            };
-
-            var response = {
-                songs: randomSongs,
-                infos: infos
-            };
-
-            res.send(response);
-        }
-        else {
-            var error = {"allSongGenrePlayed": 1};
-            res.send({error});
-        }
-    });
 };
 
 // Reset list of songs stored in sessions

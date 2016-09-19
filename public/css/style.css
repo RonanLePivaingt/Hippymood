@@ -12,7 +12,7 @@
     align-items: center;
     justify-content: center;
 }
-hide {
+.hide {
     display:none;
 }
 #player {

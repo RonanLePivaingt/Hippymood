@@ -1,0 +1,28 @@
+#auth { 
+    margin: 0 auto;
+    max-width: 50em;
+    font-family: "Helvetica", "Arial", sans-serif;
+    text-align: center;
+}
+#auth > img {
+    border-radius: 50%;
+    filter: grayscale(100%);
+}
+#auth p { 
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+}
+@media screen and (min-resolution: 2dppx) {
+    #auth p { 
+        font-size: 3em;
+        line-height: 3rem;
+    }   
+}
+/* General class to display/hide elements with opacity animations */
+.hideOpacity {
+    opacity: 0;
+    transition: opacity .25s ease-in-out;
+}
+.showOpacity {
+    opacity: 1;
+}
