@@ -8,6 +8,10 @@ config.db.user = "dbUser";
 config.db.password = "dbPassword";
 config.db.database = "dbName";
 
+config.auth = {};
+config.auth.activate = 1; /* 1 to activate authentification, 0 to disable */
+config.auth.combination = "38384040373937396665";
+
 config.nbTopGenre = 5;
 
 module.exports = config;
