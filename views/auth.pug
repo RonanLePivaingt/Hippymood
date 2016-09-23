@@ -6,17 +6,17 @@ html
     body
         div#auth
             h1 Hippy Mood
-            img(src="/public/img/chips.jpg")
-            form(action="#")
-                div.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
-                    input.mdl-textfield__input(type="text", id="password")
-                    label.mdl-textfield__label(for="password") Mot de passe
+            img#datChips(src="/public/img/chips.jpg")
             p Feel the Chips
+            div#debug
         div#appData.hide
         script.
             var auth = 0;
             var authCombination = "#{auth.combination}";
         script
             include ../public/js/genericFunctions.js
+            include ../public/js/hammer.min.js
+            include ../public/js/jquery-3.1.1.min.js
+            include ../public/js/jquery-ui.min.js
             include ../public/js/auth.js
             include ../public/js/intro.js
