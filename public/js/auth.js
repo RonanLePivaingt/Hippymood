@@ -1,44 +1,45 @@
 document.addEventListener("DOMContentLoaded", function(event) { 
     // Keyboard unlock
-	var combination = '';
+    var combination = '';
 
-	document.onkeyup = function(evt){    
-		var key = evt.keyCode.toString();
-		if (key === "38" && combination != "38") {
-			combination = key;
-			checkCombination();
-		}
-		else if (key === "38") {
-			combination += key;
-			checkCombination();
-		}
-		else if (key === "40") {
-			combination += key;
-			checkCombination();
-		}
-		else if (key === "37") {
-			combination += key;
-			checkCombination();
-		}
-		else if (key === "39") {
-			combination += key;
-			checkCombination();
-		}
-		else if (key === "65") {
-			combination += key;
-			checkCombination();
-		}
-		else if (key === "66") {
-			combination += key;
-			checkCombination();
-		}
-		else combination = '';
-		//console.log("Key : " + key + ", Combination : " + combination);
-	}
+    document.onkeyup = function(evt){    
+        var key = evt.keyCode.toString();
+        if (key === "38" && combination != "38") {
+            combination = key;
+            checkCombination();
+        }
+        else if (key === "38") {
+            combination += key;
+            checkCombination();
+        }
+        else if (key === "40") {
+            combination += key;
+            checkCombination();
+        }
+        else if (key === "37") {
+            combination += key;
+            checkCombination();
+        }
+        else if (key === "39") {
+            combination += key;
+            checkCombination();
+        }
+        else if (key === "65") {
+            combination += key;
+            checkCombination();
+        }
+        else if (key === "66") {
+            combination += key;
+            checkCombination();
+        }
+        else combination = '';
+        //console.log("Key : " + key + ", Combination : " + combination);
+    }
 
-	function checkCombination() {
-		//if (combination === "38384040373937396665") {
-		if (combination === authCombination) {
+    function checkCombination() {
+        //if (combination === "38384040373937396665") {
+        console.log(combination); 
+        if (combination === authCombination) {
             postAjax('/', {combination}, function(data){ 
                 console.log(data); 
                 if (data == "OK") {
@@ -47,12 +48,22 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     display();
                 }
             });
-		}
-	}
+        }
+    }
 
     // Touch unlock
-    $( "#datChips" ).draggable({ revert: true });
-    var myElement = document.getElementById('auth');
+    //$( "#datChips" ).draggable({ revert: true });
+    var wait = 0;
+    function resetWait() {
+        wait = 0;
+    }
+    $( "#datChips" ).draggable({ 
+        revert:  function(dropped) {
+            window.setTimeout(resetWait, 200);
+            return true;
+        }
+    });
+    var myElement = document.getElementById('datChips');
     //var myElement = document.querySelectorAll('window');
 
     // create a simple instance
@@ -65,8 +76,53 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     // listen to events...
     var debug = document.getElementById('debug');
+    var key = "";
     mc.on("panleft panright panup pandown tap press", function(ev) {
-        console.log(ev.type +" gesture detected.")
-        debug.innerHTML = debug.innerHTML +";" + ev.type +" gesture detected.";
+        if (wait === 0) {
+            wait = 1;
+            console.log(ev.type + " gesture detected.")
+            switch (ev.type) {
+                case "panup": // -
+                    key = "38";
+                case "pandown": // -
+                    key = "40";
+                case "panleft": // -
+                    key = "37";
+                case "panright": // -
+                    key = "39";
+            }
+            debug.innerHTML = debug.innerHTML + ";" + ev.type;
+            console.log("Yop " + key);
+
+            if (key === "38" && combination != "38") {
+                combination = key;
+                checkCombination();
+            }
+            else if (key === "38") {
+                combination += key;
+                checkCombination();
+            }
+            else if (key === "40") {
+                combination += key;
+                checkCombination();
+            }
+            else if (key === "37") {
+                combination += key;
+                checkCombination();
+            }
+            else if (key === "39") {
+                combination += key;
+                checkCombination();
+            }
+            else if (key === "65") {
+                combination += key;
+                checkCombination();
+            }
+            else if (key === "66") {
+                combination += key;
+                checkCombination();
+            }
+            else combination = '';
+        }
     });
 });
