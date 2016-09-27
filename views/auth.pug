@@ -7,6 +7,14 @@ html
         div#auth
             h1 Hippy Mood
             img#datChips(src="/public/img/chips.jpg")
+            div#NESbuttons.action-pane.hide
+                .buttons
+                    label.label
+                        | B
+                        button#NESb.button
+                    label.label
+                        | A
+                        button#NESa.button
             p Feel the Chips
             div#debug
         div#appData.hide
@@ -20,3 +28,5 @@ html
             include ../public/js/jquery-ui.min.js
             include ../public/js/auth.js
             include ../public/js/intro.js
+        style
+            include ../public/css/nesButtons.css

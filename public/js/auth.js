@@ -33,12 +33,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
             checkCombination();
         }
         else combination = '';
-        //console.log("Key : " + key + ", Combination : " + combination);
     }
 
     function checkCombination() {
-        //if (combination === "38384040373937396665") {
-        console.log(combination); 
         if (combination === authCombination) {
             postAjax('/', {combination}, function(data){ 
                 console.log(data); 
@@ -52,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     // Touch unlock
-    //$( "#datChips" ).draggable({ revert: true });
     var wait = 0;
     function resetWait() {
         wait = 0;
@@ -77,22 +73,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // listen to events...
     var debug = document.getElementById('debug');
     var key = "";
-    mc.on("panleft panright panup pandown tap press", function(ev) {
+    mc.on("panleft panright panup pandown", function(ev) {
         if (wait === 0) {
             wait = 1;
-            console.log(ev.type + " gesture detected.")
             switch (ev.type) {
-                case "panup": // -
+                case "panup":
                     key = "38";
-                case "pandown": // -
+                    break;
+                case "pandown":
                     key = "40";
-                case "panleft": // -
+                    break;
+                case "panleft":
                     key = "37";
-                case "panright": // -
+                    break;
+                case "panright":
                     key = "39";
+                    break;
+                default:
+                    break;
             }
-            debug.innerHTML = debug.innerHTML + ";" + ev.type;
-            console.log("Yop " + key);
 
             if (key === "38" && combination != "38") {
                 combination = key;
@@ -113,16 +112,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
             else if (key === "39") {
                 combination += key;
                 checkCombination();
-            }
-            else if (key === "65") {
-                combination += key;
-                checkCombination();
-            }
-            else if (key === "66") {
-                combination += key;
-                checkCombination();
+                if (combination == "3838404037393739") {
+                    // Faire apparaître les touches A et B
+                    removeClass(document.getElementById("NESbuttons"), "hide");
+                }
             }
             else combination = '';
         }
     });
+    //
+    // Au clic sur les boutons + évènements 
+    function buttonClick() {
+        if (this.id == "NESb") {
+            combination += "66";
+            checkCombination();
+        }
+        else if (this.id == "NESa") {
+            combination += "65";
+            checkCombination();
+        }
+    }
+
+    document.getElementById("NESb").addEventListener("click", buttonClick, false);;
+    document.getElementById("NESa").addEventListener("click", buttonClick, false);;
 });
