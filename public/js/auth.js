@@ -150,7 +150,4 @@ document.addEventListener("DOMContentLoaded", function(event) {
         combination += "65";
         checkCombination();
     });
-
-    document.getElementById("NESb").addEventListener("click", buttonClick, false);;
-    document.getElementById("NESa").addEventListener("click", buttonClick, false);;
 });
