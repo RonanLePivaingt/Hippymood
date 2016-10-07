@@ -5,8 +5,8 @@
     text-align: center;
 }
 img#datChips {
-    width: 50%;
-    height: 50%;
+    max-width: 50%;
+    max-height: 50%;
 }
 #auth > img {
     border-radius: 50%;

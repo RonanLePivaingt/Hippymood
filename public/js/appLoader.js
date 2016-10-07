@@ -2,6 +2,7 @@ var robotoLoaded = 0
     genericFunctionsLoaded = 0
     appHTMLLoaded = 0
     appHTML = ""
+    authJsLoaded = 0
     ;
 function initGenrePlayer() {
     function display() {
@@ -48,6 +49,17 @@ function initGenrePlayer() {
             el.addEventListener("click", playerInit, false);
         });
     }
+    // Loading auth js when Robot is ready
+    if (robotoLoaded && auth == 0 && authJsLoaded == 0) {
+        authJsLoaded = 1;
+        loadScript(
+            "/public/js/auth.js", 
+            function() {
+                console.log("Auth js loaded");
+            }
+        );
+    }
+
     if (robotoLoaded && genericFunctionsLoaded && appHTMLLoaded) {
         // Stopping timeout and loading
         //window.clearTimeout(loaderTimeout);
