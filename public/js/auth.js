@@ -1,4 +1,47 @@
 document.addEventListener("DOMContentLoaded", function(event) { 
+    // Animations 
+    const burst = new mojs.Burst({
+        degree:   120,
+        radius:   { 10: 25 },
+        count:    5,
+        children: {
+            shape:        'line',
+            radius:       7,
+            radiusY:      0,
+            scale:        1.5,
+            strokeDasharray: '100%',
+            strokeDashoffset: { '-100%' : '100%' },
+            stroke:       '#F9DD5E' ,
+            easing:       'linear.none',
+            duration:     300
+        }
+    });
+
+    function upAnim() {
+        burst
+            .tune({ x: 0, y: -200, angle: 300  })
+            .replay();
+    }
+    function downAnim() {
+        burst
+            .tune({ x: 0, y: -80, angle: 120 })
+            .replay();
+    }
+    function leftAnim() {
+        burst
+            .tune({ x: -70, y: -140, angle: 210  })
+            .replay();
+    }
+    function rightAnim() {
+        burst
+            .tune({ x: 70, y: -140, angle: 30  })
+            .replay();
+    }
+
+    document.addEventListener( 'click', function (e) {
+        upAnim();
+    });
+
     // Keyboard unlock
     var combination = '';
 
@@ -7,22 +50,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
         if (key === "38" && combination != "38") {
             combination = key;
             checkCombination();
+            upAnim();
         }
         else if (key === "38") {
             combination += key;
             checkCombination();
+            upAnim();
         }
         else if (key === "40") {
             combination += key;
             checkCombination();
+            downAnim();
         }
         else if (key === "37") {
             combination += key;
             checkCombination();
+            leftAnim();
         }
         else if (key === "39") {
             combination += key;
             checkCombination();
+            rightAnim();
         }
         else if (key === "65") {
             combination += key;
@@ -54,12 +102,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
     function resetWait() {
         wait = 0;
     }
+    /*
     $( "#datChips" ).draggable({ 
         revert:  function(dropped) {
             window.setTimeout(resetWait, 200);
             return true;
         }
     });
+    */
     var myElement = document.getElementById('datChips');
     //var myElement = document.querySelectorAll('window');
 
@@ -97,22 +147,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
             if (key === "38" && combination != "38") {
                 combination = key;
                 checkCombination();
+                upAnim();
             }
             else if (key === "38") {
                 combination += key;
                 checkCombination();
+                upAnim();
             }
             else if (key === "40") {
                 combination += key;
                 checkCombination();
+                downAnim();
             }
             else if (key === "37") {
                 combination += key;
                 checkCombination();
+                leftAnim();
             }
             else if (key === "39") {
                 combination += key;
                 checkCombination();
+                rightAnim();
                 if (combination == "3838404037393739") {
                     // Faire apparaître les touches A et B
                     removeClass(document.getElementById("NESbuttons"), "hide");
