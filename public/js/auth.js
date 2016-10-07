@@ -17,22 +17,92 @@ document.addEventListener("DOMContentLoaded", function(event) {
         }
     });
 
+    const DURATION = 400
+
+    const smoke = new mojs.Burst({
+        degree:   0,
+        count:    3,
+        radius:   { 10: 100 },
+        children: {
+            fill:       'cyan',
+            pathScale:  'rand(0.5, 1)',
+            radius:     'rand(12, 15)',
+            swirlSize:  'rand(10, 15)',
+            swirlFrequency: 'rand(2, 4)',
+            direction:  [ 1, -1 ],
+            duration:   `rand(${1*DURATION}, ${2*DURATION})`,
+            delay:      'rand(0, 75)',
+            easing:     'quad.out',
+            isSwirl:    true,
+            isForce3d:  true,
+        }
+    });
+        
     function upAnim() {
+        smoke
+            .tune({ 
+                children: { 
+                    fill: 'cyan'
+                },
+                x: 0, 
+                y: -200, 
+                degree: 0, 
+                radius: { 10: 100 } 
+            })
+            .generate()
+            .replay();
         burst
-            .tune({ x: 0, y: -200, angle: 300  })
+            .tune({ x: 0, y: -200 })
+            .tune({ x: 1, y: -200, angle: 300  })
             .replay();
     }
     function downAnim() {
+        smoke
+            .tune({ 
+                children: { 
+                    fill: 'cyan'
+                },
+                x: 0, 
+                y: -80, 
+                degree: 0, 
+                radius: { 10: -100 } 
+            })
+            .generate()
+            .replay();
         burst
             .tune({ x: 0, y: -80, angle: 120 })
             .replay();
     }
     function leftAnim() {
+        smoke
+            .tune({ 
+                children: { 
+                    fill: 'cyan'
+                },
+                x: -70, 
+                y: -140, 
+                degree: 180, 
+                radius: { 20: -100 } 
+            })
+            .generate()
+            .replay();
         burst
             .tune({ x: -70, y: -140, angle: 210  })
             .replay();
     }
     function rightAnim() {
+        smoke
+            .tune({ 
+                children: { 
+                    fill: 'cyan'
+                },
+                x: 70, 
+                y: -140, 
+                degree: 180, 
+                radius: { 100: 0 } 
+            })
+            .generate()
+            .replay();
         burst
             .tune({ x: 70, y: -140, angle: 30  })
             .replay();
@@ -127,6 +197,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     mc.on("panleft panright panup pandown", function(ev) {
         if (wait === 0) {
             wait = 1;
+            window.setTimeout(resetWait, 400);
             switch (ev.type) {
                 case "panup":
                     key = "38";
