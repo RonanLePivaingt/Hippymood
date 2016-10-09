@@ -83,6 +83,8 @@ const smoke = new mojs.Burst({
 });
     
 function upAnim() {
+    addClass(datChips, "shake-vertical");
+    window.setTimeout(removeClass, 200, datChips, "shake-vertical");
     smoke
         .tune({ 
             children: { 
@@ -104,6 +106,8 @@ function upAnim() {
         .replay();
 }
 function downAnim() {
+    addClass(datChips, "shake-vertical");
+    window.setTimeout(removeClass, 200, datChips, "shake-vertical");
     smoke
         .tune({ 
             children: { 
@@ -125,6 +129,8 @@ function downAnim() {
         .replay();
 }
 function leftAnim() {
+    addClass(datChips, "shake-horizontal");
+    window.setTimeout(removeClass, 200, datChips, "shake-horizontal");
     smoke
         .tune({ 
             children: { 
@@ -146,6 +152,8 @@ function leftAnim() {
         .replay();
 }
 function rightAnim() {
+    addClass(datChips, "shake-horizontal");
+    window.setTimeout(removeClass, 200, datChips, "shake-horizontal");
     smoke
         .tune({ 
             children: { 
