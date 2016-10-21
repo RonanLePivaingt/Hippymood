@@ -81,6 +81,17 @@ const smoke = new mojs.Burst({
         isForce3d:  true,
     }
 });
+
+var shape = new mojs.Shape({
+    shape:        'circle',
+    radius:       datChipsPos.width/2,
+    duration:     200,
+    easing:     'quad.out',
+    fill:         'transparent',
+    stroke:       '#F64040',
+    strokeWidth:  4,
+    isShowEnd:  false
+});
     
 function upAnim() {
     addClass(datChips, "shake-vertical");
@@ -175,15 +186,34 @@ function rightAnim() {
         .replay();
 }
 
-document.addEventListener( 'click', function (e) {
-    upAnim();
-});
+function failAnim() {
+    addClass(datChips, "fail");
+    window.setTimeout(removeClass, 200, datChips, "fail");
+    console.log(datChipsCenter);
+    shape
+        .tune({ 
+            x :datChipsCenter.x - windowCenter.x,
+            y :datChipsCenter.y - windowCenter.y,
+        })
+        .play();
+}
 
 // Keyboard unlock
 var combination = '';
 
-document.onkeyup = function(evt){    
-    var key = evt.keyCode.toString();
+function addCombination(evt, predefinedKey) {
+    var key;
+
+     //use this to determine whether predefinedKey was passed or not
+    if (arguments.length == 1) {
+        key = evt.keyCode.toString();
+        console.log("Oh my " + key);
+    }
+    else {
+        key = arguments[1]; // take second argument
+        console.log("Oh my touch " + key);
+    }
+
     if (key === "38" && combination != "38") {
         combination = key;
         checkCombination();
@@ -208,6 +238,10 @@ document.onkeyup = function(evt){
         combination += key;
         checkCombination();
         rightAnim();
+        if (combination == "3838404037393739") {
+            // Faire apparaître les touches A et B
+            removeClass(document.getElementById("NESbuttons"), "hide");
+        }
     }
     else if (key === "65") {
         combination += key;
@@ -217,7 +251,17 @@ document.onkeyup = function(evt){
         combination += key;
         checkCombination();
     }
-    else combination = '';
+    else {
+        if (combination.length >= 8) {
+            failAnim();
+            addClass(document.getElementById("NESbuttons"), "hide");
+        }
+        combination = '';
+    }
+}
+document.onkeyup = function(evt) {    
+    addCombination(evt);
+    console.log("Clavier : " + combination);
 }
 
 function checkCombination() {
@@ -260,58 +304,29 @@ mc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
 
 // listen to events...
 var debug = document.getElementById('debug');
-var key = "";
 mc.on("panleft panright panup pandown", function(ev) {
     if (wait === 0) {
+        var touchKey ="";
         wait = 1;
         window.setTimeout(resetWait, 400);
         switch (ev.type) {
             case "panup":
-                key = "38";
+                touchKey = "38";
                 break;
             case "pandown":
-                key = "40";
+                touchKey = "40";
                 break;
             case "panleft":
-                key = "37";
+                touchKey = "37";
                 break;
             case "panright":
-                key = "39";
+                touchKey = "39";
                 break;
             default:
                 break;
         }
 
-        if (key === "38" && combination != "38") {
-            combination = key;
-            checkCombination();
-            upAnim();
-        }
-        else if (key === "38") {
-            combination += key;
-            checkCombination();
-            upAnim();
-        }
-        else if (key === "40") {
-            combination += key;
-            checkCombination();
-            downAnim();
-        }
-        else if (key === "37") {
-            combination += key;
-            checkCombination();
-            leftAnim();
-        }
-        else if (key === "39") {
-            combination += key;
-            checkCombination();
-            rightAnim();
-            if (combination == "3838404037393739") {
-                // Faire apparaître les touches A et B
-                removeClass(document.getElementById("NESbuttons"), "hide");
-            }
-        }
-        else combination = '';
+        addCombination(null, touchKey);
     }
 });
 

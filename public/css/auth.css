@@ -31,16 +31,30 @@ img#datChips {
     opacity: 1;
 }
 /* Animations */
+.fail {
+    animation-name: fail;
+    animation-duration: 200ms;
+    animation-timing-function: ease-in-out;
+    animation-delay: 0s;
+}
+@keyframes fail {
+    10% {
+        transform: scale(0.7);
+    }
+    98% {
+        transform: scale(1);
+    }
+}
 .shake-vertical {
     animation-name: shake-vertical;
-    animation-duration: 100ms;
+    animation-duration: 400ms;
     animation-iteration-count: infinite;
     animation-timing-function: ease-in-out;
     animation-delay: 0s;
 }
 .shake-horizontal {
     animation-name: shake-horizontal;
-    animation-duration: 100ms;
+    animation-duration: 400ms;
     animation-iteration-count: infinite;
     animation-timing-function: ease-in-out;
     animation-delay: 0s;
