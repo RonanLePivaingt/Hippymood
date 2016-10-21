@@ -323,31 +323,16 @@ mc.on("panleft panright panup pandown", function(ev) {
     }
 });
 
-// Au clic sur les boutons + évènements 
-function buttonClick() {
-    if (this.id == "NESb") {
-        combination += "66";
-        checkCombination();
-    }
-    else if (this.id == "NESa") {
-        combination += "65";
-        checkCombination();
-    }
-}
-// Idem ci dessus mais avec le tactile
 var myElement = document.getElementById('NESb');
 var mcB = new Hammer(myElement);
 mcB.add( new Hammer.Tap({ event: 'tap' }) );
 mcB.on("tap", function(ev) {
-    console.log("Tap B");
-    combination += "66";
-    checkCombination();
+    addCombination(null, "66");
 });
+
 var myElement = document.getElementById('NESa');
 var mcA = new Hammer(myElement);
 mcA.add( new Hammer.Tap({ event: 'tap' }) );
 mcA.on("tap", function(ev) {
-    console.log("Tap A");
-    combination += "65";
-    checkCombination();
+    addCombination(null, "65");
 });
