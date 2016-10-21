@@ -39,9 +39,6 @@ var chipsRight = {
     x: datChipsCenter.x - windowCenter.x + (datChipsPos.width / 2),
     y: datChipsCenter.y - windowCenter.y,
 }
-console.log(datChipsCenter);
-console.log(windowCenter);
-console.log(chipsUp);
 
 // Animations 
 const burst = new mojs.Burst({
@@ -189,7 +186,6 @@ function rightAnim() {
 function failAnim() {
     addClass(datChips, "fail");
     window.setTimeout(removeClass, 200, datChips, "fail");
-    console.log(datChipsCenter);
     shape
         .tune({ 
             x :datChipsCenter.x - windowCenter.x,
@@ -207,14 +203,20 @@ function addCombination(evt, predefinedKey) {
      //use this to determine whether predefinedKey was passed or not
     if (arguments.length == 1) {
         key = evt.keyCode.toString();
-        console.log("Oh my " + key);
     }
     else {
         key = arguments[1]; // take second argument
-        console.log("Oh my touch " + key);
     }
 
-    if (key === "38" && combination != "38") {
+    if (combination.length > 1)
+        console.log("Comparaison : " + combination + ", " +  authCombination.substring(0, combination.length));
+
+    if (combination.length > 0 && combination + key != authCombination.substring(0, combination.length + 2)) {
+        failAnim();
+        addClass(document.getElementById("NESbuttons"), "hide");
+        combination = '';
+    }
+    else if (key === "38" && combination != "38") {
         combination = key;
         checkCombination();
         upAnim();
@@ -251,21 +253,12 @@ function addCombination(evt, predefinedKey) {
         combination += key;
         checkCombination();
     }
-    else {
-        if (combination.length >= 8) {
-            failAnim();
-            addClass(document.getElementById("NESbuttons"), "hide");
-        }
-        combination = '';
-    }
 }
 document.onkeyup = function(evt) {    
     addCombination(evt);
-    console.log("Clavier : " + combination);
 }
 
 function checkCombination() {
-    console.log(combination + " - " + authCombination);
     if (combination === authCombination) {
         postAjax('/', {combination}, function(data){ 
             console.log(data); 
