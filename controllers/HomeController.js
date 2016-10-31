@@ -25,16 +25,24 @@ var connection = mysql.createConnection({
 });
 
 exports.Index = function(req, res){
+    // Redirecting to authentification page if choosen
     if (config.auth.activate) {
         if (req.session.auth)
             res.render('index');
         else {
             var data = {
                 auth: {
-                    combination: config.auth.combination
+                    combination: config.auth.combination,
+                    img: config.auth.img,
+                    greetings: config.auth.greetings
                 }
             };
-            res.render('auth', data);
+            if (config.auth.customTemplate) {
+                res.render(config.auth.customTemplate, data);
+            }
+            else {
+                res.render("auth", data);
+            }
         }
     }
     else
@@ -188,7 +196,7 @@ exports.ResetSessions = function(req, res){
 
 // Reset list of songs stored in sessions
 exports.ResetDatabase = function(req, res){
-    connection.query("DELETE FROM genreAssociation; DELETE FROM genres; DELETE FROM songs; DELETE FROM artists; DELETE FROM albums; DELETE FROM sessions;", function(err, results) {
+    connection.query("DELETE FROM genreAssociation; DELETE FROM genres; DELETE FROM songs; DELETE FROM artists; DELETE FROM albums;", function(err, results) {
         res.send("Bim bim");
     });
 };
