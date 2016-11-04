@@ -64,14 +64,18 @@ function playerVueInit() {
                 this.searchResults = data.searchResults;
             },
             playSearchResult: function(index) {
-                console.log("Play the serached song no : " + index);
+                // Getting data of the choosen song
                 data = this.searchResults[index];
+
+                // Playing song
                 playerHTML5.setAttribute("src", data.path);
+
+                // Updating vue data
                 this.title = data.song
                 this.artist = data.artist
                 this.album = data.album
                 this.path = data.path
-                this.genre = "Mood : pas géré pour le moment"
+                this.genre = "Mood : " + data.genre
                 this.filename = filenameFromPath(data.path)
 
                 // Switching to the player tab

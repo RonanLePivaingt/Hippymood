@@ -146,25 +146,25 @@ exports.Genre = function(req, res){
 // Function to get song infos by submitting a genre
 exports.Search = function(req, res){
     var keywords = req.params.keywords;
+    var keywordsUC = keywords.toUpperCase();
 
-    var SQLquery = 'SELECT songs.id, songs.name AS song, artists.name AS artist, songs.path, albums.name AS album ';
-        SQLquery += 'FROM songs, genreAssociation, artists, albums ';
+    var SQLquery = 'SELECT songs.id, songs.name AS song, artists.name AS artist, songs.path, albums.name AS album, genres.name AS genre ';
+        SQLquery += 'FROM songs, genreAssociation, genres, artists, albums ';
         SQLquery += 'WHERE songs.id = genreAssociation.id_songs ';
+        SQLquery += 'AND genres.id = genreAssociation.id ';
         SQLquery += 'AND songs.id_artists = artists.id ';
         SQLquery += 'AND songs.id_albums = albums.id ';
         SQLquery += 'AND ( ';
-        SQLquery += 'songs.name LIKE "%' + keywords + '%" ';
-        SQLquery += 'OR artists.name LIKE "%' + keywords + '%" ';
-        SQLquery += 'OR albums.name LIKE "%' + keywords + '%" ';
+        SQLquery += 'UCASE(songs.name) LIKE "%' + keywordsUC + '%" ';
+        SQLquery += 'OR UCASE(artists.name) LIKE "%' + keywordsUC + '%" ';
+        SQLquery += 'OR UCASE(albums.name) LIKE "%' + keywordsUC + '%" ';
         SQLquery += ') ';
 
     connection.query(SQLquery, function(err, rows, fields) {
         if (err) {
-            console.log("Dans le if");
             console.log(err);
         }
         else {
-            console.log("Dans le else");
             console.log(rows);
             var data = {err: ''};
             if (rows.length === 0) {
