@@ -149,6 +149,14 @@ exports.Genre = function(req, res){
                 // -1 to count the one being played
                 var infos = {nbSongLeft: rows.length - 1};
 
+                // Resetting the list of played songs if the delay configured in config is passed
+                if (req.session.lastVisit != undefined) {
+                    if(Date.now() - req.session.lastVisit > config.songList.timeSinceVisitReset) {
+                        req.session.playedSongs = undefined;
+                    }
+                }
+                req.session.lastVisit = Date.now();
+
                 // Saving song played id
                 if (req.session.playedSongs == undefined) 
                     req.session.playedSongs = [randomSongs[0]['id']];
