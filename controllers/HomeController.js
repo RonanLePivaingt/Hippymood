@@ -37,11 +37,11 @@ exports.Index = function(req, res){
                     greetings: config.auth.greetings
                 }
             };
-            if (config.auth.customTemplate) {
-                res.render(config.auth.customTemplate, data);
+            if (config.theme.name) {
+                res.render("../themes/" + config.theme.name + "/auth", data);
             }
             else {
-                res.render("auth", data);
+                res.render("../themes/default/auth", data);
             }
         }
     }

@@ -1,0 +1,5 @@
+# Ignore every themes except the default
+*
+
+!.gitignore
+!default

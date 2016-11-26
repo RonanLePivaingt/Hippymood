@@ -2,15 +2,6 @@
 Web app to play your music smoothly by genre/mood.
 
 # Roadmap
-## 0.3 (1st release to friends!)
-- Improve genre and next genre display
-- About
-    - Made with love by me
-    - Technology used + link to github
-    - Current version + display changelog
-- Add basic authentification with a combination to restrict access
-    - Key combination + animation for desktop
-    - Simple password for mobile
 
 ## 0.whoKnows
 - Support multiple mood per song
