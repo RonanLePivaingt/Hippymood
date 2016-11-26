@@ -164,13 +164,6 @@
         height: 200px;
     }
     */
-    /* Genres list */
-    .genreList button span {
-        font-size: 1rem;
-    }
-    .genreList .mdl-button {
-        height: 3rem;
-    }
 }
 
 /*

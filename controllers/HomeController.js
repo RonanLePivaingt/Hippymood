@@ -28,7 +28,12 @@ exports.Index = function(req, res){
     // Redirecting to authentification page if choosen
     if (config.auth.activate) {
         if (req.session.auth)
-            res.render('index');
+            if (config.theme.name) {
+                res.render("../themes/" + config.theme.name + "/index");
+            }
+            else {
+                res.render("../themes/default/index");
+            }
         else {
             var data = {
                 auth: {
