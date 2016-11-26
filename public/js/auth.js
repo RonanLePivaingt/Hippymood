@@ -213,7 +213,7 @@ function addCombination(evt, predefinedKey) {
 
     if (combination.length > 0 && combination + key != authCombination.substring(0, combination.length + 2)) {
         failAnim();
-        addClass(document.getElementById("NESbuttons"), "hide");
+        addClass(document.getElementById("NESgamepad"), "hide");
         combination = '';
     }
     else if (key === "38" && combination != "38") {
@@ -242,7 +242,7 @@ function addCombination(evt, predefinedKey) {
         rightAnim();
         if (combination == "3838404037393739") {
             // Faire apparaître les touches A et B
-            removeClass(document.getElementById("NESbuttons"), "hide");
+            removeClass(document.getElementById("NESgamepad"), "hide");
         }
     }
     else if (key === "65") {
