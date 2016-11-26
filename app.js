@@ -40,7 +40,7 @@ app.set('view engine', 'pug');
 
 app.use('/music', express.static('music'));
 app.use('/public', express.static('public'));
-
+app.use('/assets', express.static('themes/' + config.theme.name));
 
 // send app to router
 require('./router')(app);
