@@ -1,7 +1,8 @@
 var robotoLoaded = 0
     genericFunctionsLoaded = 0
     appHTMLLoaded = 0
-    appHTML = "";
+    appHTML = ""
+    authJsLoaded = 0
     ;
 function initGenrePlayer() {
     function display() {
@@ -39,7 +40,8 @@ function initGenrePlayer() {
 
         // Hide spinner when app is loaded
         var appSpinner = document.getElementById("appLoadSpinner");
-        addClass(appSpinner,"hideOpacity");
+        if (appSpinner)
+            addClass(appSpinner,"hideOpacity");
 
         // Update UI on first genre click
         var buttons = document.querySelectorAll("div.genreList button");
@@ -47,15 +49,26 @@ function initGenrePlayer() {
             el.addEventListener("click", playerInit, false);
         });
     }
+    // Loading auth js when Robot is ready
+    if (robotoLoaded && auth == 0 && authJsLoaded == 0) {
+        authJsLoaded = 1;
+        loadScript(
+            "/public/js/auth.js", 
+            function() {
+                console.log("Auth js loaded");
+            }
+        );
+    }
+
     if (robotoLoaded && genericFunctionsLoaded && appHTMLLoaded) {
         // Stopping timeout and loading
-        window.clearTimeout(loaderTimeout);
+        //window.clearTimeout(loaderTimeout);
         display();
     }
     else {
         // Starting 
-        if (typeof loaderTimeout == 'undefined')
-            loaderTimeout = window.setTimeout(display, 5000);
+        //if (typeof loaderTimeout == 'undefined')
+            //loaderTimeout = window.setTimeout(display, 5000);
     }
 }
 loadScript("/public/js/fontdetect.js", function() {

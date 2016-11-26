@@ -44,37 +44,37 @@ function keyboardEvents() {
     });
 }
 
-var combination = '';
+var adminCombination = '';
 
-function checkCombination() {
-    if (combination === "6568777378") {
+function checkAdminCombination() {
+    if (adminCombination === "6568777378") {
         setAdmin();
     }
 }
 
 window.addEventListener("keyup", function(event) {
-    var key = event.keyCode.toString();
-    if (key === "65") {
-        combination = key;
-        checkCombination();
+    var adminKey = event.keyCode.toString();
+    if (adminKey === "65") {
+        adminCombination = adminKey;
+        checkAdminCombination();
     }
-    else if (key === "68") {
-        combination += key;
-        checkCombination();
+    else if (adminKey === "68") {
+        adminCombination += adminKey;
+        checkAdminCombination();
     }
-    else if (key === "77") {
-        combination += key;
-        checkCombination();
+    else if (adminKey === "77") {
+        adminCombination += adminKey;
+        checkAdminCombination();
     }
-    else if (key === "73") {
-        combination += key;
-        checkCombination();
+    else if (adminKey === "73") {
+        adminCombination += adminKey;
+        checkAdminCombination();
     }
-    else if (key === "78") {
-        combination += key;
-        checkCombination();
+    else if (adminKey === "78") {
+        adminCombination += adminKey;
+        checkAdminCombination();
     }
-    else combination = '';
+    else adminCombination = '';
 });
 
 keyboardEvents();

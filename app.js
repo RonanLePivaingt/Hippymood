@@ -3,6 +3,10 @@ var app = express();
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
 
+var bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 var config = require('./config');
 var options = {
     host: config.db.host,
@@ -10,8 +14,6 @@ var options = {
     user: config.db.user,
     password: config.db.password,
     database: config.db.database,
-    checkExpirationInterval: 900000,// How frequently expired sessions will be cleared; milliseconds.
-    expiration: 86400000,// The maximum age of a valid session; milliseconds.
     createDatabaseTable: true,// Whether or not to create the sessions database table, if one does not already exist.
     schema: {
         tableName: 'sessions',
@@ -38,7 +40,7 @@ app.set('view engine', 'pug');
 
 app.use('/music', express.static('music'));
 app.use('/public', express.static('public'));
-
+app.use('/assets', express.static('themes/' + config.theme.name));
 
 // send app to router
 require('./router')(app);
