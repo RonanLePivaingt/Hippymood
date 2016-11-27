@@ -1,8 +1,13 @@
 div.mdl-grids.searchList#search
-    div.searchResult(v-for="search in searchResults")
+    div#backToPlayer
+        button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.mdl-button--accent(onclick="searchPlayerTransition();")
+            i.material-icons keyboard_backspace
+            span Revenir au lecteur
+        div#searchResultSpinner.mdl-spinner.mdl-js-spinner.is-active.hide
+    div.searchResult
         ul.demo-list-three.mdl-list
-            a(href="#/", v-on:click="playSearchResult($index)" , data-search-index="{{ search.song }}", data-song="{{ search.song }}", data-artist="{{ search.artist }}", data-album="{{ search.album }}", data-path="{{ search.path }}" data-genreId="{{ search.genreId }}")
-                li.mdl-list__item.mdl-list__item--three-line
+            li.mdl-list__item.mdl-list__item--three-line(v-for="search in searchResults")
+                a(href="#/", v-on:click="playSearchResult($index)" , data-search-index="{{ search.song }}", data-song="{{ search.song }}", data-artist="{{ search.artist }}", data-album="{{ search.album }}", data-path="{{ search.path }}" data-genreId="{{ search.genreId }}")
                     span.mdl-list__item-primary-content
                         i.material-icons.mdl-list__item-avatar play_circle_filled
                         |  
@@ -10,3 +15,5 @@ div.mdl-grids.searchList#search
                         |  
                         span.mdl-list__item-text-body
                             | {{ search.artist }}, {{ search.album }}
+                        a.searchGenre.mdl-list__item-secondary-action(href='#', v-on:click="playSearchResult($index)")
+                            button.mdl-list__item-secondary-action.mdl-button.mdl-js-button.mdl-button--raised {{ search.genre }}

@@ -108,9 +108,13 @@
     }
     /* Wide card with share menu button */
     /* Player */
-    .demo-card-wide.mdl-card, .genreList, .searchList {
+    .demo-card-wide.mdl-card, .genreList {
         width: 512px;
         margin: 0 auto; 
+    }
+    .searchList {
+        margin: 0 auto;
+        max-width: 50em;
     }
     #player h2 {
         font-size: 2rem;
@@ -321,4 +325,27 @@ img.bigger {
 .searchResult a {
     text-decoration: none;
     cursor: pointer;
+}
+#backToPlayer {
+    text-align: center;
+}
+#backToPlayer button i {
+    margin-bottom: 12px;
+    margin-right: 12px;
+}
+#backToPlayer div.mdl-spinner {
+    display: block;
+    margin: 1rem auto;
+}
+div#searchResultSpinner.hide {
+    display: none;
+}
+#searchFormIntro {
+    margin: 0 auto;
+}
+a.searchGenre {
+    margin-left: auto;
+}
+div.mdl-grid {
+    padding: 0px;
 }

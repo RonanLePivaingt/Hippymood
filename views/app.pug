@@ -1,9 +1,17 @@
-div#title.mdl-grid(style="display:none")
+div.mdl-grid
+    form#searchFormIntro(action="/Search")
+        div#searchInputIntroDiv.mdl-textfield.mdl-js-textfield.mdl-textfield--expandable
+          label.mdl-button.mdl-js-button.mdl-button--icon(for="searchInputIntro")
+              i#searchIcon.material-icons search
+          div.mdl-textfield__expandable-holder
+              input#searchInputIntro.mdl-textfield__input(type="text")
+              label.mdl-textfield__label(for="sample-expandable") Expandable Input
+div#title.mdl-grid.hide
     h1 Hippy Mood
 include ./includes/about.pug
-div#app.mdl-grid(style="display:none")
+div#app.mdl-grid.hide
     div.mdl-tabs.mdl-js-tabs.mdl-js-ripple-effect
-        div.mdl-tabs__tab-bar
+        div.mdl-tabs__tab-bar.hide
             a.mdl-tabs__tab.is-active(href="#player-panel") Lecteur
             a.mdl-tabs__tab(href="#search-panel") Recherche
         div#player-panel.mdl-tabs__panel.is-active

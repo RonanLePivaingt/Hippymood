@@ -101,11 +101,13 @@ loadScript(
 /* Function to display player and hide intro text */
 var playerInit = function (event) {
     var intro = document.getElementById("intro");
-    intro.setAttribute("style", "display: none");
     var app = document.getElementById("app");
-    app.style.display = "";
     var title = document.getElementById("title");
-    title.style.display = "";
+    var searchFormIntro= document.getElementById("searchFormIntro");
+    addClass(intro, "hide");
+    addClass(searchFormIntro, "hide");
+    removeClass(app, "hide");
+    removeClass(title, "hide");
 
     window.removeEventListener('click',playerInit, false );
 };

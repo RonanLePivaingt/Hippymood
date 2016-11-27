@@ -14,9 +14,10 @@
     }   
 }
 /* General class to display/hide elements with opacity animations */
-.hideOpacity {
+div.hideOpacity {
     opacity: 0;
-    transition: opacity .25s ease-in-out;
+    height: 0px;
+    transition: all .25s ease-in-out;
 }
 .showOpacity {
     opacity: 1;

@@ -62,6 +62,7 @@ function playerVueInit() {
             },
             search: function(data) {
                 this.searchResults = data.searchResults;
+                componentHandler.upgradeDom();
             },
             playSearchResult: function(index) {
                 // Getting data of the choosen song
@@ -80,14 +81,12 @@ function playerVueInit() {
                 this.filename = filenameFromPath(data.path)
 
                 // Switching to the player tab
-                var playerButton = document.querySelectorAll('.mdl-tabs__tab[href="#player-panel"]')[0];
-                var playerPanel = document.getElementById("player-panel");
-                var searchButton = document.querySelectorAll('.mdl-tabs__tab[href="#search-panel"]')[0];
-                var searchPanel = document.getElementById("search-panel");
-                removeClass(searchButton, "is-active");
-                removeClass(searchPanel, "is-active");
-                addClass(playerPanel, "is-active");
-                addClass(playerButton, "is-active");
+                searchPlayerTransition();
+
+                // Resetting input on player panel and hiding the nav bar
+                var searchInputDiv = document.getElementById("searchInputDiv");
+                removeClass(searchInputDiv, "is-dirty");
+
             },
             updateUi: function() {
                 this.title = currentSong.song
@@ -109,6 +108,16 @@ function playerVueInit() {
 }
 playerVueInit();
 
+function searchPlayerTransition() {
+                var playerButton = document.querySelectorAll('.mdl-tabs__tab[href="#player-panel"]')[0];
+                var playerPanel = document.getElementById("player-panel");
+                var searchButton = document.querySelectorAll('.mdl-tabs__tab[href="#search-panel"]')[0];
+                var searchPanel = document.getElementById("search-panel");
+                removeClass(searchButton, "is-active");
+                removeClass(searchPanel, "is-active");
+                addClass(playerPanel, "is-active");
+                addClass(playerButton, "is-active");
+}
 /*
  * SnackBar functions
  */
@@ -382,14 +391,44 @@ function search(e) {
     addClass(searchPanel, "is-active");
     addClass(searchButton, "is-active");
 
+    // Displaying spinner
+    var searchResultSpinner = document.getElementById("searchResultSpinner");
+    removeClass(searchResultSpinner, "hide");
+
     // Getting search keywords 
-    var searchInput = document.getElementById('searchInput');
+    var searchInput = this.querySelectorAll("input")[0];
     keywords = searchInput.value;
+
+    // if intro search, display player and mask this search field
+    if (this.getAttribute("id") == "searchFormIntro") {
+        var intro = document.getElementById("intro");
+        var title = document.getElementById("title");
+        var app = document.getElementById("app");
+
+        addClass(this, "hide");
+        addClass(intro, "hide");
+        removeClass(title, "hide");
+        removeClass(app, "hide");
+
+        // Hide the back to player button if no song was played yet
+        var backToPlayerButton = document.getElementById("backToPlayer");
+        addClass(backToPlayerButton, "hide");
+    }
+    else {
+        // Show the back to player button if a song was already played
+        var backToPlayerButton = document.getElementById("backToPlayer");
+        removeClass(backToPlayerButton, "hide");
+    }
 
     getAjax("/search/" + keywords, function(data){ 
         searchResults = JSON.parse(data);
         console.log(searchResults);
+
         playerVue.search(searchResults);
+
+        // Hiding spinner
+        var searchResultSpinner = document.getElementById("searchResultSpinner");
+        addClass(searchResultSpinner, "hide");
 
         // Adding events to the links
         var searchResultsLinks = document.querySelectorAll("div.searchResult > a");
@@ -397,13 +436,14 @@ function search(e) {
         for (o = 0; o++; o < searchResultsLinks.length) {
             searchResultsLinks[o].addEventListener("click", playPause, false);
         }
+
+        // Resetting search input expand
+        var searchInputDiv = document.getElementById("searchInputDiv");
+        removeClass(searchInputDiv, "is-dirty");
     });
 
     // You must return false to prevent the default form behavior
     return false;
-}
-function playSearchResult() {
-    console.log("C'est parti mon kiki !");
 }
 
 var searchForm = document.getElementById('searchForm');
@@ -411,4 +451,10 @@ if (searchForm.attachEvent) {
     searchForm.attachEvent("submit", search);
 } else {
     searchForm.addEventListener("submit", search);
+}
+var searchFormIntro = document.getElementById('searchFormIntro');
+if (searchFormIntro.attachEvent) {
+    searchFormIntro.attachEvent("submit", search);
+} else {
+    searchFormIntro.addEventListener("submit", search);
 }
