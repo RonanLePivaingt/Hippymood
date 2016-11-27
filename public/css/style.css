@@ -119,11 +119,6 @@
         font-size: 1.5rem;
     }
     /* Player icons & buttons */
-    #player i.material-icons {
-        font-size: 3em;
-        width: unset;
-        line-height: unset;
-    }
     #playerButtons button { 
         height: 4em;
         width: 4em;
@@ -134,6 +129,13 @@
         width: unset;
         line-height: unset;
     }
+    /*
+    #player i.material-icons.meta {
+        font-size: 3em;
+        width: unset;
+        line-height: unset;
+    }
+    */
     /* Player menu */
     #menu li {
         font-size: 2rem;
@@ -144,6 +146,7 @@
         width: 3rem;
     }
     */
+/*
     #demo-menu-lower-right {
         height: 4rem;
         width: 4rem;
@@ -154,6 +157,7 @@
         line-height: unset;
         transform: translate(-50%, -50%);
     }
+    */
     /* Interface d'admin */
     #admin {
         width: 512px;
@@ -314,6 +318,7 @@ img.bigger {
 #menu form {
     display: inline-block;
 }
-#menu #searchIcon {
-    font-size: 1rem;
+.searchResult a {
+    text-decoration: none;
+    cursor: pointer;
 }

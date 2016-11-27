@@ -1,4 +1,12 @@
 div.mdl-grids.searchList#search
     div.searchResult(v-for="search in searchResults")
-        a(href="#/", v-on:click="playSearchResult($index)" , data-search-index="{{ search.song }}", data-song="{{ search.song }}", data-artist="{{ search.artist }}", data-album="{{ search.album }}", data-path="{{ search.path }}")
-            p {{ search.song }}
+        ul.demo-list-three.mdl-list
+            a(href="#/", v-on:click="playSearchResult($index)" , data-search-index="{{ search.song }}", data-song="{{ search.song }}", data-artist="{{ search.artist }}", data-album="{{ search.album }}", data-path="{{ search.path }}" data-genreId="{{ search.genreId }}")
+                li.mdl-list__item.mdl-list__item--three-line
+                    span.mdl-list__item-primary-content
+                        i.material-icons.mdl-list__item-avatar play_circle_filled
+                        |  
+                        span {{ search.song }}
+                        |  
+                        span.mdl-list__item-text-body
+                            | {{ search.artist }}, {{ search.album }}

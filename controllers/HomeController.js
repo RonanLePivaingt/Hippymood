@@ -193,7 +193,7 @@ exports.Search = function(req, res){
     var keywords = req.params.keywords;
     var keywordsUC = keywords.toUpperCase();
 
-    var SQLquery = 'SELECT songs.id, songs.name AS song, artists.name AS artist, songs.path, albums.name AS album, genres.name AS genre ';
+    var SQLquery = 'SELECT songs.id, songs.name AS song, artists.name AS artist, songs.path, albums.name AS album, genres.name AS genre, genres.id as genreId ';
         SQLquery += 'FROM songs, genreAssociation, genres, artists, albums ';
         SQLquery += 'WHERE songs.id = genreAssociation.id_songs ';
         SQLquery += 'AND genres.id = genreAssociation.id ';

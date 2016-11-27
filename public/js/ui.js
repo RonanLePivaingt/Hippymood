@@ -76,6 +76,7 @@ function playerVueInit() {
                 this.album = data.album
                 this.path = data.path
                 this.genre = "Mood : " + data.genre
+                currentGenre = document.getElementById("genreBtn" + data.genreId);
                 this.filename = filenameFromPath(data.path)
 
                 // Switching to the player tab
