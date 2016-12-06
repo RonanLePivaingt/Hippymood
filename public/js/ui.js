@@ -37,6 +37,7 @@ function playerVueInit() {
             nextGenre: '',
             allSongGenrePlayed: 0,
             nbSongLeft: 999,
+            searchKeywords: '',
             searchResults: []
         },
         methods: {
@@ -60,15 +61,17 @@ function playerVueInit() {
                 this.allSongGenrePlayed = allSongGenrePlayed;
                 this.nbSongLeft = currentGenre.getAttribute("data-genre-nbsongleft")
             },
-            search: function(data) {
+            updateSearchKeywords: function(keywords) {
+                this.searchKeywords = keywords;
+            },
+            updateSearchResults: function(data) {
                 this.searchResults = data.searchResults;
                 componentHandler.upgradeDom();
             },
             playSearchResult: function(index) {
                 // Getting data of the choosen song
                 data = this.searchResults[index];
-
-                // Playing song
+// Playing song
                 playerHTML5.setAttribute("src", data.path);
 
                 // Updating vue data
@@ -399,6 +402,9 @@ function search(e) {
     var searchInput = this.querySelectorAll("input")[0];
     keywords = searchInput.value;
 
+    // Updating search keyword in vue
+    playerVue.updateSearchKeywords(keywords);
+
     // if intro search, display player and mask this search field
     if (this.getAttribute("id") == "searchFormIntro") {
         var intro = document.getElementById("intro");
@@ -424,7 +430,7 @@ function search(e) {
         searchResults = JSON.parse(data);
         console.log(searchResults);
 
-        playerVue.search(searchResults);
+        playerVue.updateSearchResults(searchResults);
 
         // Hiding spinner
         var searchResultSpinner = document.getElementById("searchResultSpinner");

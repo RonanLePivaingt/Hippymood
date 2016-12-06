@@ -17,6 +17,6 @@ div.mdl-grids.searchList#search
                             | {{ search.artist }}, {{ search.album }}
                         a.searchGenre.mdl-list__item-secondary-action(href='#', v-on:click="playSearchResult($index)")
                             button.mdl-list__item-secondary-action.mdl-button.mdl-js-button.mdl-button--raised {{ search.genre }}
-    div.searchResult(v-show="!searchResults")
-        p.material-icons.message-with-icon Aucun résultat trouvé 
-            i.material-icons mood_bad
+    div.searchResult.empty(v-show="!searchResults")
+        i.material-icons mood_bad
+        p.material-icons.message-with-icon Aucun résultat trouvé pour la recherche "<span class="searchKeyword">{{ searchKeywords }}</span>"

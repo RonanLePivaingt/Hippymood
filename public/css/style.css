@@ -327,10 +327,16 @@ img.bigger {
     text-decoration: none;
     cursor: pointer;
 }
+.searchResult.empty {
+    text-align: center;
+}
 .searchResult p.material-icons.message-with-icon {
     font-family: Roboto, sans-serif;
     width: 100%;
     text-align: center;
+}
+.searchResult span.searchKeyword {
+    color: #ff4081;
 }
 #backToPlayer {
     text-align: center;
