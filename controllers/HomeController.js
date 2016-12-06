@@ -210,14 +210,9 @@ exports.Search = function(req, res){
             console.log(err);
         }
         else {
-            console.log(rows);
-            var data = {err: ''};
-            if (rows.length === 0) {
-                data.err = "No result found for : " + keywords;
-            }
-            else {
+            var data = {};
+            if (rows.length > 0)
                 data.searchResults = rows;
-            }
             res.send(data);
         }
     });

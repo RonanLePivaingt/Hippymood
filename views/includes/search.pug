@@ -4,7 +4,7 @@ div.mdl-grids.searchList#search
             i.material-icons keyboard_backspace
             span Revenir au lecteur
         div#searchResultSpinner.mdl-spinner.mdl-js-spinner.is-active.hide
-    div.searchResult
+    div.searchResult(v-show="searchResults")
         ul.demo-list-three.mdl-list
             li.mdl-list__item.mdl-list__item--three-line(v-for="search in searchResults")
                 a(href="#/", v-on:click="playSearchResult($index)" , data-search-index="{{ search.song }}", data-song="{{ search.song }}", data-artist="{{ search.artist }}", data-album="{{ search.album }}", data-path="{{ search.path }}" data-genreId="{{ search.genreId }}")
@@ -17,3 +17,6 @@ div.mdl-grids.searchList#search
                             | {{ search.artist }}, {{ search.album }}
                         a.searchGenre.mdl-list__item-secondary-action(href='#', v-on:click="playSearchResult($index)")
                             button.mdl-list__item-secondary-action.mdl-button.mdl-js-button.mdl-button--raised {{ search.genre }}
+    div.searchResult(v-show="!searchResults")
+        p.material-icons.message-with-icon Aucun résultat trouvé 
+            i.material-icons mood_bad
