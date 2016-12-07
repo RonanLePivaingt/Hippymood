@@ -218,6 +218,25 @@ exports.Search = function(req, res){
     });
 };
 
+// If a song is played from the search result, this function will add it to the played songs list
+exports.searchSongPlayed = function(req, res){
+    var songId = req.params.songId;
+
+    console.log(songId + " id de la chanson qui devrait être ajouté");
+
+    // Saving song played id
+    if (req.session.playedSongs == undefined) {
+        req.session.playedSongs = [songId];
+    }
+    else {
+        req.session.playedSongs.push(songId);
+    }
+    console.log(req.session.playedSongs);
+
+    // Necessary to save the session (or req.session.save();) but cleaner because it gives a response to the client
+    res.send("Done");
+}
+
 // Reset list of songs stored in sessions
 exports.ResetGenre = function(req, res){
     var genreId = req.params.id;

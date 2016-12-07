@@ -10,6 +10,7 @@ module.exports = function(app){
     app.get('/genre/:id', HomeController.Genre);
     app.get('/resetGenre/:id', HomeController.ResetGenre);
     app.get('/search/:keywords', HomeController.Search);
+    app.get('/searchSongPlayed/:songId', HomeController.searchSongPlayed);
     app.get('/admin', HomeController.Admin);
     app.get('/admin/resetSessions', HomeController.ResetSessions);
     app.get('/admin/resetDatabase', HomeController.ResetDatabase);

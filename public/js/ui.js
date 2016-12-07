@@ -90,6 +90,8 @@ function playerVueInit() {
                 var searchInputDiv = document.getElementById("searchInputDiv");
                 removeClass(searchInputDiv, "is-dirty");
 
+                // Sending the id of the choosen song to the server
+                getAjax("/searchSongPlayed/" + data.id, function(){});
             },
             updateUi: function() {
                 this.title = currentSong.song
