@@ -15,6 +15,7 @@ function initGenrePlayer() {
         loadScript(
             "/public/js/ui.js", 
             function() {
+                loadScript("/public/js/mousetrap.min.js");
                 loadScript("/public/js/events.js");
             }
         );

@@ -78,3 +78,25 @@ window.addEventListener("keyup", function(event) {
 });
 
 keyboardEvents();
+
+// Check if element is displayed
+function isHidden(el) {
+    return (el.offsetParent === null)
+}
+
+// Focus on the displayed search input
+function focusSearch() {
+    var searchInputs = document.getElementsByClassName("searchInput");
+    for (var i = 0; i < searchInputs.length; i++) { 
+        if (isHidden(searchInputs[i]) == false) {
+            searchInputs[i].focus();
+            break;
+        }
+    }
+
+    // Prevent default browser action
+    return false;
+}
+
+// Mapping / key to focusSearch
+Mousetrap.bind('/', focusSearch);
