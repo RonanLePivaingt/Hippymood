@@ -1,5 +1,5 @@
 div.mdl-grids.searchList#search
-    div#backToPlayer
+    div#backToPlayer(v-show="tracklist")
         button.mdl-button.mdl-js-button.mdl-button--raised.mdl-js-ripple-effect.mdl-button--accent(onclick="searchPlayerTransition();")
             i.material-icons keyboard_backspace
             span Revenir au lecteur
@@ -18,5 +18,12 @@ div.mdl-grids.searchList#search
                         a.searchGenre.mdl-list__item-secondary-action(href='#', v-on:click="playSearchResult($index)")
                             button.mdl-list__item-secondary-action.mdl-button.mdl-js-button.mdl-button--raised {{ search.genre }}
     div.searchResult.empty(v-show="!searchResults")
-        i.material-icons mood_bad
+        i.material-icons.expressive-icon mood_bad
         p.material-icons.message-with-icon Aucun résultat trouvé pour la recherche "<span class="searchKeyword">{{ searchKeywords }}</span>"
+        form#searchFormList(action="/Search")
+            div#searchInputListDiv.mdl-textfield.mdl-js-textfield.mdl-textfield--expandable
+              label.mdl-button.mdl-js-button.mdl-button--icon(for="searchInputList")
+                  i#searchIcon.material-icons search
+              div.mdl-textfield__expandable-holder
+                  input#searchInputList.mdl-textfield__input(type="text", value="{{ searchKeywords }}")
+                  label.mdl-textfield__label(for="sample-expandable") Expandable Input

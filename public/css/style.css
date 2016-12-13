@@ -67,6 +67,10 @@
     #player i.material-icons {
         font-size: 5em;
     }
+    /* Used to avoid a shadow cut when selecting the buttons with tab */
+    #playerButtons { 
+        overflow: visible;
+    }
     #playerButtons button { 
         height: 7em;
         width: 7em;
@@ -330,6 +334,9 @@ img.bigger {
 .searchResult.empty {
     text-align: center;
 }
+.searchResult.empty i.expressive-icon {
+    font-size: 3rem;
+}
 .searchResult p.material-icons.message-with-icon {
     font-family: Roboto, sans-serif;
     width: 100%;
@@ -343,8 +350,8 @@ img.bigger {
     margin-bottom: 1rem;
 }
 #backToPlayer button i {
-    margin-bottom: 12px;
-    margin-right: 12px;
+    margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
 }
 #backToPlayer div.mdl-spinner {
     display: block;

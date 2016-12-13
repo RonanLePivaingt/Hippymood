@@ -67,6 +67,7 @@ function playerVueInit() {
             updateSearchResults: function(data) {
                 this.searchResults = data.searchResults;
                 componentHandler.upgradeDom();
+                removeClass(document.getElementById("searchInputListDiv"), "is-dirty");
             },
             playSearchResult: function(index) {
                 // Getting data of the choosen song
@@ -220,6 +221,9 @@ function playGenre() {
             showSnackBar();
         }
     }
+
+    // Switch from search list to player
+    searchPlayerTransition();
 };
 function cancelNextGenre() {
     currentGenre = lastGenre;
@@ -430,7 +434,6 @@ function search(e) {
 
     getAjax("/search/" + keywords, function(data){ 
         searchResults = JSON.parse(data);
-        console.log(searchResults);
 
         playerVue.updateSearchResults(searchResults);
 
@@ -440,7 +443,6 @@ function search(e) {
 
         // Adding events to the links
         var searchResultsLinks = document.querySelectorAll("div.searchResult > a");
-        console.log("Nb réponses : " + searchResultsLinks.length);
         for (o = 0; o++; o < searchResultsLinks.length) {
             searchResultsLinks[o].addEventListener("click", playPause, false);
         }
@@ -465,4 +467,10 @@ if (searchFormIntro.attachEvent) {
     searchFormIntro.attachEvent("submit", search);
 } else {
     searchFormIntro.addEventListener("submit", search);
+}
+var searchFormList = document.getElementById('searchFormList');
+if (searchFormList.attachEvent) {
+    searchFormList.attachEvent("submit", search);
+} else {
+    searchFormList.addEventListener("submit", search);
 }
