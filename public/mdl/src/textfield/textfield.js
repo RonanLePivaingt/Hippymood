@@ -201,7 +201,7 @@
    *
    * @public
    */
-  MaterialTextfield.prototype.enable = function() {
+  gaterialTextfield.prototype.enable = function() {
     this.input_.disabled = false;
     this.updateClasses_();
   };

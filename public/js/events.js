@@ -83,16 +83,18 @@ keyboardEvents();
 function isHidden(el) {
     return (el.offsetParent === null)
 }
-
-// Focus on the displayed search input
-function focusSearch() {
+// Return the selected search input element displayed
+function getFocusedSearchInput() {
     var searchInputs = document.getElementsByClassName("searchInput");
     for (var i = 0; i < searchInputs.length; i++) { 
         if (isHidden(searchInputs[i]) == false) {
-            searchInputs[i].focus();
-            break;
+            return searchInputs[i];
         }
     }
+}
+// Focus on the displayed search input
+function focusSearch() {
+    getFocusedSearchInput().select();
 
     // Prevent default browser action
     return false;
@@ -100,3 +102,16 @@ function focusSearch() {
 
 // Mapping / key to focusSearch
 Mousetrap.bind('/', focusSearch);
+
+// Remove focus on input when clicking escape key
+document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    var isEscape = false;
+    if ("key" in evt) {
+        isEscape = (evt.key == "Escape" || evt.key == "Esc");
+    } else {
+        isEscape = (evt.keyCode == 27);
+    }
+    if (isEscape)
+        getFocusedSearchInput().blur();
+};

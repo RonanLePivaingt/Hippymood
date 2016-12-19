@@ -67,6 +67,7 @@ function playerVueInit() {
             updateSearchResults: function(data) {
                 this.searchResults = data.searchResults;
                 componentHandler.upgradeDom();
+                // Keep the search input closed after the upgradeDom
                 removeClass(document.getElementById("searchInputListDiv"), "is-dirty");
             },
             playSearchResult: function(index) {
@@ -389,6 +390,8 @@ function scanMusic() {
 /* Search */
 function search(e) {
     if (e.preventDefault) e.preventDefault();
+
+    // Créer une fonction javascript pour récupérer l'élément de recherche visible et lui retirer le focus avec .blur() ?
 
     // Switching to the search tab
     var playerButton = document.querySelectorAll('.mdl-tabs__tab[href="#player-panel"]')[0];

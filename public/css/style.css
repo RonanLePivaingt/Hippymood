@@ -331,16 +331,23 @@ img.bigger {
     text-decoration: none;
     cursor: pointer;
 }
-.searchResult.empty {
+.searchResult.searchForm, .searchResult.empty {
     text-align: center;
+}
+.searchResult.empty p {
+    margin-bottom: 0px;
 }
 .searchResult.empty i.expressive-icon {
     font-size: 3rem;
+    margin-bottom: 1rem;
 }
 .searchResult p.material-icons.message-with-icon {
     font-family: Roboto, sans-serif;
     width: 100%;
     text-align: center;
+}
+#searchFormList {
+    margin-bottom: 0px;
 }
 .searchResult span.searchKeyword {
     color: #ff4081;
