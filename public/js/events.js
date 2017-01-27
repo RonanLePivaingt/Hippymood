@@ -19,31 +19,6 @@ for (var i = 0; i < genres.length; i++) {
     genres[i].addEventListener('click', playGenre, false);
 }
 
-function keyboardEvents() {
-    window.addEventListener("keypress", function(event) {
-        switch (event.key) {
-            case ' ':
-                // Pausing/playing song on space press
-                playPause();
-                event.stopPropagation();
-                event.preventDefault();
-                break;
-            case 'ArrowRight':
-                // Skipping song with ctrl+right
-                if (event.ctrlKey)
-                    playNext();
-                break;
-            case 'ArrowLeft':
-                // Skipping song with ctrl+right
-                if (event.ctrlKey)
-                    playPrevious();
-                break;
-            default:
-                break;
-        }
-    });
-}
-
 var adminCombination = '';
 
 function checkAdminCombination() {
@@ -77,8 +52,6 @@ window.addEventListener("keyup", function(event) {
     else adminCombination = '';
 });
 
-keyboardEvents();
-
 // Check if element is displayed
 function isHidden(el) {
     return (el.offsetParent === null)
@@ -99,6 +72,16 @@ function focusSearch() {
     // Prevent default browser action
     return false;
 }
+
+// Mapping space to pause and prevent page scroll
+Mousetrap.bind('space', function (e) {
+    playPause();
+    e.preventDefault();
+});
+
+// Mapping ctrl+left and ctrl+right to play previous or next song
+Mousetrap.bind('ctrl+left', playPrevious);
+Mousetrap.bind('ctrl+right', playNext);
 
 // Mapping / key to focusSearch
 Mousetrap.bind('/', focusSearch);
