@@ -1,3 +1,9 @@
+# 0.4
+- Search by song, artist and album name
+- / keyboard shortcut to search
+- Usage of mousetrap.js library to make keyboards shortcuts working in more browsers
+
+
 # 0.3 (1st release to friends!)
 - Improve genre and next genre display
 - About
