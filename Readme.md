@@ -1,26 +1,14 @@
-# Hippy Mood
-Web app to play your music smoothly by genre/mood.
+# Hippy Mood - vue2fromscratch branch
+After troubles to migrate Hippymood directly to the version 2 of vuejs, I will be following a complete vue2 tutorial from scratch and integrate the result to Hippymood.
 
-# Roadmap
+The goals : 
+- Become familiar with vue2
+- Clean the architecture by splitting the UI in multiple components
+- Check if components might help to move to a modular architecture and allow different behaviours on different instances but keeping the same core.
 
-## 0.5
-- Migration of Vuejs from v1 to v2
-- Use a query builder to prevent SQL injections (Knex.js)
-- Clean up the architecture of the code
-- Move to an architecture more friendly to Hippymood behavior change without touching to the core (with extensions, vuejs components maybe)
+## Usage
+node httpServer.js
+Open your browser to localhost:3000 and start hacking.
 
-## 0.whoKnows
-- Support multiple mood per song
-- Define subgenres and adapt UI to browse them (electronic music is a good example)
-
-## 0.whoKnows
-- Search system
-    - Play selected song, then the genre of the searched song
-
-## 0.whoKnows
-- New responsive UI
-
-## 0.whoKnows
-- Control the player with a mobile device and a QRcode (+url ?)
-    - If available on the same network
-    - Through the server (probably with a high latency)
+## Tutorial
+I will follow this video tutorial about vuejs (french) : https://www.youtube.com/watch?v=g7YKecZhFRA&list=PLjwdMgw5TTLW-mAtlR46VajrKs4dep3y0&index=1

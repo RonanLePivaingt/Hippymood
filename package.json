@@ -1,0 +1,29 @@
+{
+  "name": "hippymood",
+  "version": "0.4.0",
+  "description": " Web app to play your music smoothly by genre/mood.",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "express": "^4.14.1",
+    "express-mysql-session": "^1.2.0",
+    "express-session": "^1.15.1",
+    "musicmetadata": "^2.0.5",
+    "mysql": "^2.13.0",
+    "pug": "^2.0.0-beta11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RonanLePivaingt/Hippymood.git"
+  },
+  "author": "Ronan Le Pivaingt",
+  "license": "AGPL-3.0+",
+  "bugs": {
+    "url": "https://github.com/RonanLePivaingt/Hippymood/issues"
+  },
+  "homepage": "https://github.com/RonanLePivaingt/Hippymood#readme"
+}
