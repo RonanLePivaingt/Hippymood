@@ -1,0 +1,16 @@
+<html>
+    <body>
+        <div id="app">
+            <h1> Hello {{ message }} </h1>
+            <a :href="link" :title="message">{{ message }}</a>
+            <div class="success" v-if="success">
+                <p> Search results </p>
+                <p @click="close"> Close </p>
+            </div>
+            <input v-model="message"></input>
+            <input type="checkbox" v-model="success"></input>
+        </div>
+        <script src="js/vue.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>

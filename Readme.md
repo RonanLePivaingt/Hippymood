@@ -7,8 +7,8 @@ The goals :
 - Check if components might help to move to a modular architecture and allow different behaviours on different instances but keeping the same core.
 
 ## Usage
-node httpServer.js
-Open your browser to localhost:3000 and start hacking.
+node app.js
+Open your browser to localhost:8080 and start hacking.
 
 ## Tutorial
 I will follow this video tutorial about vuejs (french) : https://www.youtube.com/watch?v=g7YKecZhFRA&list=PLjwdMgw5TTLW-mAtlR46VajrKs4dep3y0&index=1
