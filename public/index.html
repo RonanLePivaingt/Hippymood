@@ -9,8 +9,11 @@
             </div>
             <input v-model="message"></input>
             <input type="checkbox" v-model="success"></input>
+
+            <mood-list :moods="moods"></mood-list>
         </div>
         <script src="js/vue.js"></script>
+        <script src="js/vue-resource.min.js"></script>
         <script src="js/app.js"></script>
     </body>
 </html>

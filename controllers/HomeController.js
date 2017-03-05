@@ -61,6 +61,18 @@ exports.Admin = function(req, res){
     res.render('admin');
 };
 
+// Function to return the list of mood
+exports.Moods = function(req, res){
+    if (req.session.auth || config.auth.activate === 0) {
+        var SQLquery = 'SELECT id, name ';
+            SQLquery += 'FROM genres ';
+
+        connection.query(SQLquery, function(err, rows, fields) {
+            res.send(rows);
+        });
+    }
+}
+
 // Function to get song infos by submitting a genre
 exports.Genre = function(req, res){
     if (req.session.auth || config.auth.activate === 0) {

@@ -5,6 +5,7 @@ module.exports = function(app){
     // Main Routes
     app.post('/', HomeController.Auth);
     app.get('/app', HomeController.App);
+    app.get('/moods', HomeController.Moods);
     app.get('/genre/:id', HomeController.Genre);
     app.get('/resetGenre/:id', HomeController.ResetGenre);
     app.get('/search/:keywords', HomeController.Search);
