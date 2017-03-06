@@ -1,16 +1,16 @@
 <html>
     <body>
         <div id="app">
-            <h1> Hello {{ message }} </h1>
-            <a :href="link" :title="message">{{ message }}</a>
-            <div class="success" v-if="success">
-                <p> Search results </p>
-                <p @click="close"> Close </p>
+            <h1>Hippymood</h1>
+            <div id="player">
+                <h2> Player </h2>
+                <mood-list :moods="moods"></mood-list>
+                <player-html5 :current="current"></player-html5>
             </div>
-            <input v-model="message"></input>
-            <input type="checkbox" v-model="success"></input>
-
-            <mood-list :moods="moods"></mood-list>
+            <div id="admin">
+                <h2> Admin </h2>
+                <button @click="resetSession">Reset session</button>
+            </div>
         </div>
         <script src="js/vue.js"></script>
         <script src="js/vue-resource.min.js"></script>

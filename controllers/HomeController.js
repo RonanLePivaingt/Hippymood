@@ -74,7 +74,7 @@ exports.Moods = function(req, res){
 }
 
 // Function to get song infos by submitting a genre
-exports.Genre = function(req, res){
+exports.Mood = function(req, res){
     if (req.session.auth || config.auth.activate === 0) {
         // Disabling cache for myurl.com/genre/id URLs to prevent some browser to play the same song again and again and again...
         res.header("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -237,7 +237,7 @@ exports.ResetGenre = function(req, res){
 };
 
 // Reset sessions
-exports.ResetSessions = function(req, res){
+exports.ResetSession = function(req, res){
     req.session.playedSongs = [];
     res.send("Done");
 };
