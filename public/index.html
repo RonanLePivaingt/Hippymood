@@ -1,11 +1,16 @@
 <html>
+    <head>
+        <link rel="stylesheet" href="/css/material-components-web.min.css">
+    </head>
     <body>
         <div id="app">
             <h1>Hippymood</h1>
             <div id="player">
                 <h2> Player </h2>
-                <mood-list :moods="moods"></mood-list>
                 <player-html5 :current="current"></player-html5>
+                <div>
+                    <mood-list  v-for="mood in moods" :mood="mood" :key="mood.id" :currentmood="currentmood"></mood-list>
+                </div>
             </div>
             <div id="admin">
                 <h2> Admin </h2>

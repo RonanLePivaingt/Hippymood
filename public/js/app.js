@@ -5,14 +5,20 @@ var data = {
 };
 
 Vue.component('mood-list', {
-    props: ['moods'],
-    template: '<div><template v-for="mood in moods"><button @click="play" :id="mood.id">{{ mood.name }}</button></template></div>',
+    props: ['mood', 'currentmood'],
+    template: '<button @click="play" :id="mood.id" class="mdc-button" :class="isActive">{{ mood.name }}</button>',
     methods: {
         play: function(el) {
-            console.log("Mood de l'id : " + el.target.id);
             vm.playGenre(el.target.id);
         }
+    },
+    computed: {
+        isActive: function() {
+            // Return the CSS classes to apply to the current mood button
+            return this.currentmood == this.mood.id ? 'mdc-button--accent mdc-button--raised' : '';
+        }
     }
+
 })
 
 // HTML5 audio player component
@@ -21,7 +27,6 @@ Vue.component('player-html5', {
     template: '<div><audio id="playerHTML5" autoplay="autoplay" :src="current.path"></audio><p>{{ current.path }}</p></div>',
     methods: {
         play: function(el) {
-            console.log("Mood de l'id : " + el.target.id);
             vm.playGenre(el.target.id);
         }
     }
@@ -39,19 +44,13 @@ var vm = new Vue({
         infos: {}
     },
     methods: {
-        close: function() {
-            this.success = false
-        },
         playGenre: function(genreId) {
-            console.log("Let's go : " + genreId);
             this.$http.get('/mood/' + genreId).then(response => {
                 // get body data
-                console.log(response.body);
                 if (response.body.songs)
                     this.current = response.body.songs[0];
                 this.infos = response.body.infos;
             }, response => {
-                console.log("Shit it the fan !");
             });
         },
         resetSession: function() {
@@ -63,11 +62,15 @@ var vm = new Vue({
 
         }
     },
+    computed: {
+        currentmood: function() {
+            return this.current.genreId;
+        }
+    },
     created: function() {
         console.log("The vue is created");
         this.$http.get('/moods').then(response => {
             // get body data
-            console.log("Lets get a drink !");
             this.moods = response.body;
 
         }, response => {

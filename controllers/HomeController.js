@@ -154,10 +154,10 @@ exports.Mood = function(req, res){
                 else 
                     req.session.playedSongs.push(randomSongs[0]['id']);
 
-                var response = {
-                    songs: randomSongs,
-                    infos: infos
-                };
+                // Creating response
+                randomSongs.forEach(function(el, index, array) {
+                    el.genreId = genre;
+                });
 
                 var response = {
                     songs: randomSongs,
