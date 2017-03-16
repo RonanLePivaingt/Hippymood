@@ -70,6 +70,51 @@ devMiddleware.waitUntilValid(function () {
   console.log('> Listening at ' + uri + '\n')
 })
 
+// Server code of the previous Hippymood version without vue-cli and the webpack template - Start
+var session = require('express-session');
+var MySQLStore = require('express-mysql-session')(session);
+
+var bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+var config = require('./serverConfig');
+var dbOptions = {
+    host: config.db.host,
+    port: 3306,
+    user: config.db.user,
+    password: config.db.password,
+    database: config.db.database,
+    createDatabaseTable: true,// Whether or not to create the sessions database table, if one does not already exist.
+    schema: {
+        tableName: 'sessions',
+        columnNames: {
+            session_id: 'session_id',
+            expires: 'expires',
+            data: 'data'
+        }
+    }
+};
+var sessionStore = new MySQLStore(dbOptions);
+
+app.use(session({
+    key: 'session_cookie_name',
+    secret: 'session_cookie_secret',
+    store: sessionStore,
+    resave: true,
+    saveUninitialized: true
+    })
+);
+
+//app.set('port', process.env.PORT || 8080);
+
+//app.use('/music', express.static('music'));
+//app.use('/', express.static('public'));
+
+// send app to router
+require('../server/router')(app);
+// Server code of the previous Hippymood version without vue-cli and the webpack template - End
+
 module.exports = app.listen(port, function (err) {
   if (err) {
     console.log(err)
@@ -81,3 +126,4 @@ module.exports = app.listen(port, function (err) {
     opn(uri)
   }
 })
+

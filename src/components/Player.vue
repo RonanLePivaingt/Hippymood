@@ -26,8 +26,46 @@ export default {
   name: 'player',
   data () {
     return {
-      msg: 'Hippymood'
+      msg: 'Hippymood',
+      link: 'http://jaimeleschips.fr',
+      success: true,
+      moods: [],
+      current: {},
+      infos: {}
     }
+  },
+  methods: {
+    playGenre: function (genreId) {
+      this.$http.get('/mood/' + genreId).then(response => {
+        // get body data
+        if (response.body.songs) {
+          this.current = response.body.songs[0]
+        }
+        this.infos = response.body.infos
+      }, response => {
+      })
+    },
+    resetSession: function () {
+      this.$http.get('/admin/resetSession').then(response => {
+        console.log('Session successfully reseted')
+      }, response => {
+        console.log('Shit it the fan !')
+      })
+    }
+  },
+  computed: {
+    currentmood: function () {
+      return this.current.genreId
+    }
+  },
+  created: function () {
+    console.log('The vue is created')
+    this.$http.get('/moods').then(response => {
+      // get body data
+      this.moods = response.body
+    }, response => {
+      console.log('Shit it the fan !')
+    })
   }
 }
 </script>

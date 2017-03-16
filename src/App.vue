@@ -33,6 +33,13 @@ export default {
   },
   created: function () {
     console.log('Get the mood list')
+    this.$http.get('/moods').then(response => {
+      // get body data
+      console.log(response.body)
+      this.moods = response.body
+    }, response => {
+      console.log('Shit it the fan !')
+    })
   }
 }
 </script>
