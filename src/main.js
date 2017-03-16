@@ -3,11 +3,14 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 import App from './App'
+import MoodList from './components/MoodList'
 import router from './router'
 
 Vue.config.productionTip = false
 
 Vue.use(VueResource)
+
+Vue.component('mood-list', MoodList)
 
 /* eslint-disable no-new */
 new Vue({

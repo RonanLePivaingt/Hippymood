@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <h1> Hippymood </h1>
     <router-view></router-view>
   </div>
 </template>
@@ -30,16 +30,6 @@ export default {
     currentmood: function () {
       return this.current.genreId
     }
-  },
-  created: function () {
-    console.log('Get the mood list')
-    this.$http.get('/moods').then(response => {
-      // get body data
-      console.log(response.body)
-      this.moods = response.body
-    }, response => {
-      console.log('Shit it the fan !')
-    })
   }
 }
 </script>
