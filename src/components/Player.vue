@@ -2,6 +2,7 @@
   <div class="player">
     <div class="mood-list">
       <mood-list  v-for="mood in moods" :mood="mood" :key="mood.id"></mood-list>
+      <p>Pointless counter : {{ count }} </p>
     </div>
   </div>
 </template>
@@ -41,6 +42,9 @@ export default {
   computed: {
     currentmood: function () {
       return this.current.genreId
+    },
+    count: function () {
+      return this.$store.state.count
     }
   },
   created: function () {

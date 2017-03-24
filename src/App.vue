@@ -2,6 +2,8 @@
   <div id="app">
     <h1> Hippymood </h1>
     <router-view></router-view>
+    <player-html5 :current="current"></player-html5>
+    <button @click="testStore()">Increment counter</button>
   </div>
 </template>
 
@@ -24,6 +26,9 @@ export default {
     },
     resetSession: function () {
       console.log('Reset session')
+    },
+    testStore: function () {
+      this.$store.commit('increment')
     }
   },
   computed: {
