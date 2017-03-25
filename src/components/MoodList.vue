@@ -15,8 +15,7 @@
     props: ['mood'],
     methods: {
       play: function (el) {
-        window.vm.$emit('mood-selected', el.target.id)
-        // window.vm.playGenre(el.target.id)
+        this.$root.$store.dispatch('playMood', el.target.id)
       }
     },
     computed: {

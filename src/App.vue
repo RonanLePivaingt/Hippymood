@@ -16,7 +16,6 @@ export default {
       link: 'http://jaimeleschips.fr',
       success: true,
       moods: [],
-      current: {},
       infos: {}
     }
   },
@@ -32,8 +31,8 @@ export default {
     }
   },
   computed: {
-    currentmood: function () {
-      return this.current.genreId
+    current: function () {
+      return this.$store.state.current
     }
   }
 }

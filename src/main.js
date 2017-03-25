@@ -29,6 +29,26 @@ const store = new Vuex.Store({
   mutations: {
     increment (state) {
       state.count++
+    },
+    setMoods (state, moods) {
+      state.moods = moods
+    },
+    setCurrent (state, current) {
+      state.current = current
+    }
+  },
+  actions: {
+    playMood: function ({ commit }, moodId) {
+      Vue.http.get('/mood/' + moodId).then(response => {
+        // get body data
+        if (response.body.songs) {
+          console.log(response.body.songs[0])
+          // this.current = response.body.songs[0]
+          commit('setCurrent', response.body.songs[0])
+        }
+        // this.infos = response.body.infos
+      }, response => {
+      })
     }
   }
 })

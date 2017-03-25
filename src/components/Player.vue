@@ -10,16 +10,7 @@
 <script>
 export default {
   name: 'player',
-  data: function () {
-    return {
-      message: 'Yop',
-      link: 'http://jaimeleschips.fr',
-      success: true,
-      moods: [],
-      current: {},
-      infos: {}
-    }
-  },
+  data: '',
   methods: {
     playGenre: function (genreId) {
       this.$http.get('/mood/' + genreId).then(response => {
@@ -45,6 +36,9 @@ export default {
     },
     count: function () {
       return this.$store.state.count
+    },
+    moods: function () {
+      return this.$store.state.moods
     }
   },
   created: function () {
@@ -52,7 +46,7 @@ export default {
     this.$http.get('/moods').then(response => {
       // get body data
       console.log(response.body)
-      this.moods = response.body
+      this.$store.commit('setMoods', response.body)
     }, response => {
       console.log('Shit it the fan !')
     })
