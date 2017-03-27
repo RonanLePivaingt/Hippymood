@@ -3,10 +3,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
-import router from './router'
-import App from './App'
-import PlayerHtml5 from './components/PlayerHtml5'
-import MoodList from './components/MoodList'
+import router from '@/router'
+import App from '@/App'
+import PlayerHtml5 from '@/components/PlayerHtml5'
+import MoodList from '@/components/MoodList'
 
 Vue.config.productionTip = false
 

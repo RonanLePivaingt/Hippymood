@@ -1,7 +1,7 @@
 var mysql = require('mysql');
 
 // Loading configuration file with database credentials
-var config = require('./config');
+var config = require('../../build/serverConfig');
 var connection = mysql.createConnection({
     host     : config.db.host,
     user     : config.db.user,

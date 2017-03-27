@@ -15,6 +15,7 @@
   "dependencies": {
     "express-mysql-session": "^1.2.0",
     "express-session": "^1.15.1",
+    "musicmetadata": "^2.0.5",
     "vue": "^2.2.2",
     "vue-resource": "^1.2.1",
     "vue-router": "^2.2.0",
