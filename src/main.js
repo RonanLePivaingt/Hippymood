@@ -3,10 +3,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
-import App from './App'
-import MoodList from './components/MoodList'
-import PlayerHtml5 from './components/PlayerHtml5'
 import router from './router'
+import App from './App'
+import PlayerHtml5 from './components/PlayerHtml5'
+import MoodList from './components/MoodList'
 
 Vue.config.productionTip = false
 
@@ -18,18 +18,10 @@ Vue.component('player-html5', PlayerHtml5)
 
 const store = new Vuex.Store({
   state: {
-    count: 0,
-    message: 'Yop',
-    link: 'http://jaimeleschips.fr',
-    success: true,
     moods: [],
-    current: {},
-    infos: {}
+    current: {}
   },
   mutations: {
-    increment (state) {
-      state.count++
-    },
     setMoods (state, moods) {
       state.moods = moods
     },
@@ -40,14 +32,12 @@ const store = new Vuex.Store({
   actions: {
     playMood: function ({ commit }, moodId) {
       Vue.http.get('/mood/' + moodId).then(response => {
-        // get body data
         if (response.body.songs) {
-          console.log(response.body.songs[0])
-          // this.current = response.body.songs[0]
+          console.log(response.body.songs)
           commit('setCurrent', response.body.songs[0])
         }
-        // this.infos = response.body.infos
       }, response => {
+        console.log('Shit it the fan !')
       })
     }
   }
@@ -59,25 +49,5 @@ window.vm = new Vue({
   store,
   router,
   template: '<App/>',
-  components: { App },
-  methods: {
-    playGenre: function (genreId) {
-      console.log('Coucou')
-      this.$http.get('/mood/' + genreId).then(response => {
-        console.log(response.body.songs)
-        // get body data
-        if (response.body.songs) {
-          // this.current = response.body.songs[0]
-        }
-        // this.infos = response.body.infos
-      }, response => {
-        console.log('Shit it the fan !')
-      })
-    }
-  }
-})
-
-window.vm.$on('mood-selected', id => {
-  console.log(`Oh, that's nice. It's gotten ${id} clicks! :)`)
-  window.vm.playGenre(id)
+  components: { App }
 })
