@@ -252,7 +252,7 @@ exports.ResetDatabase = function(req, res){
 exports.ScanMusic = function(req, res){
 
     // Loading tags processing
-    var id3tags = require('id3tags');
+    var id3tags = require('./id3tags');
 
     var fs = require('fs');
     var path = require('path');
