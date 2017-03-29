@@ -156,7 +156,7 @@ exports.Mood = function(req, res){
 
                 // Creating response
                 randomSongs.forEach(function(el, index, array) {
-                    el.genreId = genre;
+                    el.moodId = genre;
                 });
 
                 var response = {

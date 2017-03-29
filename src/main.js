@@ -19,7 +19,8 @@ Vue.component('player-html5', PlayerHtml5)
 const store = new Vuex.Store({
   state: {
     moods: [],
-    current: {}
+    current: {},
+    currentMood: 0
   },
   mutations: {
     setMoods (state, moods) {
@@ -27,6 +28,9 @@ const store = new Vuex.Store({
     },
     setCurrent (state, current) {
       state.current = current
+      if (current.moodId !== state.currentMood) {
+        state.currentMood = current.moodId
+      }
     }
   },
   actions: {

@@ -19,9 +19,9 @@
       }
     },
     computed: {
-      isActive: function () {
+      isActive () {
         // Return the CSS classes to apply to the current mood button
-        return this.currentmood === this.mood.id ? 'mdc-button--accent mdc-button--raised' : ''
+        return parseInt(this.$store.state.currentMood) === parseInt(this.mood.id) ? 'mdc-button--accent mdc-button--raised' : ''
       }
     }
   }
