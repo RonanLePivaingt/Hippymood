@@ -37,7 +37,16 @@ const store = new Vuex.Store({
     playMood: function ({ commit }, moodId) {
       Vue.http.get('/mood/' + moodId).then(response => {
         if (response.body.songs) {
-          console.log(response.body.songs)
+          commit('setCurrent', response.body.songs[0])
+        }
+      }, response => {
+        console.log('Shit it the fan !')
+      })
+    },
+    nextSong: function ({ commit }) {
+      var moodId = store.state.currentMood
+      Vue.http.get('/mood/' + moodId).then(response => {
+        if (response.body.songs) {
           commit('setCurrent', response.body.songs[0])
         }
       }, response => {
