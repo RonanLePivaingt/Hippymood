@@ -1,17 +1,27 @@
 <template>
-  <audio id="playerHTML5" autoplay="autoplay" :src="current.path"></audio>
+  <audio 
+    id="playerHTML5" 
+    autoplay="autoplay" 
+    :src="current.path"
+    v-on:ended="next()"
+    ></audio>
 </template>
 
 <script>
   export default {
     name: 'player-html5',
-    props: ['current']
+    props: ['current'],
+    methods: {
+      next () {
+        this.$root.$store.dispatch('nextSong')
+      }
+    }
   }
-</script>
+  </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  #playerHTML5 {
-    display: none;
-  }
+#playerHTML5 {
+  display: none;
+}
 </style>

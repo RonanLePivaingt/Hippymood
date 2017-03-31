@@ -20,7 +20,8 @@ const store = new Vuex.Store({
   state: {
     moods: [],
     current: {},
-    currentMood: 0
+    currentMood: 0,
+    playerState: 'paused'
   },
   mutations: {
     setMoods (state, moods) {
@@ -31,6 +32,12 @@ const store = new Vuex.Store({
       if (current.moodId !== state.currentMood) {
         state.currentMood = current.moodId
       }
+    },
+    setPlaying (state) {
+      state.playerState = 'playing'
+    },
+    setPaused (state) {
+      state.playerState = 'paused'
     }
   },
   actions: {
@@ -38,9 +45,11 @@ const store = new Vuex.Store({
       Vue.http.get('/mood/' + moodId).then(response => {
         if (response.body.songs) {
           commit('setCurrent', response.body.songs[0])
+          commit('setPlaying')
         }
       }, response => {
         console.log('Shit it the fan !')
+        commit('setPaused')
       })
     },
     nextSong: function ({ commit }) {
@@ -48,9 +57,11 @@ const store = new Vuex.Store({
       Vue.http.get('/mood/' + moodId).then(response => {
         if (response.body.songs) {
           commit('setCurrent', response.body.songs[0])
+          commit('setPlaying')
         }
       }, response => {
         console.log('Shit it the fan !')
+        commit('setPaused')
       })
     }
   }
