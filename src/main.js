@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
+import VueMaterial from 'vue-material'
 import router from '@/router'
 import App from '@/App'
 import PlayerHtml5 from '@/components/PlayerHtml5'
@@ -12,6 +13,7 @@ Vue.config.productionTip = false
 
 Vue.use(Vuex)
 Vue.use(VueResource)
+Vue.use(VueMaterial)
 
 Vue.component('mood-list', MoodList)
 Vue.component('player-html5', PlayerHtml5)

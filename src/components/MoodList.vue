@@ -1,12 +1,11 @@
 <template>
-  <button 
-    @click="play" 
+  <md-button 
+    @click.native="play" 
     :id="mood.id" 
-    class="mdc-button" 
     :class="isActive"
   >
     {{ mood.name }}
-  </button>
+  </md-button>
 </template>
 
 <script>
@@ -21,7 +20,7 @@
     computed: {
       isActive () {
         // Return the CSS classes to apply to the current mood button
-        return parseInt(this.$store.state.currentMood) === parseInt(this.mood.id) ? 'mdc-button--accent mdc-button--raised' : ''
+        return parseInt(this.$store.state.currentMood) === parseInt(this.mood.id) ? 'md-raised md-accent' : ''
       }
     }
   }
