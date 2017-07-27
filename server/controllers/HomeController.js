@@ -30,7 +30,7 @@ exports.Index = function(req, res){
 
 // Registering session as authentified
 exports.Auth = function(req, res){
-    if (req.body.combination == config.auth.combination) {
+    if (req.body.combination == config.auth.combinationCode) {
         req.session.auth = 1;
         res.send("OK");
     }

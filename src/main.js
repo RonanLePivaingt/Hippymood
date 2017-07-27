@@ -9,6 +9,8 @@ import App from '@/App'
 import PlayerHtml5 from '@/components/PlayerHtml5'
 import MoodList from '@/components/MoodList'
 
+import Config from '@/../build/serverConfig.js'
+
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
@@ -23,7 +25,12 @@ const store = new Vuex.Store({
     moods: [],
     current: {},
     currentMood: 0,
-    playerState: 'paused'
+    next: {},
+    nextMood: 0,
+    intro: 1,
+    playerState: 'intro',
+    authCombination: Config.auth.combination,
+    authCombinationCode: Config.auth.combinationCode
   },
   mutations: {
     setMoods (state, moods) {
@@ -35,11 +42,17 @@ const store = new Vuex.Store({
         state.currentMood = current.moodId
       }
     },
+    setNext (state, next) {
+      state.next = next
+    },
     setPlaying (state) {
       state.playerState = 'playing'
     },
     setPaused (state) {
       state.playerState = 'paused'
+    },
+    removeIntro (state) {
+      state.intro = 0
     }
   },
   actions: {
@@ -48,23 +61,60 @@ const store = new Vuex.Store({
         if (response.body.songs) {
           commit('setCurrent', response.body.songs[0])
           commit('setPlaying')
+          commit('removeIntro')
         }
       }, response => {
         console.log('Shit it the fan !')
         commit('setPaused')
       })
     },
+    setNextMood: function ({ dispatch, commit }, moodId) {
+      // That dont variable is ugly but eslinter is shouting on else if use...
+      var dont = false
+      if (store.state.next.type !== 'mood' && store.state.next.moodId !== moodId) {
+        dont = true
+        commit(
+          'setNext',
+          {
+            moodId: moodId,
+            type: 'mood'
+          }
+        )
+      }
+      if (store.state.next.type === 'mood' && store.state.next.moodId === moodId && dont === false) {
+        // Should be triggering the next song action
+        return dispatch('nextSong')
+      }
+    },
     nextSong: function ({ commit }) {
-      var moodId = store.state.currentMood
-      Vue.http.get('/mood/' + moodId).then(response => {
-        if (response.body.songs) {
-          commit('setCurrent', response.body.songs[0])
-          commit('setPlaying')
+      var moodId
+      if (store.state.next === {}) {
+        moodId = store.state.currentMood
+        Vue.http.get('/mood/' + moodId).then(response => {
+          if (response.body.songs) {
+            commit('setCurrent', response.body.songs[0])
+            commit('setPlaying')
+          }
+        }, response => {
+          commit('setPaused')
+        })
+      }
+      if (store.state.next !== {}) {
+        if (store.state.next.type === 'mood') {
+          moodId = store.state.next.moodId
+          store.state.currentMood = moodId
+          store.state.next = {}
+          Vue.http.get('/mood/' + moodId).then(response => {
+            if (response.body.songs) {
+              commit('setCurrent', response.body.songs[0])
+              commit('setPlaying')
+            }
+          }, response => {
+            console.log('Shit it the fan !')
+            commit('setPaused')
+          })
         }
-      }, response => {
-        console.log('Shit it the fan !')
-        commit('setPaused')
-      })
+      }
     }
   }
 })
@@ -75,5 +125,21 @@ window.vm = new Vue({
   store,
   router,
   template: '<App/>',
-  components: { App }
+  components: { App },
+  methods: {
+    unlock: function () {
+      this.$http.post(
+        '/',
+        {combination: this.$store.state.authCombinationCode}
+      )
+      .then(
+        function (response) {
+          // Redirecting to main page if server response is good
+          if (response.body === 'OK') {
+            router.push('/')
+          }
+        }
+      )
+    }
+  }
 })
