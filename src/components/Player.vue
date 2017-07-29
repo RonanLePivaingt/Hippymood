@@ -88,14 +88,6 @@ export default {
     paused: function () {
       return this.$store.state.playerState === 'paused'
     }
-  },
-  created: function () {
-    console.log('Get the mood list')
-    this.$http.get('/moods').then(response => {
-      this.$store.commit('setMoods', response.body)
-    }, response => {
-      console.log('Shit it the fan !')
-    })
   }
 }
 </script>

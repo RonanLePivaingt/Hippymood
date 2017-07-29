@@ -71,6 +71,9 @@ exports.Moods = function(req, res){
             res.send(rows);
         });
     }
+    else {
+        res.send("Must auth");
+    }
 }
 
 // Function to get song infos by submitting a genre

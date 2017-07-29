@@ -3,6 +3,7 @@
     @click.native="play" 
     :id="mood.id" 
     :class="isActive"
+    class="md-raised"
   >
     {{ mood.name }}
   </md-button>
@@ -14,13 +15,24 @@
     props: ['mood'],
     methods: {
       play: function (el) {
-        this.$root.$store.dispatch('playMood', el.target.id)
+        if (this.playerState !== 'playing') {
+          this.$root.$store.dispatch('playMood', el.target.id)
+        }
+        if (this.playerState === 'playing') {
+          this.$root.$store.dispatch('setNextMood', el.target.id)
+        }
       }
     },
     computed: {
       isActive () {
         // Return the CSS classes to apply to the current mood button
         return parseInt(this.$store.state.currentMood) === parseInt(this.mood.id) ? 'md-raised md-accent' : ''
+      },
+      playerState () {
+        return this.$store.state.playerState
+      },
+      next () {
+        return this.$store.state.next
       }
     }
   }

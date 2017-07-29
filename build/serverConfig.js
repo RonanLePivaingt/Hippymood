@@ -10,7 +10,9 @@ config.db.database = "hippymood";
 
 // Authentification
 config.auth = {};
-config.auth.activate = 0; /* 1 to activate authentification, 0 to disable */
+config.auth.activate = 1; /* 1 to activate authentification, 0 to disable */
+config.auth.combination = 'up up down down left right left right b a'; /* 1 to activate authentification, 0 to disable */
+config.auth.combinationCode = '38384040373937396665'; /* 1 to activate authentification, 0 to disable */
 
 // Time in milliseconds since last visit before reseting the list of played songs (3600000 milliseconds is 1 hour)
 config.songList = {};

@@ -28,6 +28,7 @@ const store = new Vuex.Store({
     next: {},
     nextMood: 0,
     intro: 1,
+    unlocked: -1,
     playerState: 'intro',
     authCombination: Config.auth.combination,
     authCombinationCode: Config.auth.combinationCode
@@ -53,6 +54,9 @@ const store = new Vuex.Store({
     },
     removeIntro (state) {
       state.intro = 0
+    },
+    setUnlocked (state, unlocked) {
+      state.unlocked = unlocked
     }
   },
   actions: {
@@ -115,6 +119,10 @@ const store = new Vuex.Store({
           })
         }
       }
+    },
+    unlockedStatus: function ({ commit }, status) {
+      console.log('Changing unlocked status')
+      commit('setUnlocked', status)
     }
   }
 })
@@ -126,20 +134,48 @@ window.vm = new Vue({
   router,
   template: '<App/>',
   components: { App },
+  created: function () {
+    console.log('main is created')
+    this.$http.get('/moods').then(response => {
+      console.log(response)
+      if (response.body === 'Must auth') {
+        this.$store.commit('setUnlocked', 0)
+      }
+      if (response.body !== 'Must auth') {
+        console.log('Unlocking')
+        this.$store.commit('setMoods', response.body)
+        this.$store.commit('setUnlocked', 1)
+      }
+    }, response => {
+      console.log('Shit it the fan !')
+    })
+  },
   methods: {
     unlock: function () {
       this.$http.post(
         '/',
         {combination: this.$store.state.authCombinationCode}
       )
-      .then(
-        function (response) {
-          // Redirecting to main page if server response is good
-          if (response.body === 'OK') {
-            router.push('/')
+        .then(
+          function (response) {
+            // Redirecting to main page if server response is good
+            if (response.body === 'OK') {
+              this.$http.get('/moods').then(response => {
+                console.log(response)
+                if (response.body === 'Must auth') {
+                  this.$store.commit('setUnlocked', 0)
+                }
+                if (response.body !== 'Must auth') {
+                  console.log('Unlocking')
+                  this.$store.commit('setMoods', response.body)
+                  this.$store.commit('setUnlocked', 1)
+                }
+              }, response => {
+                console.log('Shit it the fan !')
+              })
+            }
           }
-        }
-      )
+        )
     }
   }
 })
