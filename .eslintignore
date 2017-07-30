@@ -1,4 +1,5 @@
 build/*.js
 config/*.js
 src/js/auth.js
+src/js/hammer.min.js
 src/js/keypress-2.1.4.min.js

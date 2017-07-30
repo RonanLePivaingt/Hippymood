@@ -157,7 +157,7 @@ document.addEventListener(
         key = arguments[1]; // take second argument
       }
 
-      /*
+      /* For debugging purpose
       if (combination.length > 1)
         console.log("Comparaison : " + combination + ", " +  window.authCombination.substring(0, combination.length));
         */
@@ -211,8 +211,55 @@ document.addEventListener(
     function checkCombination() {
       if (combination === window.authCombination) {
         console.log('Authentification validé par auth.js');
+        // Calling unlock checking function again, for unlocking with touch events
+        window.vm.unlock()
       }
     }
+
+
+    /**************
+     * Touch unlock
+     */
+
+    // Initializing a global var to delay between each touch inputs
+    window.wait = 0;
+    function resetWait() {
+      console.log('wait' + wait);
+      window.wait = 0;
+    }
+
+    // Initializing Hammerjs
+    var mc = new Hammer(datChips);
+    // let the pan gesture support all directions.
+    // this will block the vertical scrolling on a touch-device while on the element
+    mc.get('pan').set({ direction: Hammer.DIRECTION_ALL });
+
+    // listen to events...
+    mc.on("panleft panright panup pandown", function(ev) {
+      if (wait === 0) {
+        var touchKey ="";
+        window.wait = 1;
+        window.setTimeout(resetWait, 400);
+        switch (ev.type) {
+          case "panup":
+            touchKey = "38";
+            break;
+          case "pandown":
+            touchKey = "40";
+            break;
+          case "panleft":
+            touchKey = "37";
+            break;
+          case "panright":
+            touchKey = "39";
+            break;
+          default:
+            break;
+        }
+
+        addCombination(null, touchKey);
+      }
+    });
 
   }, 
   false

@@ -11,6 +11,7 @@
 <script>
   import Keypress from '../js/keypress-2.1.4.min.js'
   var listener = new Keypress.Listener()
+  import '../js/hammer.min.js'
   import '../js/auth.js'
   export default {
     name: 'chipslock',
