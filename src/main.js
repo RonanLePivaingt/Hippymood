@@ -135,9 +135,7 @@ window.vm = new Vue({
   template: '<App/>',
   components: { App },
   created: function () {
-    console.log('main is created')
     this.$http.get('/moods').then(response => {
-      console.log(response)
       if (response.body === 'Must auth') {
         this.$store.commit('setUnlocked', 0)
       }

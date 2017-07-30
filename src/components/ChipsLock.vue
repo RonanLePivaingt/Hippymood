@@ -11,18 +11,21 @@
 <script>
   import Keypress from '../js/keypress-2.1.4.min.js'
   var listener = new Keypress.Listener()
-  // import '../js/auth.js'
+  import '../js/auth.js'
   export default {
     name: 'chipslock',
-    created: function () {
+    mounted: function () {
       window.authCombination = this.$store.state.authCombinationCode
       listener.sequence_combo(
         this.$store.state.authCombination,
         function () {
+          console.log('Unlocked')
           window.vm.unlock()
         },
         true
       )
+      var event = new Event('chipslock-ready')
+      document.dispatchEvent(event)
     },
     destroyed: function () {
       // Removing listeners when the component is removed
