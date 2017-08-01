@@ -5,16 +5,21 @@
       src="/static/img/chips.jpg"
       />
     <p>Feel The Chips</p>
+    <nes-gamepad></nes-gamepad>
   </div>
 </template>
 
 <script>
+  import NESGamepad from './NESGamepad'
   import Keypress from '../js/keypress-2.1.4.min.js'
   var listener = new Keypress.Listener()
   import '../js/hammer.min.js'
   import '../js/auth.js'
   export default {
     name: 'chipslock',
+    components: {
+      'nes-gamepad': NESGamepad
+    },
     mounted: function () {
       window.authCombination = this.$store.state.authCombinationCode
       listener.sequence_combo(

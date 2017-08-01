@@ -261,6 +261,45 @@ document.addEventListener(
       }
     });
 
+    /*****************************
+     * Touch events on NES gamepad
+     */
+    // Check is NES gamepad is loaded and add event listener if not
+    var btnNesA = document.getElementById('nespad-a')
+    var mcNesA = new Hammer(btnNesA);
+    mcNesA.on("tap", function(ev) {
+      console.log('NES gamepad : A button triggered');
+      addCombination(null, "65");
+    });
+    var btnNesB = document.getElementById('nespad-b')
+    var mcNesB = new Hammer(btnNesB);
+    mcNesB.on("tap", function(ev) {
+      console.log('NES gamepad : B button triggered');
+      addCombination(null, "66");
+    });
+
+    var dpad = document.getElementById('dpad');
+    var dpadUp = document.getElementById('up');
+    var dpadDown = document.getElementById('down');
+    var dpadLeft = document.getElementById('left');
+    var dpadRight = document.getElementById('right');
+
+    var mcDpadUp = new Hammer(dpadUp);
+    mcDpadUp .on("tap", function(ev) {
+      addCombination(null, "38");
+    });
+    var mcDpadDown = new Hammer(dpadDown);
+    mcDpadDown .on("tap", function(ev) {
+      addCombination(null, "40");
+    });
+    var mcDpadLeft = new Hammer(dpadLeft);
+    mcDpadLeft .on("tap", function(ev) {
+      addCombination(null, "37");
+    });
+    var mcDpadRight = new Hammer(dpadRight);
+    mcDpadRight .on("tap", function(ev) {
+      addCombination(null, "39");
+    });
   }, 
   false
 );
