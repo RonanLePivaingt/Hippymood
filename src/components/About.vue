@@ -7,27 +7,31 @@
     </div>
 
     <p> Fait avec ♥ par Ronan Le Pivaingt </p>
-    <p>Avec : </p> 
-    <div>
+    <p>Technologies web utilisées : </p> 
+    <div class="logo-container">
       <a href="https://vuejs.org/" target="_blank" title="Vue.js">
-        <img class="logo" src="/static/img/vue_logo.png" alt="Vue js logo" />
+        <img class="logo" src="../assets/vue_logo.png" alt="Vue js logo" />
       </a>
-      <a href="https://getmdl.io/" target="_blank" title="Material Design Component" style="filter: invert(100%">
-        <img class="logo" src="/static/img/mdl_logo.svg" alt="Material Design Component logo" />
+      <a href="http://vuematerial.io/" target="_blank" title="Vue Material">
+        <img class="logo" src="../assets/vue-material-logo.png" alt="Vue Material logo" />
       </a>
     </div>
-    <div>
+    <div class="logo-container">
       <a href="https://nodejs.org/" target="_blank" title="Node.js">
         <img class="logoBigger" src="/static/img/nodejs_logo.png" alt="Vue js logo" />
       </a>
       <a href="https://expressjs.com/" target="_blank" title="Express">
-        <img class="logoBigger" src="/static/img/express_logo.png" alt="Express logo" />
+        <img class="logoBigger" src="../assets/express-logo.png" alt="Express logo" />
       </a>
     </div>
-    <p>Voir le code : </p>
-    <a href="https://github.com/RonanLePivaingt/Hippymood" target="_blank" title="Hippymood sur Github">
-      <img class="logo" src="/static/img/github_logo.png"/>
-    </a>
+
+    <md-divider class="md-inset"></md-divider>
+
+    <div class="github-link">
+      <a href="https://github.com/RonanLePivaingt/Hippymood" target="_blank" title="Voir le code d'Hippymood sur Github">
+        <img class="logo" src="../assets/github_logo.png"/>
+      </a>
+    </div>
   </div>
 </template>
 
@@ -46,6 +50,22 @@
 .back {
   text-align: center;
 }
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.logo-container img {
+  height: 100%;
+}
+hr.md-divider {
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+.github-link {
+  text-align: center;
+}
+/*
 img {
   max-width: 20%;
   max-height: 20%;
@@ -58,4 +78,5 @@ img.bigger {
   max-width: 50%;
   max-height: 50%;
 }
+*/
 </style>

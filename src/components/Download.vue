@@ -8,10 +8,14 @@
     <div>
 
       <md-card-header>
-        <div class="md-title">{{ current.song }}</div>
+        <div class="md-title">
+          <i class="material-icons meta">audiotrack</i> {{ current.song }}
+        </div>
         <div class="md-subhead">
-          <span v-show="current.album">{{ current.album }} </br></span>
-          {{ current.artist }}
+          <span v-show="current.album">
+            <i class="material-icons meta">album</i> {{ current.album }} </br>
+          </span>
+          <i class="material-icons">person</i> {{ current.artist }}
         </div>
       </md-card-header>
     </div>

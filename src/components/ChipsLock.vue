@@ -2,7 +2,7 @@
   <div id="chipslock">
     <img 
       id="datChips"
-      src="/static/img/chips.jpg"
+      src="/static/img/chipsN&B.jpg"
       />
     <p>Feel The Chips</p>
     <nes-gamepad></nes-gamepad>

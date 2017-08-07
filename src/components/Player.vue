@@ -8,7 +8,7 @@
       </p>
     </div>
     <div class="player" v-show="intro === 0">
-      <md-card id="playerCard" class="md-primary">
+      <md-card id="playerCard">
         <md-menu id="playerMenu" md-direction="bottom left" md-size="4">
           <md-button class="md-icon-button" md-menu-trigger>
             <md-icon>more_vert</md-icon>
@@ -27,25 +27,33 @@
           </md-menu-content>
         </md-menu>
 
-        <md-card-header>
-          <div class="md-title">{{ current.song }}</div>
-          <div class="md-subhead">
-            <span v-show="current.album">{{ current.album }} </br></span>
-            {{ current.artist }}
+        <md-card-header class="player-header">
+          <div class="md-title">
+            <i class="material-icons meta">audiotrack</i> {{ current.song }}
           </div>
         </md-card-header>
 
+        <md-card-content>
+            <span v-show="current.album">
+              <i class="material-icons meta">album</i> {{ current.album }} </br>
+            </span>
+            <i class="material-icons">person</i> {{ current.artist }}
+        </md-card-content>
+
         <md-card-actions id="playerControls">
-          <md-button @click.native="play" v-show="paused" class="md-raised"> 
-            Play 
+          <md-button @click.native="play" v-show="paused" class="md-accent md-fab md-raised"> 
+            <md-icon>play_arrow</md-icon>
           </md-button>
-          <md-button @click.native="pause" v-show="!paused" class="md-raised"> 
-            Pause 
+          <md-button @click.native="pause" v-show="!paused" class="md-accent md-fab md-raised"> 
+            <md-icon>pause</md-icon>
           </md-button>
-          <md-button @click.native="next" class="md-raised"> 
-            Next 
+          <md-button @click.native="next" class="md-fab md-raised"> 
+            <md-icon>skip_next</md-icon>
           </md-button>
         </md-card-actions>
+        <md-card-content class="player-mood">
+          <md-chip disabled>{{ currentmood }}</md-chip>
+        </md-card-content>
       </md-card>
     </div>
     <div class="mood-list">
@@ -74,7 +82,11 @@ export default {
   },
   computed: {
     currentmood: function () {
-      return this.current.genreId
+      for (var i = 0; i < this.$store.state.moods.length; i++) {
+        if (parseInt(this.$store.state.moods[i].id) === parseInt(this.current.moodId)) {
+          return this.$store.state.moods[i].name
+        }
+      }
     },
     intro: function () {
       return this.$store.state.intro
@@ -94,6 +106,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
+.intro p {
+  font-size: 1.5rem;
+  line-height: 1.5rem;
+}
 #playerCard {
   margin: 0 auto;
   width: 30em;
@@ -101,8 +117,26 @@ export default {
 #playerMenu {
   position: absolute;
   right: 0px;
+  color: white;
+}
+.player-header {
+  display: flex;
+  height: 176px;
+  background: rgb(0,188,212);
+  color: white;
+}
+.player-header .md-title {
+  align-self: flex-end;
+}
+.player-mood {
+  margin: 0 auto;
 }
 #playerControls {
+  margin: 0 auto;
+}
+.mood-list {
+  max-width: 35rem;
+  text-align: center;
   margin: 0 auto;
 }
 </style>
