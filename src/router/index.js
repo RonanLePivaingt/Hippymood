@@ -4,6 +4,7 @@ import Player from '@/components/Player'
 import Admin from '@/components/Admin'
 import About from '@/components/About'
 import Download from '@/components/Download'
+import Search from '@/components/Search'
 
 Vue.use(Router)
 
@@ -28,6 +29,12 @@ export default new Router({
       path: '/admin',
       name: 'Admin',
       component: Admin
+    },
+    {
+      path: '/search',
+      name: 'Search',
+      component: Search
     }
+
   ]
 })

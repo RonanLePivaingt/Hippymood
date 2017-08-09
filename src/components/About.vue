@@ -2,7 +2,7 @@
   <div id="about">
     <div class="back">
       <md-button class="md-raised md-accent" href="#/" >
-        Retour au lecteur
+        <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
       </md-button>
     </div>
 

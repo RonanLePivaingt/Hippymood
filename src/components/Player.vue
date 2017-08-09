@@ -28,6 +28,9 @@
         </md-menu>
 
         <md-card-header class="player-header">
+          <md-button class="md-icon-button searchButton" @click="search">
+            <md-icon>search</md-icon>
+          </md-button>
           <div class="md-title">
             <i class="material-icons meta">audiotrack</i> {{ current.song }}
           </div>
@@ -47,15 +50,18 @@
           <md-button @click.native="pause" v-show="!paused" class="md-accent md-fab md-raised"> 
             <md-icon>pause</md-icon>
           </md-button>
-          <md-button @click.native="next" class="md-fab md-raised"> 
+          <md-button @click.native="nextSong" class="md-fab md-raised"> 
             <md-icon>skip_next</md-icon>
           </md-button>
         </md-card-actions>
+
         <md-card-content class="player-mood">
           <md-chip disabled>{{ currentmood }}</md-chip>
+          <md-chip md-deletable v-show="nextChip" @click.native="deleteNext()"> {{ nextChip }}</md-chip>
         </md-card-content>
       </md-card>
     </div>
+
     <div class="mood-list">
       <mood-list  v-for="mood in moods" :mood="mood" :key="mood.id"></mood-list>
     </div>
@@ -76,14 +82,27 @@ export default {
       playerHTML5.pause()
       this.$store.commit('setPaused')
     },
-    next () {
+    nextSong () {
       this.$root.$store.dispatch('nextSong')
+    },
+    search () {
+      this.$router.push('search')
+    },
+    deleteNext () {
+      this.$store.commit('deleteNext')
     }
   },
   computed: {
     currentmood: function () {
       for (var i = 0; i < this.$store.state.moods.length; i++) {
         if (parseInt(this.$store.state.moods[i].id) === parseInt(this.current.moodId)) {
+          return this.$store.state.moods[i].name
+        }
+      }
+    },
+    nextMood: function () {
+      for (var i = 0; i < this.$store.state.moods.length; i++) {
+        if (parseInt(this.$store.state.moods[i].id) === parseInt(this.next.moodId)) {
           return this.$store.state.moods[i].name
         }
       }
@@ -96,6 +115,18 @@ export default {
     },
     current: function () {
       return this.$store.state.current
+    },
+    next: function () {
+      return this.$store.state.next
+    },
+    nextChip: function () {
+      if (this.next.type === 'mood') {
+        return this.nextMood
+      }
+      if (this.next.type === 'song') {
+        return 'Chanson : ' + this.$store.state.next.song.song
+      }
+      return false
     },
     paused: function () {
       return this.$store.state.playerState === 'paused'
@@ -127,6 +158,14 @@ export default {
 }
 .player-header .md-title {
   align-self: flex-end;
+}
+button.md-button.searchButton {
+  position: absolute;
+  top: 0;
+  right: 36px;
+}
+.searchButton > i.md-icon {
+  color: white !important;
 }
 .player-mood {
   margin: 0 auto;

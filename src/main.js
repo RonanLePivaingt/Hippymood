@@ -46,6 +46,9 @@ const store = new Vuex.Store({
     setNext (state, next) {
       state.next = next
     },
+    deleteNext (state) {
+      state.next = {}
+    },
     setPlaying (state) {
       state.playerState = 'playing'
     },
@@ -75,7 +78,7 @@ const store = new Vuex.Store({
     setNextMood: function ({ dispatch, commit }, moodId) {
       // That dont variable is ugly but eslinter is shouting on else if use...
       var dont = false
-      if (store.state.next.type !== 'mood' && store.state.next.moodId !== moodId) {
+      if (store.state.next.moodId !== moodId && store.state.current.moodId !== moodId) {
         dont = true
         commit(
           'setNext',
@@ -90,9 +93,25 @@ const store = new Vuex.Store({
         return dispatch('nextSong')
       }
     },
+    setNextSong: function ({ dispatch, commit }, song) {
+      // That dont variable is ugly but eslinter is shouting on else if use...
+      if (store.state.next.type !== 'mood') {
+        commit(
+          'setNext',
+          {
+            song: song,
+            type: 'song'
+          }
+        )
+      }
+      if (store.state.next.type === 'mood') {
+        // Should be triggering the next song action
+        return dispatch('nextSong')
+      }
+    },
     nextSong: function ({ commit }) {
       var moodId
-      if (store.state.next === {}) {
+      if (store.state.next.type === undefined) {
         moodId = store.state.currentMood
         Vue.http.get('/mood/' + moodId).then(response => {
           if (response.body.songs) {
@@ -103,7 +122,7 @@ const store = new Vuex.Store({
           commit('setPaused')
         })
       }
-      if (store.state.next !== {}) {
+      if (store.state.next.type === 'mood') {
         if (store.state.next.type === 'mood') {
           moodId = store.state.next.moodId
           store.state.currentMood = moodId
@@ -116,7 +135,12 @@ const store = new Vuex.Store({
           }, response => {
             console.log('Shit it the fan !')
             commit('setPaused')
+            store.state.next = {}
           })
+        }
+        if (store.state.next.type === 'song') {
+          commit('setCurrent', store.state.next.song)
+          store.state.next = {}
         }
       }
     },
@@ -159,7 +183,6 @@ window.vm = new Vue({
             // Redirecting to main page if server response is good
             if (response.body === 'OK') {
               this.$http.get('/moods').then(response => {
-                console.log(response)
                 if (response.body === 'Must auth') {
                   this.$store.commit('setUnlocked', 0)
                 }

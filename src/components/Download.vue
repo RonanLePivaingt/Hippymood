@@ -2,7 +2,7 @@
   <div id="download">
     <div class="back">
       <md-button class="md-raised md-accent" href="#/" >
-        Retour au lecteur
+        <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
       </md-button>
     </div>
     <div>
@@ -20,7 +20,9 @@
       </md-card-header>
     </div>
     <div class="download-link">
-      <a class="md-button md-raised" :href="current.path" download>Télécharger la chanson</a>
+      <a class="md-button md-raised" :href="current.path" download>
+          Télécharger la chanson <i class="material-icons">file_download</i>
+      </a>
       
     </div>
   </div>
