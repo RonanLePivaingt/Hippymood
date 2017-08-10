@@ -50,6 +50,9 @@
   margin: 0 auto;
   width: 30em;
 }
+.back {
+  text-align: center;
+}
 .download-link {
   text-align: center;
 }

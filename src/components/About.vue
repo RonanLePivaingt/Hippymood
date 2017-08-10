@@ -52,6 +52,18 @@
               </div>
             </md-list-item>
             <md-list-item class="md-inset">
+              Recherche
+              <div class="keyboard-shortcut">
+                <div class="key">
+                  <span>ctrl</span>
+                </div>
+                +
+                <div class="key">
+                  <span>F</span>
+                </div>
+              </div>
+            </md-list-item>
+            <md-list-item class="md-inset">
               Télécharger la chanson
               <div class="keyboard-shortcut">
                 <div class="key">
@@ -60,6 +72,30 @@
                 +
                 <div class="key">
                   <span>S</span>
+                </div>
+              </div>
+            </md-list-item>
+            <md-list-item class="md-inset">
+              Afficher la page à propos
+              <div class="keyboard-shortcut">
+                <div class="key">
+                  <span>ctrl</span>
+                </div>
+                +
+                <div class="key">
+                  <span>I</span>
+                </div>
+              </div>
+            </md-list-item>
+            <md-list-item class="md-inset">
+              Afficher le lecteur
+              <div class="keyboard-shortcut">
+                <div class="key">
+                  <span>ctrl</span>
+                </div>
+                +
+                <div class="key">
+                  <span>H</span>
                 </div>
               </div>
             </md-list-item>
@@ -117,7 +153,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #about {
-  margin: 0 auto;
+  margin: 0 auto 2rem auto;
   width: 30em;
   font-size: 1rem;
 }

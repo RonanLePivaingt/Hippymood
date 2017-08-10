@@ -26,7 +26,6 @@ const store = new Vuex.Store({
     previous: [],
     previousIndex: 0,
     current: {},
-    currentMood: 0,
     next: {},
     nextMood: 0,
     intro: 1,
@@ -40,12 +39,15 @@ const store = new Vuex.Store({
       state.moods = moods
     },
     setCurrent (state, current) {
+      // Adding current song to history if the user is not trying to listen to previous songs
       if (state.previousIndex === 0) {
         state.previous.push(state.current)
       }
       state.current = current
-      if (current.moodId !== state.currentMood) {
-        state.currentMood = current.moodId
+
+      // Removing intro text
+      if (state.intro) {
+        state.intro = 0
       }
     },
     setNext (state, next) {
@@ -59,9 +61,6 @@ const store = new Vuex.Store({
     },
     setPaused (state) {
       state.playerState = 'paused'
-    },
-    removeIntro (state) {
-      state.intro = 0
     },
     setUnlocked (state, unlocked) {
       state.unlocked = unlocked
@@ -79,7 +78,6 @@ const store = new Vuex.Store({
         if (response.body.songs) {
           commit('setCurrent', response.body.songs[0])
           commit('setPlaying')
-          commit('removeIntro')
         }
       }, response => {
         console.log('Shit it the fan !')
@@ -87,10 +85,7 @@ const store = new Vuex.Store({
       })
     },
     setNextMood: function ({ dispatch, commit }, moodId) {
-      // That dont variable is ugly but eslinter is shouting on else if use...
-      var dont = false
       if (store.state.next.moodId !== moodId && store.state.current.moodId !== moodId) {
-        dont = true
         commit(
           'setNext',
           {
@@ -98,24 +93,26 @@ const store = new Vuex.Store({
             type: 'mood'
           }
         )
-      }
-      if (store.state.next.type === 'mood' && store.state.next.moodId === moodId && dont === false) {
+      } else {
         // Should be triggering the next song action
         return dispatch('nextSong')
       }
     },
     setNextSong: function ({ dispatch, commit }, song) {
-      // That dont variable is ugly but eslinter is shouting on else if use...
       if (store.state.next.type !== 'mood') {
-        commit(
-          'setNext',
-          {
-            song: song,
-            type: 'song'
-          }
-        )
-      }
-      if (store.state.next.type === 'mood') {
+        if (store.state.current.id !== undefined) {
+          commit(
+            'setNext',
+            {
+              song: song,
+              type: 'song'
+            }
+          )
+        } else {
+          commit('setCurrent', song)
+          commit('setPlaying', song)
+        }
+      } else {
         // Should be triggering the next song action
         return dispatch('nextSong')
       }
@@ -134,8 +131,7 @@ const store = new Vuex.Store({
           }, response => {
             commit('setPaused')
           })
-        }
-        if (store.state.next.type === 'mood') {
+        } else if (store.state.next.type === 'mood') {
           if (store.state.next.type === 'mood') {
             moodId = store.state.next.moodId
             store.state.currentMood = moodId
@@ -151,10 +147,9 @@ const store = new Vuex.Store({
               store.state.next = {}
             })
           }
-          if (store.state.next.type === 'song') {
-            commit('setCurrent', store.state.next.song)
-            store.state.next = {}
-          }
+        } else if (store.state.next.type === 'song') {
+          commit('setCurrent', store.state.next.song)
+          store.state.next = {}
         }
       } else {
         // Handling from
@@ -173,7 +168,6 @@ const store = new Vuex.Store({
       }
     },
     unlockedStatus: function ({ commit }, status) {
-      console.log('Changing unlocked status')
       commit('setUnlocked', status)
     }
   }
@@ -190,8 +184,7 @@ window.vm = new Vue({
     this.$http.get('/moods').then(response => {
       if (response.body === 'Must auth') {
         this.$store.commit('setUnlocked', 0)
-      }
-      if (response.body !== 'Must auth') {
+      } else {
         console.log('Unlocking')
         this.$store.commit('setMoods', response.body)
         this.$store.commit('setUnlocked', 1)
@@ -213,8 +206,7 @@ window.vm = new Vue({
               this.$http.get('/moods').then(response => {
                 if (response.body === 'Must auth') {
                   this.$store.commit('setUnlocked', 0)
-                }
-                if (response.body !== 'Must auth') {
+                } else {
                   console.log('Unlocking')
                   this.$store.commit('setMoods', response.body)
                   this.$store.commit('setUnlocked', 1)
@@ -252,8 +244,17 @@ window.vm = new Vue({
     playPreviousSong: function () {
       this.$store.dispatch('previousSong')
     },
+    displayPlayer: function () {
+      this.$router.push('/')
+    },
+    displaySearch: function () {
+      this.$router.push('/search')
+    },
     displayDownload: function () {
       this.$router.push('/download')
+    },
+    displayAbout: function () {
+      this.$router.push('/about')
     }
   }
 })

@@ -16,6 +16,17 @@
       </md-input-container>
     </form>
 
+    <div class="loading" v-show="loading">
+      <md-spinner :md-size="150" md-indeterminate></md-spinner>
+    </div>
+
+    <div class="error" v-show="error">
+      <p>
+        (>_<)
+      </p>
+      Aucun résultat de recherche pour la recherche : <b> {{ previousSearchKeywords }} </b>
+    </div>
+
     <md-list>
       <md-list-item 
         v-for="(item, index) in searchResults"
@@ -56,7 +67,10 @@ export default {
   data: function () {
     return {
       searchKeywords: '',
-      searchResults: {}
+      previousSearchKeywords: '',
+      searchResults: {},
+      loading: false,
+      error: false
     }
   },
   mounted: function () {
@@ -67,11 +81,20 @@ export default {
   },
   methods: {
     onSubmit () {
+      this.searchResults = {}
+      this.loading = true
+      this.error = false
       this.$http.get(
         '/search/' + this.searchKeywords,
       ).then(
         response => {
-          this.searchResults = response.body.searchResults
+          this.loading = false
+          if (response.body.searchResults !== undefined) {
+            this.searchResults = response.body.searchResults
+          } else {
+            this.previousSearchKeywords = this.searchKeywords
+            this.error = true
+          }
         }
       )
     },
@@ -84,5 +107,15 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style scoped>
+.loading, .error {
+  text-align: center;
+}
+.error {
+  font-size: 1rem;
+}
+.error > p {
+  color: rgba(0,0,0,0.4);
+  font-size: 8rem;
+}
 </style>

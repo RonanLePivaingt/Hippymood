@@ -65,6 +65,33 @@ export default {
           window.vm.displayDownload()
         },
         'this': myScope
+      },
+      {
+        'keys': 'meta f',
+        'is_exclusive': false,
+        'prevent_default': true,
+        'on_keydown': function () {
+          window.vm.displaySearch()
+        },
+        'this': myScope
+      },
+      {
+        'keys': 'meta i',
+        'is_exclusive': true,
+        'prevent_default': true,
+        'on_keydown': function () {
+          window.vm.displayAbout()
+        },
+        'this': myScope
+      },
+      {
+        'keys': 'meta h',
+        'is_exclusive': true,
+        'prevent_default': true,
+        'on_keydown': function () {
+          window.vm.displayPlayer()
+        },
+        'this': myScope
       }
     ])
   },

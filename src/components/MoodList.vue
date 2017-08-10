@@ -26,7 +26,7 @@
     computed: {
       isActive () {
         // Return the CSS classes to apply to the current mood button
-        return parseInt(this.$store.state.currentMood) === parseInt(this.mood.id) ? 'md-raised md-primary' : ''
+        return parseInt(this.$store.state.current.moodId) === parseInt(this.mood.id) ? 'md-raised md-primary' : ''
       },
       playerState () {
         return this.$store.state.playerState
