@@ -13,6 +13,9 @@
 </template>
 
 <script>
+import Keypress from './js/keypress-2.1.4.min.js'
+var listener = new Keypress.Listener()
+var myCombos
 import chipslock from './components/ChipsLock'
 export default {
   name: 'app',
@@ -25,6 +28,62 @@ export default {
     },
     unlocked: function () {
       return this.$store.state.unlocked
+    }
+  },
+  mounted: function () {
+    var myScope = document
+    myCombos = listener.register_many([
+      {
+        'keys': 'meta space',
+        'is_exclusive': true,
+        'on_keydown': function () {
+          window.vm.togglePlayPause()
+        },
+        'this': myScope
+      },
+      {
+        'keys': 'meta left',
+        'is_exclusive': true,
+        'on_keydown': function () {
+          window.vm.playPreviousSong()
+        },
+        'this': myScope
+      },
+      {
+        'keys': 'meta right',
+        'is_exclusive': true,
+        'on_keydown': function () {
+          window.vm.playNextSong()
+        },
+        'this': myScope
+      },
+      {
+        'keys': 'meta s',
+        'is_exclusive': true,
+        'prevent_default': true,
+        'on_keydown': function () {
+          window.vm.displayDownload()
+        },
+        'this': myScope
+      }
+    ])
+  },
+  destroyed: function () {
+    // Removing listeners when the component is removed
+    listener.unregister_many(myCombos)
+  },
+  methods: {
+    play () {
+      window.vm.play()
+    },
+    pause () {
+      window.vm.pause()
+    },
+    nextSong () {
+      window.vm.playNextSong()
+    },
+    search () {
+      this.$router.push('search')
     }
   }
 }

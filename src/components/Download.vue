@@ -31,6 +31,11 @@
 <script>
   export default {
     name: 'download',
+    mounted: function () {
+      if (!this.$store.state.current.id) {
+        this.$router.push('/')
+      }
+    },
     computed: {
       current: function () {
         return this.$store.state.current

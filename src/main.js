@@ -23,6 +23,8 @@ Vue.component('player-html5', PlayerHtml5)
 const store = new Vuex.Store({
   state: {
     moods: [],
+    previous: [],
+    previousIndex: 0,
     current: {},
     currentMood: 0,
     next: {},
@@ -38,6 +40,9 @@ const store = new Vuex.Store({
       state.moods = moods
     },
     setCurrent (state, current) {
+      if (state.previousIndex === 0) {
+        state.previous.push(state.current)
+      }
       state.current = current
       if (current.moodId !== state.currentMood) {
         state.currentMood = current.moodId
@@ -60,6 +65,12 @@ const store = new Vuex.Store({
     },
     setUnlocked (state, unlocked) {
       state.unlocked = unlocked
+    },
+    incrementPreviousIndex (state) {
+      state.previousIndex++
+    },
+    decrementPreviousIndex (state) {
+      state.previousIndex--
     }
   },
   actions: {
@@ -110,38 +121,55 @@ const store = new Vuex.Store({
       }
     },
     nextSong: function ({ commit }) {
-      var moodId
-      if (store.state.next.type === undefined) {
-        moodId = store.state.currentMood
-        Vue.http.get('/mood/' + moodId).then(response => {
-          if (response.body.songs) {
-            commit('setCurrent', response.body.songs[0])
-            commit('setPlaying')
-          }
-        }, response => {
-          commit('setPaused')
-        })
-      }
-      if (store.state.next.type === 'mood') {
-        if (store.state.next.type === 'mood') {
-          moodId = store.state.next.moodId
-          store.state.currentMood = moodId
-          store.state.next = {}
+      if (store.state.previousIndex === 0) {
+        // Normal next song handling
+        var moodId
+        if (store.state.next.type === undefined) {
+          moodId = store.state.currentMood
           Vue.http.get('/mood/' + moodId).then(response => {
             if (response.body.songs) {
               commit('setCurrent', response.body.songs[0])
               commit('setPlaying')
             }
           }, response => {
-            console.log('Shit it the fan !')
             commit('setPaused')
-            store.state.next = {}
           })
         }
-        if (store.state.next.type === 'song') {
-          commit('setCurrent', store.state.next.song)
-          store.state.next = {}
+        if (store.state.next.type === 'mood') {
+          if (store.state.next.type === 'mood') {
+            moodId = store.state.next.moodId
+            store.state.currentMood = moodId
+            store.state.next = {}
+            Vue.http.get('/mood/' + moodId).then(response => {
+              if (response.body.songs) {
+                commit('setCurrent', response.body.songs[0])
+                commit('setPlaying')
+              }
+            }, response => {
+              console.log('Shit it the fan !')
+              commit('setPaused')
+              store.state.next = {}
+            })
+          }
+          if (store.state.next.type === 'song') {
+            commit('setCurrent', store.state.next.song)
+            store.state.next = {}
+          }
         }
+      } else {
+        // Handling from
+        commit('decrementPreviousIndex')
+        var songIndex = store.state.previous.length - store.state.previousIndex - 1
+        commit('setCurrent', store.state.previous[songIndex])
+      }
+    },
+    previousSong: function ({ commit }) {
+      if (store.state.previous.length - 2 >= store.state.previousIndex) {
+        commit('incrementPreviousIndex')
+        var songIndex = store.state.previous.length - store.state.previousIndex
+        commit('setCurrent', store.state.previous[songIndex])
+      } else {
+        console.log('Cant go back further :/')
       }
     },
     unlockedStatus: function ({ commit }, status) {
@@ -197,6 +225,35 @@ window.vm = new Vue({
             }
           }
         )
+    },
+    play: function () {
+      var playerHTML5 = document.getElementById('playerHTML5')
+      playerHTML5.play()
+      this.$store.commit('setPlaying')
+    },
+    pause: function () {
+      var playerHTML5 = document.getElementById('playerHTML5')
+      playerHTML5.pause()
+      this.$store.commit('setPaused')
+    },
+    togglePlayPause: function () {
+      var playerHTML5 = document.getElementById('playerHTML5')
+      if (this.$store.state.playerState === 'playing') {
+        playerHTML5.pause()
+        this.$store.commit('setPaused')
+      } else {
+        playerHTML5.play()
+        this.$store.commit('setPlaying')
+      }
+    },
+    playNextSong: function () {
+      this.$store.dispatch('nextSong')
+    },
+    playPreviousSong: function () {
+      this.$store.dispatch('previousSong')
+    },
+    displayDownload: function () {
+      this.$router.push('/download')
     }
   }
 })

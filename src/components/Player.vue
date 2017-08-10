@@ -73,17 +73,13 @@ export default {
   name: 'player',
   methods: {
     play () {
-      var playerHTML5 = document.getElementById('playerHTML5')
-      playerHTML5.play()
-      this.$store.commit('setPlaying')
+      window.vm.play()
     },
     pause () {
-      var playerHTML5 = document.getElementById('playerHTML5')
-      playerHTML5.pause()
-      this.$store.commit('setPaused')
+      window.vm.pause()
     },
     nextSong () {
-      this.$root.$store.dispatch('nextSong')
+      window.vm.playNextSong()
     },
     search () {
       this.$router.push('search')
@@ -172,6 +168,13 @@ button.md-button.searchButton {
 }
 #playerControls {
   margin: 0 auto;
+}
+/* Setting bigger player controls + set play button above the next song button */
+#playerControls button {
+  transform: scale(1.5);
+}
+#playerControls button:nth-child(1) {
+  z-index: 42;
 }
 .mood-list {
   max-width: 35rem;
