@@ -35,7 +35,6 @@ export default {
     myCombos = listener.register_many([
       {
         'keys': 'meta space',
-        'is_exclusive': true,
         'on_keydown': function () {
           window.vm.togglePlayPause()
         },
@@ -43,7 +42,6 @@ export default {
       },
       {
         'keys': 'meta left',
-        'is_exclusive': true,
         'on_keydown': function () {
           window.vm.playPreviousSong()
         },
@@ -51,7 +49,6 @@ export default {
       },
       {
         'keys': 'meta right',
-        'is_exclusive': true,
         'on_keydown': function () {
           window.vm.playNextSong()
         },
@@ -59,8 +56,6 @@ export default {
       },
       {
         'keys': 'meta s',
-        'is_exclusive': true,
-        'prevent_default': true,
         'on_keydown': function () {
           window.vm.displayDownload()
         },
@@ -68,8 +63,6 @@ export default {
       },
       {
         'keys': 'meta f',
-        'is_exclusive': false,
-        'prevent_default': true,
         'on_keydown': function () {
           window.vm.displaySearch()
         },
@@ -77,8 +70,6 @@ export default {
       },
       {
         'keys': 'meta i',
-        'is_exclusive': true,
-        'prevent_default': true,
         'on_keydown': function () {
           window.vm.displayAbout()
         },
@@ -86,8 +77,6 @@ export default {
       },
       {
         'keys': 'meta h',
-        'is_exclusive': true,
-        'prevent_default': true,
         'on_keydown': function () {
           window.vm.displayPlayer()
         },

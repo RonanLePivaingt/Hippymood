@@ -118,6 +118,7 @@ const store = new Vuex.Store({
         } else {
           commit('setCurrent', song)
           commit('setPlaying', song)
+          Vue.http.get('/searchSongPlayed/' + song.id)
         }
       } else {
         // Should be triggering the next song action
@@ -160,8 +161,12 @@ const store = new Vuex.Store({
             })
           }
         } else if (store.state.next.type === 'song') {
+          // Putting the searched song instead of the current one
           commit('setCurrent', store.state.next.song)
           store.state.next = {}
+          // Telling the server that this searched song is played and shouldn't been played again
+          var songId = store.state.current.id
+          Vue.http.get('/searchSongPlayed/' + songId)
         }
       } else {
         // Handling from
