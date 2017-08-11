@@ -11,10 +11,10 @@ module.exports = function(app){
     app.get('/admin/resetDatabase', HomeController.ResetDatabase);
     app.get('/admin/scanMusic', HomeController.ScanMusic);
     app.get('/search/:keywords', HomeController.Search);
+    app.post('/', HomeController.Auth);
+    app.get('/resetMood/:id', HomeController.ResetMood);
 
     // Old routes to be checked
-    app.post('/', HomeController.Auth);
-    app.get('/resetGenre/:id', HomeController.ResetGenre);
     app.get('/searchSongPlayed/:songId', HomeController.searchSongPlayed);
     app.get('/admin', HomeController.Admin);
 };

@@ -30,13 +30,14 @@
         <md-card-header class="player-header">
           <md-button class="md-icon-button searchButton" @click="search">
             <md-icon>search</md-icon>
+            <md-tooltip md-direction="bottom">Rechercher par chanson, album ou artiste</md-tooltip>
           </md-button>
           <div class="md-title">
             <i class="material-icons meta">audiotrack</i> {{ current.song }}
           </div>
         </md-card-header>
 
-        <md-card-content>
+        <md-card-content class="player-infos">
             <span v-show="current.album">
               <i class="material-icons meta">album</i> {{ current.album }} </br>
             </span>
@@ -50,13 +51,21 @@
           <md-button @click.native="pause" v-show="!paused" class="md-accent md-fab md-raised"> 
             <md-icon>pause</md-icon>
           </md-button>
-          <md-button @click.native="nextSong" class="md-fab md-raised"> 
+          <md-button @click.native="nextSong" v-show="nbSongsLeft !== '0'" class="md-fab md-raised"> 
             <md-icon>skip_next</md-icon>
+          </md-button>
+          <md-button @click.native="resetMood" v-show="nbSongsLeft === '0'" class="md-fab md-raised"> 
+            <md-icon>replay</md-icon>
+            <md-tooltip md-direction="bottom">Réécouter les chansons de la mood</md-tooltip>
           </md-button>
         </md-card-actions>
 
         <md-card-content class="player-mood">
-          <md-chip disabled>{{ currentmood }}</md-chip>
+          <md-chip disabled>
+            {{ currentmood }}
+            <span class="mood-songs-left" v-show="displayNbSongsLeft">{{ nbSongsLeft }}</span>
+            <md-tooltip md-direction="bottom" v-show="displayNbSongsLeft">{{ nbSongsLeftChip }}</md-tooltip>
+          </md-chip>
           <md-chip md-deletable v-show="nextChip" @click.native="deleteNext()"> {{ nextChip }}</md-chip>
         </md-card-content>
       </md-card>
@@ -86,6 +95,11 @@ export default {
     },
     deleteNext () {
       this.$store.commit('deleteNext')
+    },
+    resetMood () {
+      this.$http.get('/resetMood/' + this.current.moodId).then(response => {
+        this.nextSong()
+      })
     }
   },
   computed: {
@@ -112,8 +126,29 @@ export default {
     current: function () {
       return this.$store.state.current
     },
+    nbSongsLeft: function () {
+      if (this.$store.state.currentSongsLeft) {
+        return this.$store.state.currentSongsLeft
+      } else {
+        return '0'
+      }
+    },
+    displayNbSongsLeft: function () {
+      if (this.$store.state.currentSongsLeft >= 5) {
+        return false
+      } else {
+        return true
+      }
+    },
     next: function () {
       return this.$store.state.next
+    },
+    nbSongsLeftChip: function () {
+      if (this.nbSongsLeft !== '0') {
+        return 'Plus que ' + this.nbSongsLeft + ' chansons restantes'
+      } else {
+        return 'Plus aucune chanson restante'
+      }
     },
     nextChip: function () {
       if (this.next.type === 'mood') {
@@ -133,6 +168,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
+span.md-tooltip {
+  transform: translateX(-5rem) scale(1.5) !important;
+}
 .intro p {
   font-size: 1.5rem;
   line-height: 1.5rem;
@@ -155,6 +193,9 @@ export default {
 .player-header .md-title {
   align-self: flex-end;
 }
+.player-infos {
+  color: rgba(0, 0, 0, 0.54);
+}
 button.md-button.searchButton {
   position: absolute;
   top: 0;
@@ -175,6 +216,23 @@ button.md-button.searchButton {
 }
 #playerControls button:nth-child(1) {
   z-index: 42;
+}
+#playerControls i {
+  transform: scale(1.5);
+}
+#playerControls button:not(.md-accent) i {
+  color: rgba(0, 0, 0, 0.54);
+}
+.mood-songs-left {
+  background-color: #e91e63;;
+  display: inline-block;
+  flex-direction: wrap;
+  width: 1rem;
+  height: 1rem;
+  text-align: center;
+  border-radius: 50%;
+  color: white;
+  font-weight: bold;
 }
 .mood-list {
   max-width: 35rem;

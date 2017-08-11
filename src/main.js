@@ -26,6 +26,7 @@ const store = new Vuex.Store({
     previous: [],
     previousIndex: 0,
     current: {},
+    currentSongsLeft: 99,
     next: {},
     nextMood: 0,
     intro: 1,
@@ -49,6 +50,9 @@ const store = new Vuex.Store({
       if (state.intro) {
         state.intro = 0
       }
+    },
+    setCurrentSongsLeft (state, nbSongsLeft) {
+      state.currentSongsLeft = nbSongsLeft
     },
     setNext (state, next) {
       state.next = next
@@ -78,6 +82,9 @@ const store = new Vuex.Store({
         if (response.body.songs) {
           commit('setCurrent', response.body.songs[0])
           commit('setPlaying')
+        }
+        if (response.body.nbSongsLeft !== undefined) {
+          commit('setCurrentSongsLeft', response.body.nbSongsLeft)
         }
       }, response => {
         console.log('Shit it the fan !')
@@ -122,11 +129,14 @@ const store = new Vuex.Store({
         // Normal next song handling
         var moodId
         if (store.state.next.type === undefined) {
-          moodId = store.state.currentMood
+          moodId = store.state.current.moodId
           Vue.http.get('/mood/' + moodId).then(response => {
             if (response.body.songs) {
               commit('setCurrent', response.body.songs[0])
               commit('setPlaying')
+            }
+            if (response.body.nbSongsLeft !== undefined) {
+              commit('setCurrentSongsLeft', response.body.nbSongsLeft)
             }
           }, response => {
             commit('setPaused')
@@ -134,11 +144,13 @@ const store = new Vuex.Store({
         } else if (store.state.next.type === 'mood') {
           if (store.state.next.type === 'mood') {
             moodId = store.state.next.moodId
-            store.state.currentMood = moodId
             store.state.next = {}
             Vue.http.get('/mood/' + moodId).then(response => {
               if (response.body.songs) {
                 commit('setCurrent', response.body.songs[0])
+                if (response.body.nbSongsLeft !== undefined) {
+                  commit('setCurrentSongsLeft', response.body.nbSongsLeft)
+                }
                 commit('setPlaying')
               }
             }, response => {

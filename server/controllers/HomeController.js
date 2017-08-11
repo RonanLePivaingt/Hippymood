@@ -162,12 +162,10 @@ exports.Mood = function(req, res){
                     el.moodId = genre;
                 });
 
-                var response = {
+                res.send({
                     songs: randomSongs,
-                    infos: infos
-                };
-
-                res.send(response);
+                    nbSongsLeft: rows.length - 1
+                });
             }
             else {
                 var error = {"allSongGenrePlayed": 1};
@@ -227,15 +225,15 @@ exports.searchSongPlayed = function(req, res){
 }
 
 // Reset list of songs stored in sessions
-exports.ResetGenre = function(req, res){
-    var genreId = req.params.id;
-    console.log("Reseting session stored played songs for genre " + genreId);
-    connection.query('SELECT * FROM genreAssociation WHERE id = ' + genreId, function(err, rows, fields) {
+exports.ResetMood = function(req, res){
+    var moodId = req.params.id;
+    console.log("Reseting session stored played songs for genre " + moodId);
+    connection.query('SELECT * FROM genreAssociation WHERE id = ' + moodId, function(err, rows, fields) {
         rows.forEach(function(entry, index) {
             var i = req.session.playedSongs.indexOf(entry.id_songs);
             req.session.playedSongs.splice(i, 1);
         });
-        res.send("Genre ID : " + genreId);
+        res.send("Mood ID : " + moodId);
     });
 };
 
