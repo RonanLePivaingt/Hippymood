@@ -14,6 +14,7 @@
   import Keypress from '../js/keypress-2.1.4.min.js'
   var listener = new Keypress.Listener()
   import '../js/hammer.min.js'
+  import '../js/auth.animations.js'
   import '../js/auth.js'
   export default {
     name: 'chipslock',
@@ -30,12 +31,24 @@
         },
         true
       )
-      var event = new Event('chipslock-ready')
-      document.dispatchEvent(event)
+      function startChipsLock () {
+        window.chipslock.setCoordinates()
+        var event = new Event('chipslock-ready')
+        document.dispatchEvent(event)
+      }
+      var datChips = document.getElementById('datChips')
+      if (datChips.complete) {
+        startChipsLock()
+      } else {
+        datChips.addEventListener('load', startChipsLock())
+      }
+      window.chipslock.animate = true
     },
     destroyed: function () {
       // Removing listeners when the component is removed
       listener.destroy()
+
+      window.chipslock.animate = false
     }
   }
 </script>
@@ -51,5 +64,11 @@
 }
 #chipslock > p {
   text-align: center;
+}
+#setCoordinates {
+  position: absolute;
+  top: 20%;
+  right: 20%;
+  transform: scale(5);
 }
 </style>

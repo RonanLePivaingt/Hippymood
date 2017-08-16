@@ -51,10 +51,10 @@
           <md-button @click.native="pause" v-show="!paused" class="md-accent md-fab md-raised"> 
             <md-icon>pause</md-icon>
           </md-button>
-          <md-button @click.native="nextSong" v-show="nbSongsLeft !== '0'" class="md-fab md-raised"> 
+          <md-button @click.native="nextSong" v-show="!displayResetMood" class="md-fab md-raised"> 
             <md-icon>skip_next</md-icon>
           </md-button>
-          <md-button @click.native="resetMood" v-show="nbSongsLeft === '0'" class="md-fab md-raised"> 
+          <md-button @click.native="resetMood" v-show="displayResetMood" class="md-fab md-raised"> 
             <md-icon>replay</md-icon>
             <md-tooltip md-direction="bottom">Réécouter les chansons de la mood</md-tooltip>
           </md-button>
@@ -133,6 +133,9 @@ export default {
         return '0'
       }
     },
+    next: function () {
+      return this.$store.state.next
+    },
     displayNbSongsLeft: function () {
       if (this.$store.state.currentSongsLeft >= 5) {
         return false
@@ -140,8 +143,12 @@ export default {
         return true
       }
     },
-    next: function () {
-      return this.$store.state.next
+    displayResetMood: function () {
+      if (this.$store.state.currentSongsLeft === 0 && this.$store.state.next.type === undefined) {
+        return true
+      } else {
+        return false
+      }
     },
     nbSongsLeftChip: function () {
       if (this.nbSongsLeft !== '0') {
