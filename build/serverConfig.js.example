@@ -10,6 +10,7 @@ config.db.host = "localhost";
 config.db.user = "";
 config.db.password = "";
 config.db.database = "hippymood";
+// config.db.port = "3306";
 
 // Authentification
 config.auth = {};

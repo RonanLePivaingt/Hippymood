@@ -106,10 +106,7 @@ app.use(session({
     })
 );
 
-//app.set('port', process.env.PORT || 8080);
-
 app.use('/music', express.static('music'));
-//app.use('/', express.static('public'));
 
 // send app to router
 require('../server/router')(app);
