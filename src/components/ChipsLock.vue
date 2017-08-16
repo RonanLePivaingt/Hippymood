@@ -13,6 +13,7 @@
   import NESGamepad from './NESGamepad'
   import Keypress from '../js/keypress-2.1.4.min.js'
   var listener = new Keypress.Listener()
+  var interval
   import '../js/hammer.min.js'
   import '../js/auth.animations.js'
   import '../js/auth.js'
@@ -35,6 +36,8 @@
         window.chipslock.setCoordinates()
         var event = new Event('chipslock-ready')
         document.dispatchEvent(event)
+        // Recalculating coordinates every 5 seconds
+        interval = window.setInterval(window.chipslock.setCoordinates, 5000)
       }
       var datChips = document.getElementById('datChips')
       if (datChips.complete) {
@@ -47,6 +50,8 @@
     destroyed: function () {
       // Removing listeners when the component is removed
       listener.destroy()
+
+      window.clearInterval(interval)
 
       window.chipslock.animate = false
     }

@@ -134,7 +134,7 @@
       </md-list-item>
     </md-list>
 
-    <md-divider class="md-inset"></md-divider>
+    <md-divider class="md-inset github-separator"></md-divider>
 
     <div class="github-link">
       <a href="https://github.com/RonanLePivaingt/Hippymood" target="_blank" title="Voir le code d'Hippymood sur Github">
@@ -169,10 +169,7 @@ export default {
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
-.logo-container img {
-  height: 100%;
-}
-hr.md-divider.md-inset {
+hr.md-divider.md-inset.github-separator {
   margin-top: 5%;
   margin-bottom: 5%;
   margin-left: 0px;

@@ -1,6 +1,9 @@
 // Example configuration file, to be renamed as config.js and with the good values
 var config = {};
 
+// Application port for dev environment
+config.port = 8080
+
 // Database credentials
 config.db = {};
 config.db.host = "localhost";
