@@ -66,7 +66,7 @@
             <span class="mood-songs-left" v-show="displayNbSongsLeft">{{ nbSongsLeft }}</span>
             <md-tooltip md-direction="bottom" v-show="displayNbSongsLeft">{{ nbSongsLeftChip }}</md-tooltip>
           </md-chip>
-          <md-chip md-deletable v-show="nextChip" @click.native="deleteNext()"> {{ nextChip }}</md-chip>
+          <md-chip md-deletable v-show="nextChip" @delete="deleteNext()"> {{ nextChip }}</md-chip>
         </md-card-content>
       </md-card>
     </div>

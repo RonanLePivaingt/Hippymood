@@ -5,7 +5,6 @@ var id3tags = require('./controllers/id3tags.js');
 module.exports = function(app){
     // Checked routes for branch vue2fromscratch
     app.post('/', HomeController.Auth);
-    app.get('/app', HomeController.App);
     app.get('/moods', HomeController.Moods);
     app.get('/mood/:id', HomeController.Mood);
     app.get('/admin/resetSession', HomeController.ResetSession);
