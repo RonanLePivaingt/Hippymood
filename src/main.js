@@ -11,6 +11,9 @@ import MoodList from '@/components/MoodList'
 
 import Config from '@/../build/serverConfig.js'
 
+import VueYouTubeEmbed from 'vue-youtube-embed'
+Vue.use(VueYouTubeEmbed)
+
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
@@ -33,7 +36,9 @@ const store = new Vuex.Store({
     unlocked: -1,
     playerState: 'intro',
     authCombination: Config.auth.combination,
-    authCombinationCode: Config.auth.combinationCode
+    authCombinationCode: Config.auth.combinationCode,
+    videoMode: false,
+    betaMode: false
   },
   mutations: {
     setMoods (state, moods) {
@@ -74,11 +79,26 @@ const store = new Vuex.Store({
     },
     decrementPreviousIndex (state) {
       state.previousIndex--
+    },
+    toggleVideoMode (state) {
+      if (state.videoMode === true) {
+        state.videoMode = false
+      } else {
+        state.videoMode = true
+      }
+    },
+    toggleBetaMode (state) {
+      if (state.betaMode === true) {
+        state.betaMode = false
+      } else {
+        state.betaMode = true
+      }
     }
   },
   actions: {
     playMood: function ({ commit }, moodId) {
-      Vue.http.get('/mood/' + moodId).then(response => {
+      var videoMode = store.state.videoMode
+      Vue.http.post('/mood/', {moodId: moodId, videoMode: videoMode}).then(response => {
         if (response.body.songs) {
           commit('setCurrent', response.body.songs[0])
           commit('setPlaying')
@@ -129,9 +149,11 @@ const store = new Vuex.Store({
       if (store.state.previousIndex === 0) {
         // Normal next song handling
         var moodId
+        var videoMode
         if (store.state.next.type === undefined) {
           moodId = store.state.current.moodId
-          Vue.http.get('/mood/' + moodId).then(response => {
+          videoMode = store.state.videoMode
+          Vue.http.post('/mood/', {moodId: moodId, videoMode: videoMode}).then(response => {
             if (response.body.songs) {
               commit('setCurrent', response.body.songs[0])
               commit('setPlaying')
@@ -145,8 +167,9 @@ const store = new Vuex.Store({
         } else if (store.state.next.type === 'mood') {
           if (store.state.next.type === 'mood') {
             moodId = store.state.next.moodId
+            videoMode = store.state.next.videoMode
             store.state.next = {}
-            Vue.http.get('/mood/' + moodId).then(response => {
+            Vue.http.post('/mood/', {moodId: moodId, videoMode: videoMode}).then(response => {
               if (response.body.songs) {
                 commit('setCurrent', response.body.songs[0])
                 if (response.body.nbSongsLeft !== undefined) {
@@ -272,6 +295,16 @@ window.vm = new Vue({
     },
     displayAbout: function () {
       this.$router.push('/about')
+    },
+    activateBetaFeatures: function () {
+      if (this.$store.state.betaMode === false) {
+        this.$children[0].$refs.snackbar.open()
+      } else if (this.$store.state.videoMode === true) {
+        // Desactivating video mode as well
+        this.$store.commit('toggleVideoMode')
+      }
+
+      this.$store.commit('toggleBetaMode')
     }
   }
 })

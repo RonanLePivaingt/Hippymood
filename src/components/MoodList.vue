@@ -4,8 +4,10 @@
     :id="mood.id" 
     :class="isActive"
     class="md-raised"
+    :disabled="videoMode && mood.nbVideo === 0"
   >
     {{ mood.name }}
+
   </md-button>
 </template>
 
@@ -33,6 +35,9 @@
       },
       next () {
         return this.$store.state.next
+      },
+      videoMode () {
+        return this.$store.state.videoMode
       }
     }
   }
@@ -40,4 +45,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+i.material-icons{
+  color: rgba(0, 0, 0, 0.54);
+}
 </style>

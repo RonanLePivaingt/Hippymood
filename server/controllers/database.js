@@ -133,7 +133,8 @@ function checkSong(path, metadata) {
   var artist_id = metadata.artist_id;
   var album = metadata.album;
   var album_id = metadata.album_id;
-  var title = metadata.title ;
+  var title = metadata.title;
+  var youtube = metadata.youtube;
 
   knex('songs')
     .where('path', path)
@@ -142,7 +143,14 @@ function checkSong(path, metadata) {
       nbMatch = rows.length;
       if (nbMatch == 0) {
         knex('songs')
-          .insert({id : '', name: title, path: path, id_albums: album_id, id_artists : artist_id})
+          .insert({
+              id : '',
+              name: title,
+              path: path,
+              youtube: youtube,
+              id_albums: album_id,
+              id_artists : artist_id
+            })
           .then(function(rows) {
             metadata['song_id'] = rows[0];
             genreAssociation(metadata);

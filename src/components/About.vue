@@ -99,6 +99,18 @@
                 </div>
               </div>
             </md-list-item>
+            <md-list-item class="md-inset">
+              Activer les fonctionnalités beta
+              <div class="keyboard-shortcut">
+                <div class="key">
+                  <span>ctrl</span>
+                </div>
+                +
+                <div class="key">
+                  <span>B</span>
+                </div>
+              </div>
+            </md-list-item>
           </md-list>
         </md-list-expand>
       </md-list-item>

@@ -41,7 +41,11 @@ exports.Auth = function(req, res){
 exports.Moods = function(req, res){
   if (req.session.auth || config.auth.activate === 0) {
     knex.select('genres.id', 'genres.name')
+      .count('songs.youtube as nbVideo')
       .from('genres')
+      .join('genreAssociation', 'genres.id', '=', 'genreAssociation.id')
+      .join('songs', 'songs.id', '=', 'genreAssociation.id_songs')
+      .groupBy('genres.id')
       .then(function(rows) { 
         res.send(rows);
       })
@@ -61,7 +65,8 @@ exports.Mood = function(req, res){
     res.header("Pragma", "no-cache");
     res.header("Expires", 0);
 
-    var moodId = req.params.id;
+    var moodId = req.body.moodId;
+    var videoMode = req.body.videoMode;
 
     // Making an array of the already played songs
     var songsIdAlreadyPlayed = [];
@@ -71,14 +76,19 @@ exports.Mood = function(req, res){
       });
     }
 
-    knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'songs.path', 'albums.name AS album')
+    var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'songs.path', 'albums.name AS album', 'songs.youtube')
       .from('songs')
       .join('genreAssociation', 'songs.id', '=', 'genreAssociation.id_songs')
       .join('artists', 'artists.id', '=', 'songs.id_artists')
       .join('albums', 'albums.id', '=', 'songs.id_albums')
       .where('genreAssociation.id', moodId)
-      .whereNotIn('songs.id', songsIdAlreadyPlayed)
-      .then(function(rows) {       
+      .whereNotIn('songs.id', songsIdAlreadyPlayed);
+
+    if (videoMode) {
+      select = select.whereNotNull('songs.youtube');
+    }
+
+    select.then(function(rows) {       
         if (rows.length > 0) {
           var randomIndex1 = Math.floor(Math.random() * rows.length);
 

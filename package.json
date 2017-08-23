@@ -16,11 +16,14 @@
   "dependencies": {
     "express-mysql-session": "^1.2.0",
     "express-session": "^1.15.1",
+    "id3js": "^1.1.3",
+    "knex": "^0.13.0",
     "musicmetadata": "^2.0.5",
     "vue": "^2.2.2",
     "vue-material": "^0.7.1",
     "vue-resource": "^1.2.1",
     "vue-router": "^2.2.0",
+    "vue-youtube-embed": "^2.1.1",
     "vuex": "^2.2.1"
   },
   "devDependencies": {

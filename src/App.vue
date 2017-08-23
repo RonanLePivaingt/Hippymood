@@ -2,13 +2,25 @@
   <div id="app">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
     <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"> 
+
     <h1> Hippy Mood </h1>
     <div v-if="unlocked === -1">
       <p>Loading</p>
     </div>
+
     <chipslock v-if="unlocked === 0"></chipslock>
+
     <router-view v-if="unlocked === 1"></router-view>
-    <player-html5 :current="current"></player-html5>
+
+    <player-html5 
+        v-if="videoMode === false"
+        :current="current"
+        ></player-html5>
+
+    <md-snackbar md-position="bottom center" ref="snackbar" md-duration="10000">
+      <span>Les vidéos sont en test avec le bouton à gauche de la recherche. Enjoy ;)</span>
+      <md-button class="md-accent" md-theme="light-blue" @click="$refs.snackbar.close()">Fermer</md-button>
+    </md-snackbar>
   </div>
 </template>
 
@@ -28,6 +40,9 @@ export default {
     },
     unlocked: function () {
       return this.$store.state.unlocked
+    },
+    videoMode: function () {
+      return this.$store.state.videoMode
     }
   },
   mounted: function () {
@@ -79,6 +94,13 @@ export default {
         'keys': 'meta h',
         'on_keydown': function () {
           window.vm.displayPlayer()
+        },
+        'this': myScope
+      },
+      {
+        'keys': 'meta b',
+        'on_keydown': function () {
+          window.vm.activateBetaFeatures()
         },
         'this': myScope
       }

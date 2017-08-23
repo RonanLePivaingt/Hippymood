@@ -7,7 +7,11 @@
         Des fois tu reviens, des fois pas...
       </p>
     </div>
-    <div class="player" v-show="intro === 0">
+    <div 
+      class="player" 
+      v-bind:class="{ videoMode: videoMode }"
+      v-show="intro === 0"
+      >
       <md-card id="playerCard">
         <md-menu id="playerMenu" md-direction="bottom left" md-size="4">
           <md-button class="md-icon-button" md-menu-trigger>
@@ -28,6 +32,16 @@
         </md-menu>
 
         <md-card-header class="player-header">
+          <md-button-toggle 
+            v-if="betaMode"
+            @click.native="changeVideoMode" 
+            class="videoModeToggle"
+            >
+            <md-button class="md-icon-button">
+              <md-icon>ondemand_video</md-icon>
+            </md-button>
+          </md-button-toggle>
+
           <md-button class="md-icon-button searchButton" @click="search">
             <md-icon>search</md-icon>
             <md-tooltip md-direction="bottom">Rechercher par chanson, album ou artiste</md-tooltip>
@@ -71,6 +85,14 @@
       </md-card>
     </div>
 
+    <youtube
+      v-if="youtubeId && videoMode"
+      class="video"
+      @ended="nextSong"
+      :video-id="youtubeId"
+      :player-vars="{ autoplay: 1 }"
+      ></youtube>
+
     <div class="mood-list">
       <mood-list  v-for="mood in moods" :mood="mood" :key="mood.id"></mood-list>
     </div>
@@ -78,6 +100,14 @@
 </template>
 
 <script>
+function youtubeVideoId (url) {
+  var videoId = url.split('v=')[1]
+  var ampersandPosition = videoId.indexOf('&')
+  if (ampersandPosition !== -1) {
+    videoId = videoId.substring(0, ampersandPosition)
+  }
+  return videoId
+}
 export default {
   name: 'player',
   methods: {
@@ -89,6 +119,9 @@ export default {
     },
     nextSong () {
       window.vm.playNextSong()
+    },
+    changeVideoMode () {
+      this.$store.commit('toggleVideoMode')
     },
     search () {
       this.$router.push('search')
@@ -168,6 +201,19 @@ export default {
     },
     paused: function () {
       return this.$store.state.playerState === 'paused'
+    },
+    betaMode: function () {
+      return this.$store.state.betaMode
+    },
+    videoMode: function () {
+      return this.$store.state.videoMode
+    },
+    youtubeId: function () {
+      if (this.$store.state.current.youtube) {
+        return youtubeVideoId(this.$store.state.current.youtube)
+      } else {
+        return false
+      }
     }
   }
 }
@@ -202,6 +248,15 @@ span.md-tooltip {
 }
 .player-infos {
   color: rgba(0, 0, 0, 0.54);
+}
+.videoModeToggle {
+  position: absolute;
+  top: 0;
+  right: 72px;
+  border-radius: 50% !important;
+}
+.videoModeToggle .md-icon {
+  color: white !important;
 }
 button.md-button.searchButton {
   position: absolute;
@@ -245,5 +300,24 @@ button.md-button.searchButton {
   max-width: 35rem;
   text-align: center;
   margin: 0 auto;
+}
+.video iframe:not(.md-image) {
+  height: 360px;
+}
+.video {
+  text-align: center;
+}
+.videoMode #playerCard.md-card {
+  width: 64Opx;
+}
+.videoMode .player-header {
+  height: 100%;
+}
+.videoMode #playerControls, .videoMode .player-mood {
+  display: none;
+}
+body.video {
+    /* Ou alors un masque (en absolu ?) avec z-index inférieur à l'iframe ;) */
+    background-color: rgba(0,0,0,0.5);
 }
 </style>

@@ -1,19 +1,31 @@
 var fs = require('fs');
 var mm = require('musicmetadata');
 var db = require('./database');
+// Other id3 tags reader library to get the url-file attribute where could be stored the youtube URL
+var id3 = require('id3js');
 
-exports.scan = function(path) {
+exports.scan = function(path, checkVideo = false) {
+    checkVideo = true;
+
     // create a new parser from a node ReadStream
     var parser = mm(fs.createReadStream(path), function (err, metadata) {
         if (err) 
             return false;
 
         // Try to insert the song if a genre (mood) is set
-        if (metadata.genre[0]) {
-            if (metadata.artist[0]) {
-                db.insertSong(path, metadata);
-            }
+      if (metadata.genre[0] && metadata.artist[0]) {
+        if (checkVideo === false) {
+            db.insertSong(path, metadata);
         }
+        else {
+            // throw "monException"; // génère une exception
+            id3({ file: path, type: id3.OPEN_LOCAL }, function(err, tags) {
+                metadata['youtube'] = tags.v2['url-file'];
+                db.insertSong(path, metadata);
+            });
+            console.log(path);
+        }
+      }
         
     });
 };
