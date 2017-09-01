@@ -9,7 +9,7 @@
     </div>
     <div 
       class="player" 
-      v-bind:class="{ videoMode: videoMode }"
+      v-bind:class="{ video: videoMode }"
       v-show="intro === 0"
       >
       <md-card id="playerCard">
@@ -85,17 +85,6 @@
       </md-card>
     </div>
 
-    <youtube
-      v-if="youtubeId && videoMode"
-      class="video"
-      @ended="nextSong"
-      :video-id="youtubeId"
-      :player-vars="{ autoplay: 1 }"
-      ></youtube>
-
-    <div class="mood-list">
-      <mood-list  v-for="mood in moods" :mood="mood" :key="mood.id"></mood-list>
-    </div>
   </div>
 </template>
 
@@ -112,22 +101,22 @@ export default {
   name: 'player',
   methods: {
     play () {
-      window.vm.play()
+      window.vm.extPlay()
     },
     pause () {
-      window.vm.pause()
+      window.vm.extPause()
     },
     nextSong () {
-      window.vm.playNextSong()
+      window.vm.extPlayNextSong()
     },
     changeVideoMode () {
-      this.$store.commit('toggleVideoMode')
+      this.$store.commit('askToggleVideoMode')
     },
     search () {
       this.$router.push('search')
     },
     deleteNext () {
-      this.$store.commit('deleteNext')
+      this.$store.commit('askDeleteNext')
     },
     resetMood () {
       this.$http.get('/resetMood/' + this.current.moodId).then(response => {
@@ -152,9 +141,6 @@ export default {
     },
     intro: function () {
       return this.$store.state.intro
-    },
-    moods: function () {
-      return this.$store.state.moods
     },
     current: function () {
       return this.$store.state.current
@@ -307,17 +293,13 @@ button.md-button.searchButton {
 .video {
   text-align: center;
 }
-.videoMode #playerCard.md-card {
+.video #playerCard.md-card {
   width: 64Opx;
 }
-.videoMode .player-header {
+.video .player-header {
   height: 100%;
 }
-.videoMode #playerControls, .videoMode .player-mood {
+.video #playerControls, .video .player-mood {
   display: none;
-}
-body.video {
-    /* Ou alors un masque (en absolu ?) avec z-index inférieur à l'iframe ;) */
-    background-color: rgba(0,0,0,0.5);
 }
 </style>

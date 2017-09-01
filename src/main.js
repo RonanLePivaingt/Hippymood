@@ -6,8 +6,6 @@ import VueResource from 'vue-resource'
 import VueMaterial from 'vue-material'
 import router from '@/router'
 import App from '@/App'
-import PlayerHtml5 from '@/components/PlayerHtml5'
-import MoodList from '@/components/MoodList'
 
 import Config from '@/../build/serverConfig.js'
 
@@ -19,9 +17,6 @@ Vue.config.productionTip = false
 Vue.use(Vuex)
 Vue.use(VueResource)
 Vue.use(VueMaterial)
-
-Vue.component('mood-list', MoodList)
-Vue.component('player-html5', PlayerHtml5)
 
 const store = new Vuex.Store({
   state: {
@@ -96,7 +91,7 @@ const store = new Vuex.Store({
     }
   },
   actions: {
-    playMood: function ({ commit }, moodId) {
+    askPlayMood: function ({ commit }, moodId) {
       var videoMode = store.state.videoMode
       Vue.http.post('/mood/', {moodId: moodId, videoMode: videoMode}).then(response => {
         if (response.body.songs) {
@@ -111,7 +106,7 @@ const store = new Vuex.Store({
         commit('setPaused')
       })
     },
-    setNextMood: function ({ dispatch, commit }, moodId) {
+    askNextMood: function ({ dispatch, commit }, moodId) {
       if (store.state.next.moodId !== moodId && store.state.current.moodId !== moodId) {
         commit(
           'setNext',
@@ -122,10 +117,10 @@ const store = new Vuex.Store({
         )
       } else {
         // Should be triggering the next song action
-        return dispatch('nextSong')
+        return dispatch('askFindAndPlayNextSong')
       }
     },
-    setNextSong: function ({ dispatch, commit }, song) {
+    askNextSong: function ({ dispatch, commit }, song) {
       if (store.state.next.type !== 'mood') {
         if (store.state.current.id !== undefined) {
           commit(
@@ -142,10 +137,10 @@ const store = new Vuex.Store({
         }
       } else {
         // Should be triggering the next song action
-        return dispatch('nextSong')
+        return dispatch('askNextSong')
       }
     },
-    nextSong: function ({ commit }) {
+    askFindAndPlayNextSong: function ({ commit }) {
       if (store.state.previousIndex === 0) {
         // Normal next song handling
         var moodId
@@ -165,24 +160,22 @@ const store = new Vuex.Store({
             commit('setPaused')
           })
         } else if (store.state.next.type === 'mood') {
-          if (store.state.next.type === 'mood') {
-            moodId = store.state.next.moodId
-            videoMode = store.state.next.videoMode
-            store.state.next = {}
-            Vue.http.post('/mood/', {moodId: moodId, videoMode: videoMode}).then(response => {
-              if (response.body.songs) {
-                commit('setCurrent', response.body.songs[0])
-                if (response.body.nbSongsLeft !== undefined) {
-                  commit('setCurrentSongsLeft', response.body.nbSongsLeft)
-                }
-                commit('setPlaying')
+          moodId = store.state.next.moodId
+          videoMode = store.state.next.videoMode
+          store.state.next = {}
+          Vue.http.post('/mood/', {moodId: moodId, videoMode: videoMode}).then(response => {
+            if (response.body.songs) {
+              commit('setCurrent', response.body.songs[0])
+              if (response.body.nbSongsLeft !== undefined) {
+                commit('setCurrentSongsLeft', response.body.nbSongsLeft)
               }
-            }, response => {
-              console.log('Shit it the fan !')
-              commit('setPaused')
-              store.state.next = {}
-            })
-          }
+              commit('setPlaying')
+            }
+          }, response => {
+            console.log('Shit it the fan !')
+            commit('setPaused')
+            store.state.next = {}
+          })
         } else if (store.state.next.type === 'song') {
           // Putting the searched song instead of the current one
           commit('setCurrent', store.state.next.song)
@@ -198,7 +191,7 @@ const store = new Vuex.Store({
         commit('setCurrent', store.state.previous[songIndex])
       }
     },
-    previousSong: function ({ commit }) {
+    askPreviousSong: function ({ commit }) {
       if (store.state.previous.length - 2 >= store.state.previousIndex) {
         commit('incrementPreviousIndex')
         var songIndex = store.state.previous.length - store.state.previousIndex
@@ -207,7 +200,7 @@ const store = new Vuex.Store({
         console.log('Cant go back further :/')
       }
     },
-    unlockedStatus: function ({ commit }, status) {
+    askUnlockedStatus: function ({ commit }, status) {
       commit('setUnlocked', status)
     }
   }
@@ -234,7 +227,7 @@ window.vm = new Vue({
     })
   },
   methods: {
-    unlock: function () {
+    extUnlock: function () {
       this.$http.post(
         '/',
         {combination: this.$store.state.authCombinationCode}
@@ -258,17 +251,17 @@ window.vm = new Vue({
           }
         )
     },
-    play: function () {
+    extPlay: function () {
       var playerHTML5 = document.getElementById('playerHTML5')
       playerHTML5.play()
       this.$store.commit('setPlaying')
     },
-    pause: function () {
+    extPause: function () {
       var playerHTML5 = document.getElementById('playerHTML5')
       playerHTML5.pause()
       this.$store.commit('setPaused')
     },
-    togglePlayPause: function () {
+    extTogglePlayPause: function () {
       var playerHTML5 = document.getElementById('playerHTML5')
       if (this.$store.state.playerState === 'playing') {
         playerHTML5.pause()
@@ -278,33 +271,33 @@ window.vm = new Vue({
         this.$store.commit('setPlaying')
       }
     },
-    playNextSong: function () {
-      this.$store.dispatch('nextSong')
+    extPlayNextSong: function () {
+      this.$store.dispatch('askFindAndPlayNextSong')
     },
-    playPreviousSong: function () {
-      this.$store.dispatch('previousSong')
+    extPlayPreviousSong: function () {
+      this.$store.dispatch('askPreviousSong')
     },
-    displayPlayer: function () {
+    extDisplayPlayer: function () {
       this.$router.push('/')
     },
-    displaySearch: function () {
+    extDisplaySearch: function () {
       this.$router.push('/search')
     },
-    displayDownload: function () {
+    extDisplayDownload: function () {
       this.$router.push('/download')
     },
-    displayAbout: function () {
+    extDisplayAbout: function () {
       this.$router.push('/about')
     },
-    activateBetaFeatures: function () {
+    estActivateBetaFeatures: function () {
       if (this.$store.state.betaMode === false) {
         this.$children[0].$refs.snackbar.open()
       } else if (this.$store.state.videoMode === true) {
         // Desactivating video mode as well
-        this.$store.commit('toggleVideoMode')
+        this.$store.commit('askToggleVideoMode')
       }
 
-      this.$store.commit('toggleBetaMode')
+      this.$store.commit('askToggleBetaMode')
     }
   }
 })

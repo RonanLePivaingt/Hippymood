@@ -18,10 +18,10 @@
     methods: {
       play: function (el) {
         if (this.playerState !== 'playing') {
-          this.$root.$store.dispatch('playMood', el.target.id)
+          this.$root.$store.dispatch('askPlayMood', el.target.id)
         }
         if (this.playerState === 'playing') {
-          this.$root.$store.dispatch('setNextMood', el.target.id)
+          this.$root.$store.dispatch('askNextMood', el.target.id)
         }
       }
     },

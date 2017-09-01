@@ -72,7 +72,7 @@ document.addEventListener(
       if (combination === window.authCombination) {
         console.log('Authentification validé par auth.js');
         // Calling unlock checking function again, for unlocking with touch events
-        window.vm.unlock()
+        window.vm.extUnlock();
       }
     }
 

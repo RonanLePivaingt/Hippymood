@@ -1,13 +1,13 @@
 <template>
   <div id="admin">
     <p>
-      <button class="mdc-button" @click="resetSession()" > Reset session </button>
+      <md-button class="md-raised" @click="resetSession()">Reset session</md-button>
     </p>
     <p>
-      <button class="mdc-button" @click="resetDatabase()" > Reset database </button>
+      <md-button class="md-raised md-warn" @click="resetDatabase()">Reset database</md-button>
     </p>
     <p>
-      <button class="mdc-button" @click="scanMusic()" > Scan music </button>
+      <md-button class="md-raised" @click="scanMusic()"> Scan music </md-button>
     </p>
   </div>
 </template>

@@ -41,6 +41,7 @@ exports.Auth = function(req, res){
 exports.Moods = function(req, res){
   if (req.session.auth || config.auth.activate === 0) {
     knex.select('genres.id', 'genres.name')
+      .count('songs.id as nbSongs')
       .count('songs.youtube as nbVideo')
       .from('genres')
       .join('genreAssociation', 'genres.id', '=', 'genreAssociation.id')

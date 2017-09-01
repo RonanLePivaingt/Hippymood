@@ -1,7 +1,12 @@
 <template>
-  <div id="app">
+  <div 
+    id="app"
+    v-bind:class="{video: videoMode}"
+    >
+
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
     <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"> 
+    <div id="mask"></div>
 
     <h1> Hippy Mood </h1>
     <div v-if="unlocked === -1">
@@ -13,9 +18,21 @@
     <router-view v-if="unlocked === 1"></router-view>
 
     <player-html5 
-        v-if="videoMode === false"
-        :current="current"
-        ></player-html5>
+                 v-if="videoMode === false"
+                 :current="current"
+                 ></player-html5>
+
+    <youtube
+                 v-if="youtubeId && videoMode"
+                 class="video"
+                 @ended="nextSong"
+                 :video-id="youtubeId"
+                 :player-vars="{ autoplay: 1 }"
+                 ></youtube>
+
+    <div class="mood-list">
+      <mood-list  v-for="mood in moods" :mood="mood" :key="mood.id"></mood-list>
+    </div>
 
     <md-snackbar md-position="bottom center" ref="snackbar" md-duration="10000">
       <span>Les vidéos sont en test avec le bouton à gauche de la recherche. Enjoy ;)</span>
@@ -25,124 +42,140 @@
 </template>
 
 <script>
-import Keypress from './js/keypress-2.1.4.min.js'
-var listener = new Keypress.Listener()
-var myCombos
-import chipslock from './components/ChipsLock'
-export default {
-  name: 'app',
-  components: {
-    chipslock
-  },
-  computed: {
-    current: function () {
-      return this.$store.state.current
-    },
-    unlocked: function () {
-      return this.$store.state.unlocked
-    },
-    videoMode: function () {
-      return this.$store.state.videoMode
+  function youtubeVideoId (url) {
+    var videoId = url.split('v=')[1]
+    var ampersandPosition = videoId.indexOf('&')
+    if (ampersandPosition !== -1) {
+      videoId = videoId.substring(0, ampersandPosition)
     }
-  },
-  mounted: function () {
-    var myScope = document
-    myCombos = listener.register_many([
-      {
-        'keys': 'meta space',
-        'on_keydown': function () {
-          window.vm.togglePlayPause()
-        },
-        'this': myScope
+    return videoId
+  }
+  import Keypress from './js/keypress-2.1.4.min.js'
+  var listener = new Keypress.Listener()
+  var myCombos
+  import chipslock from './components/ChipsLock'
+  import moodList from './components/MoodList'
+  import playerHTML5 from './components/PlayerHtml5'
+  export default {
+    name: 'app',
+    components: {
+      chipslock,
+      'mood-list': moodList,
+      'player-html5': playerHTML5
+    },
+    computed: {
+      current: function () {
+        return this.$store.state.current
       },
-      {
-        'keys': 'meta left',
-        'on_keydown': function () {
-          window.vm.playPreviousSong()
-        },
-        'this': myScope
+      moods: function () {
+        return this.$store.state.moods
       },
-      {
-        'keys': 'meta right',
-        'on_keydown': function () {
-          window.vm.playNextSong()
-        },
-        'this': myScope
+      unlocked: function () {
+        return this.$store.state.unlocked
       },
-      {
-        'keys': 'meta s',
-        'on_keydown': function () {
-          window.vm.displayDownload()
-        },
-        'this': myScope
+      videoMode: function () {
+        return this.$store.state.videoMode
       },
-      {
-        'keys': 'meta f',
-        'on_keydown': function () {
-          window.vm.displaySearch()
-        },
-        'this': myScope
-      },
-      {
-        'keys': 'meta i',
-        'on_keydown': function () {
-          window.vm.displayAbout()
-        },
-        'this': myScope
-      },
-      {
-        'keys': 'meta h',
-        'on_keydown': function () {
-          window.vm.displayPlayer()
-        },
-        'this': myScope
-      },
-      {
-        'keys': 'meta b',
-        'on_keydown': function () {
-          window.vm.activateBetaFeatures()
-        },
-        'this': myScope
+      youtubeId: function () {
+        if (this.$store.state.current.youtube) {
+          return youtubeVideoId(this.$store.state.current.youtube)
+        } else {
+          return false
+        }
       }
-    ])
-  },
-  destroyed: function () {
-    // Removing listeners when the component is removed
-    listener.unregister_many(myCombos)
-  },
-  methods: {
-    play () {
-      window.vm.play()
     },
-    pause () {
-      window.vm.pause()
+    mounted: function keyboardShortcuts () {
+      var myScope = document
+      myCombos = listener.register_many([
+        {
+          'keys': 'meta space',
+          'on_keydown': function () {
+            window.vm.extTogglePlayPause()
+          },
+          'this': myScope
+        },
+        {
+          'keys': 'meta left',
+          'on_keydown': function () {
+            window.vm.extPlayPreviousSong()
+          },
+          'this': myScope
+        },
+        {
+          'keys': 'meta right',
+          'on_keydown': function () {
+            window.vm.extPlayNextSong()
+          },
+          'this': myScope
+        },
+        {
+          'keys': 'meta s',
+          'on_keydown': function () {
+            window.vm.extDisplayDownload()
+          },
+          'this': myScope
+        },
+        {
+          'keys': 'meta f',
+          'on_keydown': function () {
+            window.vm.extDisplaySearch()
+          },
+          'this': myScope
+        },
+        {
+          'keys': 'meta i',
+          'on_keydown': function () {
+            window.vm.extDisplayAbout()
+          },
+          'this': myScope
+        },
+        {
+          'keys': 'meta h',
+          'on_keydown': function () {
+            window.vm.extDisplayPlayer()
+          },
+          'this': myScope
+        },
+        {
+          'keys': 'meta b',
+          'on_keydown': function () {
+            window.vm.askActivateBetaFeatures()
+          },
+          'this': myScope
+        }
+      ])
     },
-    nextSong () {
-      window.vm.playNextSong()
-    },
-    search () {
-      this.$router.push('search')
+    destroyed: function () {
+      // Removing listeners when the component is removed
+      listener.unregister_many(myCombos)
     }
   }
-}
 </script>
 
 <style src="../node_modules/vue-material/dist/vue-material.css"></style>
 <style>
+.video #mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: -1;
+}
 #app {
-    max-width: 50rem;
-    margin: 0 auto;
-    font-family: "Roboto","Helvetica","Arial",sans-serif;
+  max-width: 50rem;
+  margin: 0 auto;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
 }
 #app > h1 {
   text-align: center;
   font-size: 4rem;
   font-weight: 400;
 }
-<style>
 @font-face {
-    font-family: 'Roboto';
-    src: url('./fonts/Roboto-Regular.ttf') format('woff');
+  font-family: 'Roboto';
+  src: url('./fonts/Roboto-Regular.ttf') format('woff');
 }
 @font-face {
   font-family: 'Material Icons';
