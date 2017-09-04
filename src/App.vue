@@ -36,7 +36,7 @@
 
     <md-snackbar md-position="bottom center" ref="snackbar" md-duration="10000">
       <span>Les vidéos sont en test avec le bouton à gauche de la recherche. Enjoy ;)</span>
-      <md-button class="md-accent" md-theme="light-blue" @click="$refs.snackbar.close()">Fermer</md-button>
+      <md-button class="md-accent" @click="$refs.snackbar.close()">Fermer</md-button>
     </md-snackbar>
   </div>
 </template>
@@ -139,7 +139,7 @@
         {
           'keys': 'meta b',
           'on_keydown': function () {
-            window.vm.askActivateBetaFeatures()
+            window.vm.extActivateBetaFeatures()
           },
           'this': myScope
         }

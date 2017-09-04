@@ -110,13 +110,13 @@ export default {
       window.vm.extPlayNextSong()
     },
     changeVideoMode () {
-      this.$store.commit('askToggleVideoMode')
+      this.$store.commit('toggleVideoMode')
     },
     search () {
       this.$router.push('search')
     },
     deleteNext () {
-      this.$store.commit('askDeleteNext')
+      this.$store.commit('deleteNext')
     },
     resetMood () {
       this.$http.get('/resetMood/' + this.current.moodId).then(response => {

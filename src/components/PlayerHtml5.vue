@@ -13,7 +13,7 @@
     props: ['current'],
     methods: {
       next () {
-        this.$root.$store.dispatch('askNextSong')
+        this.$root.$store.dispatch('askFindAndPlayNextSong')
       }
     }
   }

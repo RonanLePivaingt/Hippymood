@@ -12,6 +12,14 @@ import Config from '@/../build/serverConfig.js'
 import VueYouTubeEmbed from 'vue-youtube-embed'
 Vue.use(VueYouTubeEmbed)
 
+var VueTouch = require('vue-touch')
+// Declaring a quintuple tap for the beta unlocking features in the about view
+VueTouch.registerCustomEvent('quintupletap', {
+  type: 'tap',
+  taps: 5
+})
+Vue.use(VueTouch, {name: 'v-touch'})
+
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
@@ -289,15 +297,15 @@ window.vm = new Vue({
     extDisplayAbout: function () {
       this.$router.push('/about')
     },
-    estActivateBetaFeatures: function () {
+    extActivateBetaFeatures: function () {
       if (this.$store.state.betaMode === false) {
         this.$children[0].$refs.snackbar.open()
       } else if (this.$store.state.videoMode === true) {
         // Desactivating video mode as well
-        this.$store.commit('askToggleVideoMode')
+        this.$store.commit('toggleVideoMode')
       }
 
-      this.$store.commit('askToggleBetaMode')
+      this.$store.commit('toggleBetaMode')
     }
   }
 })

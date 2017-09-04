@@ -6,7 +6,9 @@
       </md-button>
     </div>
 
-    <p> Fait avec ♥ par Ronan Le Pivaingt </p>
+    <v-touch v-on:quintupletap="activateBetaFeatures">
+      <p> Fait avec ♥ par Ronan Le Pivaingt </p>
+    </v-touch>
 
     <md-list class="keyboards-shortcuts">
       <md-list-item>
@@ -158,7 +160,18 @@
 
 <script>
 export default {
-  name: 'about'
+  name: 'about',
+  data: function () {
+    return {
+      nbTaps: 0,
+      lastTap: Date.now()
+    }
+  },
+  methods: {
+    activateBetaFeatures () {
+      window.vm.extActivateBetaFeatures()
+    }
+  }
 }
 </script>
 

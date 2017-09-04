@@ -99,7 +99,7 @@ export default {
       )
     },
     playSearchResult (index) {
-      this.$root.$store.dispatch('setNextSong', this.searchResults[index])
+      this.$root.$store.dispatch('askNextSong', this.searchResults[index])
       this.$router.push('/')
     }
   }
