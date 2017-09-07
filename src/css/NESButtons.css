@@ -273,7 +273,8 @@ box-shadow: 1em .8em .8em -1em hsla(0, 0%, 0%, 0.3) inset; }
     .6em .2em .5em rgba(0, 0, 0, .3),
     1.2em .4em .5em rgba(0, 0, 0, .3);
 }
-.menu-pane .button:focus {
+#nespad:not(.touch) .menu-pane .button:active,
+#nespad.touch .menu-pane .button:focus {
     top: 0;
     left: 0;
     box-shadow:
@@ -336,7 +337,8 @@ font-size: 1.4rem; }
     .6em .3em .5em rgba(0, 0, 0, .3),
     1.2em .6em .5em rgba(0, 0, 0, .3);
 }
-.action-pane .button:focus {
+#nespad.touch .action-pane .button:focus,
+#nespad:not(.touch) .action-pane .button:active {
     top: .40rem;
     left: .35rem;
     box-shadow:
