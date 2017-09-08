@@ -4,31 +4,46 @@
     v-bind:class="{video: videoMode}"
     >
 
-    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
-    <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons"> 
     <div id="mask"></div>
 
     <h1> Hippy Mood </h1>
+
     <div v-if="unlocked === -1">
       <p>Loading</p>
     </div>
 
-    <chipslock v-if="unlocked === 0"></chipslock>
+    <div class="intro" v-show="intro && unlocked !== -1">
+      <p> Un site pour écouter de la musique selon ta "mood" </p>
+      <p> 
+        C'est comme une boite de chocolat, tant que t'as pas essayé tu ne sais pas!
+        Des fois tu reviens, des fois pas...
+      </p>
+      <div class="actions">
+        <md-switch
+            v-show="betaMode"
+            v-model="videoMode"
+            v-on:change="toggleVideoMode"
+            class="md-primary"
+            >Mode vidéo</md-switch>
 
-    <router-view v-if="unlocked === 1"></router-view>
+          <md-button class="md-icon-button md-raised">
+            <md-icon>search</md-icon>
+          </md-button>
+      </div>
+    </div>
 
-    <player-html5 
-                 v-if="videoMode === false"
-                 :current="current"
-                 ></player-html5>
+    <div id="main-container">
+      <chipslock v-if="unlocked === 0"></chipslock>
 
-    <youtube
-                 v-if="youtubeId && videoMode"
-                 class="video"
-                 @ended="nextSong"
-                 :video-id="youtubeId"
-                 :player-vars="{ autoplay: 1 }"
-                 ></youtube>
+      <router-view v-if="unlocked === 1"></router-view>
+
+      <html5-player
+                   v-if="videoMode === false"
+                   :current="current"
+                   ></html5-player>
+
+      <video-player></video-player>
+    </div>
 
     <div class="mood-list">
       <mood-list  v-for="mood in moods" :mood="mood" :key="mood.id"></mood-list>
@@ -42,26 +57,20 @@
 </template>
 
 <script>
-  function youtubeVideoId (url) {
-    var videoId = url.split('v=')[1]
-    var ampersandPosition = videoId.indexOf('&')
-    if (ampersandPosition !== -1) {
-      videoId = videoId.substring(0, ampersandPosition)
-    }
-    return videoId
-  }
   import Keypress from './js/keypress-2.1.4.min.js'
   var listener = new Keypress.Listener()
   var myCombos
-  import chipslock from './components/ChipsLock'
-  import moodList from './components/MoodList'
-  import playerHTML5 from './components/PlayerHtml5'
+  import ChipsLock from './components/ChipsLock'
+  import MoodList from './components/MoodList'
+  import Html5Player from './components/HTML5Player'
+  import VideoPlayer from './components/VideoPlayer'
   export default {
     name: 'app',
     components: {
-      chipslock,
-      'mood-list': moodList,
-      'player-html5': playerHTML5
+      ChipsLock,
+      MoodList,
+      Html5Player,
+      VideoPlayer
     },
     computed: {
       current: function () {
@@ -76,12 +85,17 @@
       videoMode: function () {
         return this.$store.state.videoMode
       },
-      youtubeId: function () {
-        if (this.$store.state.current.youtube) {
-          return youtubeVideoId(this.$store.state.current.youtube)
-        } else {
-          return false
-        }
+      intro: function () {
+        return this.$store.state.intro
+      },
+      betaMode: function () {
+        return this.$store.state.betaMode
+      }
+    },
+    methods: {
+      toggleVideoMode () {
+        console.log('go go go')
+        this.$store.commit('toggleVideoMode')
       }
     },
     mounted: function keyboardShortcuts () {
@@ -142,6 +156,13 @@
             window.vm.extActivateBetaFeatures()
           },
           'this': myScope
+        },
+        {
+          'keys': 'meta v',
+          'on_keydown': function () {
+            window.vm.extToggleVideoMode()
+          },
+          'this': myScope
         }
       ])
     },
@@ -154,6 +175,16 @@
 
 <style src="../node_modules/vue-material/dist/vue-material.css"></style>
 <style>
+
+#app:not(.video) #main-container {
+  width: 30rem;
+}
+#app.video #main-container {
+  width: 640px;
+}
+#main-container {
+  margin: 0 auto;
+}
 .video #mask {
   position: fixed;
   top: 0;
@@ -212,5 +243,22 @@ i.material-icons{
 
   /* Support for IE. */
   font-feature-settings: 'liga';
+}
+.intro .actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mood-list {
+  margin-top: 1rem;
+}
+#app.video .mood-list button.md-raised {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+#app.video .mood-list:hover button.md-raised:not(.md-primary) {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+#app.video h1 {
+  color: rgba(255, 255, 255, 0.9);
 }
 </style>

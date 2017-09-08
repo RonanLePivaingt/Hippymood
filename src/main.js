@@ -35,7 +35,7 @@ const store = new Vuex.Store({
     currentSongsLeft: 99,
     next: {},
     nextMood: 0,
-    intro: 1,
+    intro: true,
     unlocked: -1,
     playerState: 'intro',
     authCombination: Config.auth.combination,
@@ -261,12 +261,16 @@ window.vm = new Vue({
     },
     extPlay: function () {
       var playerHTML5 = document.getElementById('playerHTML5')
-      playerHTML5.play()
+      if (playerHTML5) {
+        playerHTML5.play()
+      }
       this.$store.commit('setPlaying')
     },
     extPause: function () {
       var playerHTML5 = document.getElementById('playerHTML5')
-      playerHTML5.pause()
+      if (playerHTML5) {
+        playerHTML5.pause()
+      }
       this.$store.commit('setPaused')
     },
     extTogglePlayPause: function () {
@@ -306,6 +310,11 @@ window.vm = new Vue({
       }
 
       this.$store.commit('toggleBetaMode')
+    },
+    extToggleVideoMode: function () {
+      if (this.$store.state.betaMode) {
+        this.$store.commit('toggleVideoMode')
+      }
     }
   }
 })

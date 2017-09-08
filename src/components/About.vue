@@ -113,6 +113,21 @@
                 </div>
               </div>
             </md-list-item>
+            <md-list-item 
+              v-show="betaMode"
+              class="md-inset"
+              >
+              Activer le mode vidéo
+              <div class="keyboard-shortcut">
+                <div class="key">
+                  <span>ctrl</span>
+                </div>
+                +
+                <div class="key">
+                  <span>V</span>
+                </div>
+              </div>
+            </md-list-item>
           </md-list>
         </md-list-expand>
       </md-list-item>
@@ -165,6 +180,11 @@ export default {
     return {
       nbTaps: 0,
       lastTap: Date.now()
+    }
+  },
+  computed: {
+    betaMode: function () {
+      return this.$store.state.betaMode
     }
   },
   methods: {

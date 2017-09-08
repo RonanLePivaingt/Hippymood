@@ -48,4 +48,7 @@
 i.material-icons{
   color: rgba(0, 0, 0, 0.54);
 }
+#app.video button.md-primary {
+  background-color: rgba(63, 81, 181, 0.7);
+}
 </style>

@@ -9,7 +9,7 @@
 
 <script>
   export default {
-    name: 'player-html5',
+    name: 'html5-player',
     props: ['current'],
     methods: {
       next () {
