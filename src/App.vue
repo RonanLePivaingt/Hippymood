@@ -12,7 +12,7 @@
       <p>Loading</p>
     </div>
 
-    <div class="intro" v-show="intro && unlocked !== -1">
+    <div class="intro" v-show="intro && unlocked > 0">
       <p> Un site pour écouter de la musique selon ta "mood" </p>
       <p> 
         C'est comme une boite de chocolat, tant que t'as pas essayé tu ne sais pas!
@@ -33,7 +33,7 @@
     </div>
 
     <div id="main-container">
-      <chipslock v-if="unlocked === 0"></chipslock>
+      <chips-lock v-if="unlocked === 0"></chips-lock>
 
       <router-view v-if="unlocked === 1"></router-view>
 

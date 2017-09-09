@@ -35,7 +35,7 @@ const store = new Vuex.Store({
     currentSongsLeft: 99,
     next: {},
     nextMood: 0,
-    intro: true,
+    intro: 1,
     unlocked: -1,
     playerState: 'intro',
     authCombination: Config.auth.combination,

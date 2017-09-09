@@ -80,7 +80,8 @@
     name: 'chipslock',
     data: function () {
       return {
-        touchDevice: false
+        touchDevice: false,
+        interval: {}
       }
     },
     mounted: function () {
@@ -98,6 +99,11 @@
         },
         true
       )
+      // Interval for resetting the coordinates of the animations
+      this.interval = window.setInterval(
+        function () { authAnim.init() },
+        2000
+      )
       // Checking if we are on a touch device (matter for A & B buttons press handling)
       // Use touchstart events and touchend instead ?
       if ('ontouchstart' in window) {
@@ -107,8 +113,6 @@
     methods: {
       padUp () {
         auth.addCombination(null, '38')
-        console.log(authAnim.testVar)
-        authAnim.testVar++
       },
       padDown () {
         auth.addCombination(null, '40')
@@ -145,6 +149,8 @@
       // Removing listeners when the component is removed
       listener.destroy()
       auth.keyboardListenerStop()
+
+      window.clearInterval(this.interval)
     }
   }
 </script>

@@ -64,7 +64,7 @@ export default {
   },
   setSmoke: function () {
     // Animations 
-    const DURATION = 400
+    var DURATION = 400
 
     this.smoke = new mojs.Burst({
       degree:   0,
