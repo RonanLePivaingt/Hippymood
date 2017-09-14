@@ -154,10 +154,11 @@
     margin-left: .1em;
 }
 #dpad-body {
-    left: -2.3em;
-    top: -2.3em;
+    left: 1.5em;
+    top: 1.5em;
     position: absolute;
     z-index: 1;
+    transform: scale(4);
 }
 #dpad .button {
     position: absolute;

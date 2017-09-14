@@ -238,7 +238,7 @@ window.vm = new Vue({
     extUnlock: function () {
       this.$http.post(
         '/',
-        {combination: this.$store.state.authCombinationCode}
+        {combination: window.combination}
       )
         .then(
           function (response) {

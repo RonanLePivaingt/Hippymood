@@ -26,7 +26,7 @@
             class="md-primary"
             >Mode vidéo</md-switch>
 
-          <md-button class="md-icon-button md-raised">
+          <md-button href="#/search" class="md-icon-button md-raised">
             <md-icon>search</md-icon>
           </md-button>
       </div>
@@ -38,7 +38,7 @@
       <router-view v-if="unlocked === 1"></router-view>
 
       <html5-player
-                   v-if="videoMode === false"
+                   v-if="videoMode === false || hasYoutubeLink === false"
                    :current="current"
                    ></html5-player>
 
@@ -90,6 +90,13 @@
       },
       betaMode: function () {
         return this.$store.state.betaMode
+      },
+      hasYoutubeLink: function () {
+        if (this.$store.state.current.youtube) {
+          return true
+        } else {
+          return false
+        }
       }
     },
     methods: {

@@ -11,9 +11,9 @@
         src="/static/img/chipsN&B.jpg"
         />
     </v-touch>
-    <p>Feel The Chips</p>
     <figure 
       id="nespad"
+      v-show="NESGamepad"
       v-bind:class="{touch: touchDevice}"
       >
       <section class="dpad-pane">
@@ -67,6 +67,7 @@
         </div>
       </section>
     </figure>
+    <p>Feel The Chips</p>
   </div>
 </template>
 
@@ -81,7 +82,8 @@
     data: function () {
       return {
         touchDevice: false,
-        interval: {}
+        interval: {},
+        NESGamepad: false
       }
     },
     mounted: function () {
@@ -95,6 +97,7 @@
       listener.sequence_combo(
         this.$store.state.authCombination,
         function () {
+          window.combination = this.$store.state.authCombinationCode
           window.vm.unlock()
         },
         true
@@ -109,8 +112,16 @@
       if ('ontouchstart' in window) {
         this.touchDevice = true
       }
+      document.addEventListener(
+        'displayNESGamepad',
+        evt => this.displayNESGamepad(),
+        false
+      )
     },
     methods: {
+      displayNESGamepad () {
+        this.NESGamepad = true
+      },
       padUp () {
         auth.addCombination(null, '38')
       },

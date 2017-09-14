@@ -59,6 +59,8 @@ export default {
       if (this.combination == "3838404037393739") {
         // Faire apparaître les touches A et B
         // removeClass(document.getElementById("NESgamepad"), "hide");
+        var event = new Event('displayNESGamepad');
+        document.dispatchEvent(event);
       }
     }
     else if (key === "65") {
@@ -84,6 +86,7 @@ export default {
     if (this.combination === window.vm.$store.state.authCombinationCode) {
       console.log('Authentification validé par auth.js');
       // Calling unlock checking function again, for unlocking with touch events
+      window.combination = this.combination;
       window.vm.extUnlock();
     }
   }

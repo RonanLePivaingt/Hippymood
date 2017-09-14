@@ -48,7 +48,9 @@ exports.Moods = function(req, res){
       .join('songs', 'songs.id', '=', 'genreAssociation.id_songs')
       .groupBy('genres.id')
       .then(function(rows) { 
-        res.send(rows);
+        res.send(
+          shuffleArray(rows)
+        );
       })
       .catch(function(error) {
         console.error(error);

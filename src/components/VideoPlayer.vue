@@ -11,7 +11,7 @@
     :player-vars="{ autoplay: 1 }"
     ></youtube>
 
-    <md-card id="video-controls" v-show="videoMode">
+    <md-card id="video-controls" v-show="youtubeId && videoMode">
       <Player-Controls 
                                  v-on:playVideo="play"
                                  v-on:pauseVideo="pause"
