@@ -113,7 +113,8 @@
           'on_keydown': function () {
             window.vm.extTogglePlayPause()
           },
-          'this': myScope
+          'this': myScope,
+          'prevent_default': true
         },
         {
           'keys': 'meta left',
@@ -267,5 +268,11 @@ i.material-icons{
 }
 #app.video h1 {
   color: rgba(255, 255, 255, 0.9);
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0
 }
 </style>

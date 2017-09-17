@@ -1,15 +1,17 @@
 <template>
   <div v-show="intro !== true">
+    <transition name="fade">
     <youtube
-    v-if="youtubeId && videoMode"
-    class="video"
-    @ready="ready"
-    @paused="pause"
-    @playing="play"
-    @ended="nextSong"
-    :video-id="youtubeId"
-    :player-vars="{ autoplay: 1 }"
-    ></youtube>
+                v-if="youtubeId && videoMode"
+                class="video"
+                @ready="ready"
+                @paused="pause"
+                @playing="play"
+                @ended="nextSong"
+                :video-id="youtubeId"
+                :player-vars="{ autoplay: 1 }"
+                ></youtube>
+    </transition>
 
     <md-card id="video-controls" v-show="youtubeId && videoMode">
       <Player-Controls 

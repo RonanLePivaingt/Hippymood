@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <transition name="fade">
     <div 
       class="player" 
       v-bind:class="{ video: videoMode }"
@@ -26,24 +26,24 @@
 
         <md-card-header class="player-header">
           <md-button-toggle 
-            v-if="betaMode"
-            @click.native="changeVideoMode" 
-            class="videoModeToggle"
-            >
-            <md-button 
-                v-bind:class="{ 'md-toggle': videoMode }"
-                class="md-icon-button"
-                >
-              <md-icon>ondemand_video</md-icon>
-              <md-tooltip
-                  v-show="videoMode"
-                  md-direction="bottom"
-                  >Activer le mode vidéo</md-tooltip>
-              <md-tooltip
-                  v-show="videoMode"
-                  md-direction="bottom"
-                  >Désactiver le mode vidéo</md-tooltip>
-            </md-button>
+                        v-if="betaMode"
+                        @click.native="changeVideoMode" 
+                        class="videoModeToggle"
+                        >
+                        <md-button 
+                        v-bind:class="{ 'md-toggle': videoMode }"
+                        class="md-icon-button"
+                        >
+                        <md-icon>ondemand_video</md-icon>
+                          <md-tooltip
+                        v-show="videoMode"
+                        md-direction="bottom"
+                        >Activer le mode vidéo</md-tooltip>
+                            <md-tooltip
+                        v-show="videoMode"
+                        md-direction="bottom"
+                        >Désactiver le mode vidéo</md-tooltip>
+                        </md-button>
           </md-button-toggle>
 
           <md-button class="md-icon-button searchButton" @click="search">
@@ -56,20 +56,21 @@
         </md-card-header>
 
         <md-card-content class="player-infos">
+          <transition name="fade">
             <span v-show="current.album">
               <i class="material-icons meta">album</i> {{ current.album }} </br>
             </span>
-            <i class="material-icons">person</i> {{ current.artist }}
+          </transition>
+          <i class="material-icons">person</i> {{ current.artist }}
         </md-card-content>
 
         <player-controls 
-               v-show="videoMode === false"
-               roundStyle="1"
-               ></player-controls>
+             v-show="videoMode === false"
+             roundStyle="1"
+             ></player-controls>
       </md-card>
     </div>
-
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -186,7 +187,7 @@ span.md-tooltip {
 #app.video:not(:hover) #playerMenu i.md-icon,
 #app.video .player-infos
 {
-	transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 #app.video:not(:hover) .player-header,
 #app.video:not(:hover) .player-header i.md-icon,

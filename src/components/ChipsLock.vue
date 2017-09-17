@@ -11,63 +11,66 @@
         src="/static/img/chipsN&B.jpg"
         />
     </v-touch>
-    <figure 
-      id="nespad"
-      v-show="NESGamepad"
-      v-bind:class="{touch: touchDevice}"
-      >
-      <section class="dpad-pane">
-        <div class="dpad-hole"></div>
-        <div id="dpad">
-          <canvas height="150" id="dpad-body" width="150"></canvas>
-          <v-touch v-on:tap="padUp">
-            <button class="button" id="up"></button>
-          </v-touch>
-          <v-touch v-on:tap="padRight">
-            <button class="button" id="right"></button>
-          </v-touch>
-          <v-touch v-on:tap="padDown">
-            <button class="button" id="down"></button>
-          </v-touch>
-          <v-touch v-on:tap="padLeft">
-            <button class="button" id="left"></button>
-          </v-touch>
-        </div>
-      </section>
-      <section class="menu-pane">
-        <div class="labels">
-          <label class="select" for="select">Select</label><label class="start" for="start">Start</label>
-        </div>
-        <div class="buttons">
-          <button class="button select" id="select">Select</button><button class="button start" id="start">Start</button>
-        </div>
-      </section>
-      <section class="action-pane"
+    <transition name="fade">
+      <figure 
+        id="nespad"
+        v-show="NESGamepad"
+        v-bind:class="{touch: touchDevice}"
         >
-        <div class="logo">
-          Nintendo
-        </div>
-        <div class="buttons">
-          <label class="label">
-            <div class="caption">
-              B
-            </div>
-            <v-touch v-on:tap="btnB">
-              <button class="button"></button>
+        <section class="dpad-pane">
+          <div class="dpad-hole"></div>
+          <div id="dpad">
+            <canvas height="150" id="dpad-body" width="150"></canvas>
+            <v-touch v-on:tap="padUp">
+              <button class="button" id="up"></button>
             </v-touch>
-          </label>
-          <label class="label">
-            <div class="caption">
-              A
-            </div>
-            <v-touch v-on:tap="btnA">
-              <button class="button"></button>
+            <v-touch v-on:tap="padRight">
+              <button class="button" id="right"></button>
             </v-touch>
-          </label>
-        </div>
-      </section>
-    </figure>
-    <p>Feel The Chips</p>
+            <v-touch v-on:tap="padDown">
+              <button class="button" id="down"></button>
+            </v-touch>
+            <v-touch v-on:tap="padLeft">
+              <button class="button" id="left"></button>
+            </v-touch>
+          </div>
+        </section>
+        <section class="menu-pane">
+          <div class="labels">
+            <label class="select" for="select">Select</label><label class="start" for="start">Start</label>
+          </div>
+          <div class="buttons">
+            <button class="button select" id="select">Select</button><button class="button start" id="start">Start</button>
+          </div>
+        </section>
+        <section class="action-pane"
+          >
+          <div class="logo">
+            Nintendo
+          </div>
+          <div class="buttons">
+            <label class="label">
+              <div class="caption">
+                B
+              </div>
+              <v-touch v-on:tap="btnB">
+                <button class="button"></button>
+              </v-touch>
+            </label>
+            <label class="label">
+              <div class="caption">
+                A
+              </div>
+              <v-touch v-on:tap="btnA">
+                <button class="button"></button>
+              </v-touch>
+            </label>
+          </div>
+        </section>
+      </figure>
+    </transition>
+
+    <p class="teaser">Feel The Chips</p>
   </div>
 </template>
 
@@ -187,6 +190,10 @@
   top: 20%;
   right: 20%;
   transform: scale(5);
+}
+p.teaser {
+  font-size: 1.5rem;
+  margin-top: 2.5rem;
 }
 </style>
 <style type="text/css" src="../css/NESButtons.css" scoped></style>
