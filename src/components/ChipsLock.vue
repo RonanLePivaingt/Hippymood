@@ -54,7 +54,7 @@
                 B
               </div>
               <v-touch v-on:tap="btnB">
-                <button class="button"></button>
+                <button id="NESBtnB" class="button"></button>
               </v-touch>
             </label>
             <label class="label">
@@ -62,7 +62,7 @@
                 A
               </div>
               <v-touch v-on:tap="btnA">
-                <button class="button"></button>
+                <button id="NESBtnA" class="button"></button>
               </v-touch>
             </label>
           </div>

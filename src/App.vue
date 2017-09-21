@@ -35,7 +35,9 @@
     <div id="main-container">
       <chips-lock v-if="unlocked === 0"></chips-lock>
 
-      <router-view v-if="unlocked === 1"></router-view>
+      <transition name="fastfade" mode="out-in">
+        <router-view v-if="unlocked === 1"></router-view>
+      </transition>
 
       <html5-player
                    v-if="videoMode === false || hasYoutubeLink === false"
@@ -273,6 +275,12 @@ i.material-icons{
   transition: opacity .5s
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0
+}
+.fastfade-enter-active, .fastfade-leave-active {
+  transition: opacity .25s
+}
+.fastfade-enter, .fastfade-leave-to /* .fastfade-leave-active below version 2.1.8 */ {
   opacity: 0
 }
 </style>

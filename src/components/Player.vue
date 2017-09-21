@@ -1,76 +1,76 @@
 <template>
-  <transition name="fade">
-    <div 
-      class="player" 
-      v-bind:class="{ video: videoMode }"
-      v-show="intro === 0"
-      >
-      <md-card id="playerCard">
-        <md-menu id="playerMenu" md-direction="bottom left" md-size="4">
-          <md-button class="md-icon-button" md-menu-trigger>
-            <md-icon>more_vert</md-icon>
-          </md-button>
+  <div 
+    class="player" 
+    v-bind:class="{ video: videoMode }"
+    v-show="intro === 0"
+    >
+    <md-card id="playerCard">
+      <md-menu id="playerMenu" md-direction="bottom left" md-size="4">
+        <md-button class="md-icon-button" md-menu-trigger>
+          <md-icon>more_vert</md-icon>
+        </md-button>
 
-          <md-menu-content>
-            <md-menu-item href="#/download">
-              <span>Télécharger</span>
-              <md-icon>file_download</md-icon>
-            </md-menu-item>
+        <md-menu-content>
+          <md-menu-item href="#/download">
+            <span>Télécharger</span>
+            <md-icon>file_download</md-icon>
+          </md-menu-item>
 
-            <md-menu-item href="#/about">
-              <span>À propos</span>
-              <md-icon>info_outline</md-icon>
-            </md-menu-item>
-          </md-menu-content>
-        </md-menu>
+          <md-menu-item href="#/about">
+            <span>À propos</span>
+            <md-icon>info_outline</md-icon>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
 
-        <md-card-header class="player-header">
-          <md-button-toggle 
-                        v-if="betaMode"
-                        @click.native="changeVideoMode" 
-                        class="videoModeToggle"
-                        >
-                        <md-button 
-                        v-bind:class="{ 'md-toggle': videoMode }"
-                        class="md-icon-button"
-                        >
-                        <md-icon>ondemand_video</md-icon>
-                          <md-tooltip
-                        v-show="videoMode"
-                        md-direction="bottom"
-                        >Activer le mode vidéo</md-tooltip>
-                            <md-tooltip
-                        v-show="videoMode"
-                        md-direction="bottom"
-                        >Désactiver le mode vidéo</md-tooltip>
-                        </md-button>
-          </md-button-toggle>
+      <md-card-header class="player-header">
+        <transition name="fade">
+        <md-button-toggle 
+                    v-if="betaMode"
+                    @click.native="changeVideoMode" 
+                    class="videoModeToggle"
+                    >
+                    <md-button 
+                    v-bind:class="{ 'md-toggle': videoMode }"
+                    class="md-icon-button"
+                    >
+                    <md-icon>ondemand_video</md-icon>
+                      <md-tooltip
+                    v-show="videoMode"
+                    md-direction="bottom"
+                    >Activer le mode vidéo</md-tooltip>
+                        <md-tooltip
+                    v-show="videoMode"
+                    md-direction="bottom"
+                    >Désactiver le mode vidéo</md-tooltip>
+                    </md-button>
+        </md-button-toggle>
+        </transition>
 
-          <md-button class="md-icon-button searchButton" @click="search">
-            <md-icon>search</md-icon>
-            <md-tooltip md-direction="bottom">Rechercher par chanson, album ou artiste</md-tooltip>
-          </md-button>
-          <div class="md-title">
-            <i class="material-icons meta">audiotrack</i> {{ current.song }}
-          </div>
-        </md-card-header>
+        <md-button class="md-icon-button searchButton" @click="search">
+          <md-icon>search</md-icon>
+          <md-tooltip md-direction="bottom">Rechercher par chanson, album ou artiste</md-tooltip>
+        </md-button>
+        <div class="md-title">
+          <i class="material-icons meta">audiotrack</i> {{ current.song }}
+        </div>
+      </md-card-header>
 
-        <md-card-content class="player-infos">
-          <transition name="fade">
-            <span v-show="current.album">
-              <i class="material-icons meta">album</i> {{ current.album }} </br>
-            </span>
-          </transition>
-          <i class="material-icons">person</i> {{ current.artist }}
-        </md-card-content>
+      <md-card-content class="player-infos">
+        <transition name="fade">
+        <span v-show="current.album">
+          <i class="material-icons meta">album</i> {{ current.album }} </br>
+        </span>
+        </transition>
+        <i class="material-icons">person</i> {{ current.artist }}
+      </md-card-content>
 
-        <player-controls 
-             v-show="videoMode === false"
-             roundStyle="1"
-             ></player-controls>
-      </md-card>
-    </div>
-  </transition>
+      <player-controls 
+           v-show="videoMode === false"
+           roundStyle="1"
+           ></player-controls>
+    </md-card>
+  </div>
 </template>
 
 <script>
