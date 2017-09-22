@@ -37,11 +37,24 @@ app.use(session({
     })
 );
 
-require('../server/router')(app);
-
 app.use(express.static('dist'));
 app.use('/music', express.static('music'));
 
-app.listen(config.port, function () {
+var io = require('socket.io');
+var http = require('http');
+var server = http.createServer(app);
+io = io(server);
+app.use(function(req, res, next) {
+  req.io = io;
+  next();
+});
+
+io.on('connection', function(socket) {
+  console.log('socket.io connection made');
+});
+
+require('../server/router')(app);
+
+server.listen(config.port, function () {
   console.log('Example app listening on port ' + config.port);
 });

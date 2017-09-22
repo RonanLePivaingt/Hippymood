@@ -242,10 +242,50 @@ exports.ResetDatabase = function(req, res){
   });
 };
 
-exports.ScanMusic = function(req, res){
-  // Loading tags processing
+exports.ScanMusic = function(req, res) {
+  var async = require("async");
   var id3tags = require('./id3tags');
 
+  // Initializing music scan queue
+  var queue = async.queue(id3tags.scan, 10); // Run ten simultaneous uploads
+  var files = getFileList("music");
+  queue.push(files);
+
+  // Setting up an interval to check indexing progress
+  var nbFiles = files.length;
+  var percentage = 0;
+  var newPercentage = 0;
+
+  function percentageCheckedFiles () {
+    var nbFilesLeft = queue.length();
+    var percentageFilesLeft = nbFilesLeft / nbFiles;
+    newPercentage = Math.round((1 - percentageFilesLeft) * 100);
+
+    // Sending data to client and log if any progress is made
+    if (percentage !== newPercentage) {
+      percentage = newPercentage;
+      req.io.emit('scan', percentage);
+      console.log("Music scan progress : " + percentage + "%");
+    }
+  }
+  var percentageInterval = setInterval(percentageCheckedFiles, 500);
+
+  // Adding event on queue end processing
+  queue.drain = function() {
+    req.io.emit('scan', 'Done');
+
+    console.log("All files are indexed");
+    // Stoping previous interval
+    clearInterval(percentageInterval);
+  };
+
+  // Sending a response back to client
+  res.send("Music scan started");
+};
+
+// Function to get all files from a directory
+function getFileList (directory) {
+  // Getting all files of the music directory
   var fs = require('fs');
   var path = require('path');
 
@@ -255,27 +295,14 @@ exports.ScanMusic = function(req, res){
     list.forEach(function(file) {
       file = dir + '/' + file
       var stat = fs.statSync(file)
-      if (stat && stat.isDirectory()) results = results.concat(walk(file))
-      else results.push(file)
+      if (stat && stat.isDirectory()) {
+        results = results.concat(walk(file))
+      }
+      else if (file.split('.').pop() === 'mp3') {
+        results.push(file)
+      }
     })
-    return results
+    return results;
   }
-  var files = walk("music");
-  // loop through array with all new ids
-  var i = 0, l = files.length;
-  console.log("Starting music scan");
-  (function iterator() {
-    var filename = files[i];
-    if (filename.slice(-3) == "mp3") {
-      id3tags.scan(filename);
-    }
-
-    if(++i<l) {
-      setTimeout(iterator, 50);
-    }
-    else {
-      console.log("Music scan done");
-      res.send("Done");
-    }
-  })();
-};
+  return walk(directory);
+}

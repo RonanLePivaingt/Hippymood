@@ -108,11 +108,25 @@ app.use(session({
 
 app.use('/music', express.static('music'));
 
+var io = require('socket.io');
+var http = require('http');
+var server = http.createServer(app);
+io = io(server);
+app.use(function(req, res, next) {
+  req.io = io;
+  next();
+});
+
+io.on('connection', function(socket) {
+  console.log('socket.io connection made');
+});
+
 // send app to router
 require('../server/router')(app);
+
 // Server code of the previous Hippymood version without vue-cli and the webpack template - End
 
-module.exports = app.listen(port, function (err) {
+module.exports = server.listen(port, function (err) {
   if (err) {
     console.log(err)
     return

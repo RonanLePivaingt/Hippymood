@@ -10,19 +10,19 @@ var knex = require('knex')({
   }
 });
 
-exports.insertSong = function(path, metadata) {
+exports.insertSong = function(path, metadata, callback) {
     var title = metadata.title
         artist = metadata.artist
         album = metadata.album
         genre = metadata.genre[0]
         ;
 
-    checkGenre(path, metadata);
+    checkGenre(path, metadata, callback);
 }
 
 var newlyRegisteredGenre = [];
 
-function checkGenre(path, metadata) {
+function checkGenre(path, metadata, callback) {
   var genre = metadata.genre[0];
 
   knex('genres')
@@ -37,28 +37,30 @@ function checkGenre(path, metadata) {
             .insert({id : '', name: genre})
             .then(function(rows) {
               metadata['genre_id'] = rows[0];
-              checkArtist(path, metadata);
+              return checkArtist(path, metadata, callback);
             })
             .catch(function(err) {
               console.log("Error while inserting genre for song : " + metadata.title + ", path : " + metadata.path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
+              callback();
               throw err;
             });
         }
       }
       else {
         metadata['genre_id'] = rows[0]['id'];
-        checkArtist(path, metadata);
+        return checkArtist(path, metadata, callback);
       }
     })
     .catch(function(error) {
+      return callback();
       throw error;
     });
-
+  return true;
 }
 
 var newlyRegisteredArtist = [];
 
-function checkArtist(path, metadata) {
+function checkArtist(path, metadata, callback) {
   var artist = metadata.artist;
 
   knex('artists')
@@ -73,27 +75,31 @@ function checkArtist(path, metadata) {
             .insert({id : '', name: artist})
             .then(function(rows) {
               metadata['artist_id'] = rows[0];
-              checkAlbum(path, metadata);
+              return checkAlbum(path, metadata, callback);
             })
             .catch(function(err) {
               console.log("Error while inserting artist for song : " + metadata.title + ", path : " + metadata.path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
+              return callback();
               throw err;
             });
         }
       }
       else {
         metadata['artist_id'] = rows[0]['id'];
-        checkAlbum(path, metadata);
+        return checkAlbum(path, metadata, callback);
       }
     })
     .catch(function(error) {
       throw error;
+      return callback();
     });
+
+  return true;
 }
 
 var newlyRegisteredAlbum = [];
 
-function checkAlbum(path, metadata) {
+function checkAlbum(path, metadata, callback) {
   var album = metadata.album;
 
   knex('albums')
@@ -108,25 +114,29 @@ function checkAlbum(path, metadata) {
             .insert({id : '', name: album})
             .then(function(rows) {
               metadata['album_id'] = rows[0];
-              checkSong(path, metadata);
+              return checkSong(path, metadata, callback);
             })
             .catch(function(err) {
               console.log("Error while inserting album for song : " + metadata.title + ", path : " + metadata.path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
+              return callback();
               throw err;
             });
         }
       }
       else {
         metadata['album_id'] = rows[0]['id'];
-        checkSong(path, metadata);
+        return checkSong(path, metadata, callback);
       }
     })
     .catch(function(error) {
       throw error;
+      return callback();
     });
+
+  return true;
 }
 
-function checkSong(path, metadata) {
+function checkSong(path, metadata, callback) {
   var genre = metadata.genre[0];
   var genre_id = metadata.genre_id;
   var artist = metadata.artist;
@@ -135,6 +145,7 @@ function checkSong(path, metadata) {
   var album_id = metadata.album_id;
   var title = metadata.title;
   var youtube = metadata.youtube;
+  callback();
 
   knex('songs')
     .where('path', path)
@@ -153,20 +164,24 @@ function checkSong(path, metadata) {
             })
           .then(function(rows) {
             metadata['song_id'] = rows[0];
-            genreAssociation(metadata);
+            return genreAssociation(metadata, callback);
           })
           .catch(function(err) {
             console.log("Error while inserting song : " + metadata.title + ", path : " + metadata.path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
+            return callback();
             throw err;
           });
       }
     })
     .catch(function(error) {
+      return callback();
       throw error;
     });
+
+  return true;
 }
 
-function genreAssociation(metadata) {
+function genreAssociation(metadata, callback) {
   genre_id = metadata.genre_id;
   song_id = metadata.song_id;
 
@@ -174,9 +189,13 @@ function genreAssociation(metadata) {
     .insert({id : genre_id, id_songs: song_id})
     .then(function(rows) {
       console.log("Song successfully inserted for : " + metadata.title + ", path : " + metadata.path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
+      return callback();
     })
     .catch(function(err) {
       console.log("Error while associating genre to the song : " + metadata.title + ", path : " + metadata.path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
+      return callback();
       throw err;
     });
+
+  return true;
 }
