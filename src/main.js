@@ -13,7 +13,11 @@ import VueYouTubeEmbed from 'vue-youtube-embed'
 Vue.use(VueYouTubeEmbed)
 
 import VueSocketio from 'vue-socket.io'
-Vue.use(VueSocketio, '//localhost:8080')
+Vue.use(VueSocketio, '/')
+
+import 'chart.js'
+import 'hchs-vue-charts'
+Vue.use(window.VueCharts)
 
 var VueTouch = require('vue-touch')
 // Declaring a quintuple tap for the beta unlocking features in the about view

@@ -12,7 +12,7 @@
       <p>Loading</p>
     </div>
 
-    <div class="intro" v-show="intro && unlocked > 0">
+    <div class="intro" v-show="intro && unlocked > 0 && currentRouterComponent !== 'Admin'">
       <p> Un site pour écouter de la musique selon ta "mood" </p>
       <p> 
         C'est comme une boite de chocolat, tant que t'as pas essayé tu ne sais pas!
@@ -99,6 +99,9 @@
         } else {
           return false
         }
+      },
+      currentRouterComponent: function () {
+        return this.$root.$route.name
       }
     },
     methods: {

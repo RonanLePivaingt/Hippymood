@@ -16,6 +16,7 @@
   "dependencies": {
     "express-mysql-session": "^1.2.0",
     "express-session": "^1.15.1",
+    "hchs-vue-charts": "^1.2.8",
     "id3js": "^1.1.3",
     "knex": "^0.13.0",
     "musicmetadata": "^2.0.5",
