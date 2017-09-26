@@ -1,38 +1,39 @@
 <template>
   <div id="admin">
     <span class="md-display-2">Administration</span>
-      <md-list>
-        <md-list-item>
-          <md-icon>trending_up</md-icon>
-          <span>Répartition des chansons par mood</span>
+    <p>Coucou la CI ;)</p>
+    <md-list>
+      <md-list-item>
+        <md-icon>trending_up</md-icon>
+        <span>Répartition des chansons par mood</span>
 
-          <md-list-expand>
-            <chartjs-horizontal-bar :height="1280" :width="800" :labels="sortedMoods.label" :datasets="sortedMoods.chart"></chartjs-horizontal-bar>
-          </md-list-expand>
-        </md-list-item>
-        <md-list-item>
-          <md-icon>build</md-icon>
-          <span>Actions d'administration</span>
+        <md-list-expand>
+          <chartjs-horizontal-bar :height="1280" :width="800" :labels="sortedMoods.label" :datasets="sortedMoods.chart"></chartjs-horizontal-bar>
+        </md-list-expand>
+      </md-list-item>
+      <md-list-item>
+        <md-icon>build</md-icon>
+        <span>Actions d'administration</span>
 
-          <md-list-expand>
-            <p>
-            <md-button class="md-raised" @click="resetSession()">Reset session</md-button>
-            </p>
-            <p>
-            <md-button class="md-raised md-warn" @click="resetDatabase()">Reset database</md-button>
-            </p>
-            <div>
-              <md-button class="md-raised" @click="scanMusic()"> Scan music </md-button>
-              <div v-show="scanProgress > -1">
-                {{ scanProgress }} %
-                <md-progress 
-                   class="md-accent"
-                   :md-progress="scanProgress"></md-progress>
-              </div>
+        <md-list-expand>
+          <p>
+          <md-button class="md-raised" @click="resetSession()">Reset session</md-button>
+          </p>
+          <p>
+          <md-button class="md-raised md-warn" @click="resetDatabase()">Reset database</md-button>
+          </p>
+          <div>
+            <md-button class="md-raised" @click="scanMusic()"> Scan music </md-button>
+            <div v-show="scanProgress > -1">
+              {{ scanProgress }} %
+              <md-progress 
+                 class="md-accent"
+                 :md-progress="scanProgress"></md-progress>
             </div>
-          </md-list-expand>
-        </md-list-item>
-      </md-list>
+          </div>
+        </md-list-expand>
+      </md-list-item>
+    </md-list>
   </div>
 </template>
 
