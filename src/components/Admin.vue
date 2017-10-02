@@ -1,9 +1,8 @@
 <template>
   <div id="admin">
     <span class="md-display-2">Administration</span>
-    <p>Coucou la CI ;)</p>
     <md-list>
-      <md-list-item>
+      <md-list-item md-expand-multiple>
         <md-icon>trending_up</md-icon>
         <span>Répartition des chansons par mood</span>
 

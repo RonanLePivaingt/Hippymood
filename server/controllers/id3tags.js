@@ -4,7 +4,10 @@ var db = require('./database');
 // Other id3 tags reader library to get the url-file attribute where could be stored the youtube URL
 var id3 = require('id3js');
 
-exports.scan = function(path, callback, checkVideo = false) {
+exports.scan = function(fileInfo, callback, checkVideo = false) {
+  var path = fileInfo.path;
+  var timestamp = fileInfo.timestamp;
+ 
   // Not checking videos
   checkVideo = true;
 
@@ -12,6 +15,9 @@ exports.scan = function(path, callback, checkVideo = false) {
   var parser = mm(fs.createReadStream(path), function (err, metadata) {
     // if (err)
       // console.error(err);
+
+    // Adding the file timestamp to metadata
+    metadata['timestamp'] = timestamp;
 
     // Try to insert the song if a genre (mood) is set
     if (metadata.genre[0] && metadata.artist[0]) {

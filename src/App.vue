@@ -29,6 +29,10 @@
           <md-button href="#/search" class="md-icon-button md-raised">
             <md-icon>search</md-icon>
           </md-button>
+
+          <md-button href="#/whatsNew" class="md-button md-raised">
+            <md-icon>fiber_new</md-icon> Quoi de neuf ?
+          </md-button>
       </div>
     </div>
 

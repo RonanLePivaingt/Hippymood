@@ -16,6 +16,11 @@
             <md-icon>file_download</md-icon>
           </md-menu-item>
 
+          <md-menu-item href="#/whatsNew">
+            <span>Quoi de neuf ?</span>
+            <md-icon>fiber_new</md-icon>
+          </md-menu-item>
+
           <md-menu-item href="#/about">
             <span>À propos</span>
             <md-icon>info_outline</md-icon>

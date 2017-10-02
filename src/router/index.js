@@ -5,6 +5,7 @@ import Admin from '@/components/Admin'
 import About from '@/components/About'
 import Download from '@/components/Download'
 import Search from '@/components/Search'
+import WhatsNew from '@/components/WhatsNew'
 
 Vue.use(Router)
 
@@ -34,7 +35,11 @@ export default new Router({
       path: '/search',
       name: 'Search',
       component: Search
+    },
+    {
+      path: '/whatsNew',
+      name: 'WhatsNew',
+      component: WhatsNew
     }
-
   ]
 })

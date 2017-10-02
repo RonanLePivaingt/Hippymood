@@ -79,7 +79,7 @@ exports.Mood = function(req, res){
       });
     }
 
-    var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'songs.path', 'albums.name AS album', 'songs.youtube')
+    var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'songs.path', 'albums.name AS album', 'songs.youtube', 'songs.timestamp')
       .from('songs')
       .join('genreAssociation', 'songs.id', '=', 'genreAssociation.id_songs')
       .join('artists', 'artists.id', '=', 'songs.id_artists')
@@ -179,6 +179,27 @@ exports.Search = function(req, res){
       var data = {};
       if (rows.length > 0)
         data.searchResults = rows;
+      res.send(data);
+    })
+    .catch(function(error) {
+      console.error(error);
+    });
+};
+
+// Function to get song infos by submitting a genre
+exports.newSongs = function(req, res){
+  var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'genres.id AS moodId', 'genres.name AS mood', 'songs.path', 'albums.name AS album', 'songs.youtube', 'songs.timestamp')
+    .from('songs')
+    .join('genreAssociation', 'songs.id', '=', 'genreAssociation.id_songs')
+    .join('genres', 'genreAssociation.id', '=', 'genres.id')
+    .join('artists', 'artists.id', '=', 'songs.id_artists')
+    .join('albums', 'albums.id', '=', 'songs.id_albums')
+    .limit(10)
+    .orderBy('songs.timestamp', 'desc')
+    .then(function(rows) {       
+      var data = {};
+      if (rows.length > 0)
+        data.newSongs = rows;
       res.send(data);
     })
     .catch(function(error) {
@@ -299,7 +320,10 @@ function getFileList (directory) {
         results = results.concat(walk(file))
       }
       else if (file.split('.').pop() === 'mp3') {
-        results.push(file)
+        results.push({
+          path: file,
+          timestamp: Date.parse(stat.mtime)
+        })
       }
     })
     return results;

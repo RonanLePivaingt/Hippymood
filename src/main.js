@@ -42,6 +42,7 @@ const store = new Vuex.Store({
     currentSongsLeft: 99,
     next: {},
     nextMood: 0,
+    whatsNew: [],
     intro: 1,
     unlocked: -1,
     playerState: 'intro',
@@ -103,6 +104,9 @@ const store = new Vuex.Store({
       } else {
         state.betaMode = true
       }
+    },
+    setWhatsNew (state, whatsNew) {
+      state.whatsNew = whatsNew
     }
   },
   actions: {
@@ -217,6 +221,20 @@ const store = new Vuex.Store({
     },
     askUnlockedStatus: function ({ commit }, status) {
       commit('setUnlocked', status)
+    },
+    askWhatsNew: function ({ dispatch, commit }) {
+      Vue.http.get(
+        '/newSongs/',
+      ).then(
+        response => {
+          console.log(response)
+          if (response.body.newSongs !== undefined) {
+            commit('setWhatsNew', response.body.newSongs)
+          } else {
+            console.log('Shit it the fan !')
+          }
+        }
+      )
     }
   }
 })
