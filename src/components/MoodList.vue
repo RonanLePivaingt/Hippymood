@@ -45,6 +45,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+button.md-primary {
+  text-shadow: 1px 0.1px 1px rgba(12,12,12,0.3);
+}
 i.material-icons{
   color: rgba(0, 0, 0, 0.54);
 }

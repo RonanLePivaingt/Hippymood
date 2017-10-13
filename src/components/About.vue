@@ -166,7 +166,7 @@
     <md-divider class="md-inset github-separator"></md-divider>
 
     <div class="github-link">
-      <a href="https://github.com/RonanLePivaingt/Hippymood" target="_blank" title="Voir le code d'Hippymood sur Github">
+      <a href="https://github.com/3615Yeye/Hippymood" target="_blank" title="Voir le code d'Hippymood sur Github">
         <img class="logo" src="../assets/github_logo.png"/>
       </a>
     </div>
@@ -196,11 +196,14 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
 #about {
   margin: 0 auto 2rem auto;
   width: 30em;
   font-size: 1rem;
+}
+#about .md-list-item i {
+  text-shadow: 1px 0.1px 1px rgba(12,12,12,0.2);
 }
 .back {
   text-align: center;

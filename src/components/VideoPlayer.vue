@@ -87,7 +87,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#app.videoMode div.md-card.md-theme-default {
+#app.video div.md-card.md-theme-default {
   overflow: hidden;
   width: 640px;
   background-color: rgba(0,0,0,0.0) !important;

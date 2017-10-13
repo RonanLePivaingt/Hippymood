@@ -7,7 +7,7 @@
     <md-card id="playerCard">
       <md-menu id="playerMenu" md-direction="bottom left" md-size="4">
         <md-button class="md-icon-button" md-menu-trigger>
-          <md-icon>more_vert</md-icon>
+          <md-icon class="bright-background">more_vert</md-icon>
         </md-button>
 
         <md-menu-content>
@@ -39,7 +39,8 @@
                     v-bind:class="{ 'md-toggle': videoMode }"
                     class="md-icon-button"
                     >
-                    <md-icon>ondemand_video</md-icon>
+                    <md-icon class="bright-background">ondemand_video</md-icon>
+
                       <md-tooltip
                     v-show="videoMode"
                     md-direction="bottom"
@@ -53,21 +54,27 @@
         </transition>
 
         <md-button class="md-icon-button searchButton" @click="search">
-          <md-icon>search</md-icon>
+          <md-icon class="bright-background">search</md-icon>
           <md-tooltip md-direction="bottom">Rechercher par chanson, album ou artiste</md-tooltip>
         </md-button>
         <div class="md-title">
-          <i class="material-icons meta">audiotrack</i> {{ current.song }}
+          <i class="material-icons meta">audiotrack</i>
+          <span> {{ current.song }} </span>
         </div>
       </md-card-header>
 
       <md-card-content class="player-infos">
         <transition name="fade">
-        <span v-show="current.album">
-          <i class="material-icons meta">album</i> {{ current.album }} </br>
-        </span>
+          <div v-show="current.album">
+            <i class="material-icons meta">album</i>
+            <span> {{ current.album }} </span>
+            </br>
+          </div>
         </transition>
-        <i class="material-icons">person</i> {{ current.artist }}
+        <div>
+          <i class="material-icons">person</i>
+          <span> {{ current.artist }} </span>
+        </div>
       </md-card-content>
 
       <player-controls 
@@ -172,9 +179,13 @@ span.md-tooltip {
   font-size: 1.5rem;
   line-height: 1.5rem;
 }
-#playerCard {
+#app:not(.video) #playerCard {
   margin: 0 auto;
-  width: 100%;
+  width: 30rem;
+}
+#app.video #playerCard {
+  margin: 0 auto;
+  width: 640px;
 }
 #playerMenu {
   position: absolute;
@@ -186,6 +197,34 @@ span.md-tooltip {
   height: 176px;
   background: rgb(0,188,212);
   color: white;
+}
+.player-header .md-title i {
+  font-size: 2rem;
+}
+.player-infos {
+  font-size: 1rem;
+  text-align: left;
+  color: rgba(0, 0, 0, 0.87);
+  line-height: 2rem;
+}
+.player-header .md-title, .player-infos div {
+  display:flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: flex-start;
+}
+.player-header .md-title i, .player-infos i {
+  padding-right: 0.3rem;
+}
+.player-infos i {
+  font-size: 2rem;
+  color: rgba(0, 0, 0, 0.5);
+}
+.player-infos span {
+  font-size: 1rem;
+  line-height: 2rem;
 }
 #app.video .player-header,
 #app.video:not(:hover) .player-header i.md-icon,
@@ -206,18 +245,17 @@ span.md-tooltip {
 }
 .player-header .md-title {
   align-self: flex-end;
+  text-shadow: 1px 0.1px 1px rgba(12,12,12,0.3);
 }
 div.video .player-infos {
   color: white;
-}
-.player-infos {
-  color: rgba(0, 0, 0, 0.54);
-  text-align: left;
 }
 .videoModeToggle {
   position: absolute;
   top: 0;
   right: 76px;
+}
+.md-button-toggle .md-button {
   border-radius: 50% !important;
 }
 .videoModeToggle .md-icon {

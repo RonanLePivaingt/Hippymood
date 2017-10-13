@@ -193,6 +193,16 @@
 <style src="../node_modules/vue-material/dist/vue-material.css"></style>
 <style>
 
+/* Disabling icon selection */
+i.material-icons {
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */
+}
+i.bright-background {
+  text-shadow: 1px 0.1px 1px rgba(12,12,12,0.3);
+}
 #app:not(.video) #main-container {
   width: 30rem;
 }

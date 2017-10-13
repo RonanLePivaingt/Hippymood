@@ -7,7 +7,7 @@
         <span>Répartition des chansons par mood</span>
 
         <md-list-expand>
-          <chartjs-horizontal-bar :height="1280" :width="800" :labels="sortedMoods.label" :datasets="sortedMoods.chart"></chartjs-horizontal-bar>
+          <chartjs-horizontal-bar :height="chartHeight" :width="800" :labels="sortedMoods.label" :datasets="sortedMoods.chart"></chartjs-horizontal-bar>
         </md-list-expand>
       </md-list-item>
       <md-list-item>
@@ -41,21 +41,18 @@ export default {
   name: 'admin',
   data () {
     return {
-      scanProgress: -1,
-      mylabels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      mydatasets: [
-        {
-          label: 'My First dataset',
-          data: [65, 59, 80, 81, 56, 55, 40]
-        },
-        {
-          label: 'My Second dataset',
-          data: [20, 50, 20, 41, 26, 85, 20]
-        }
-      ]
+      scanProgress: -1
     }
   },
   computed: {
+    chartHeight: function () {
+      if (this.$store.state.moods) {
+        // Determined by the number of moods
+        return 20 + (this.$store.state.moods.length * 35)
+      } else {
+        return 0
+      }
+    },
     sortedMoods: function () {
       var moods = this.$store.state.moods
       var sorted = moods.sort(function (a, b) {
@@ -77,9 +74,29 @@ export default {
       for (var i = 0; i < sorted.length; i++) {
         label.push(sorted[i].name)
         chart[0].data.push(sorted[i].nbSongs)
-        chart[0].backgroundColor.push('rgba(255, 99, 132, 0.2)')
+        // chart[0].backgroundColor.push('rgba(17, 15, 16, 0.80)')
+        chart[0].backgroundColor.push('rgba(152, 212, 205, 1)')
         chart[1].data.push(sorted[i].nbVideo)
-        chart[1].backgroundColor.push('rgba(255,99,132,1)')
+        // Calculer de 1 à 10 le pourcentage de vidéo
+        if (sorted[i].nbVideo) {
+          var pour10 = Math.round((sorted[i].nbVideo / sorted[i].nbSongs) * 10)
+          console.log(pour10)
+        }
+        // Mettre 10 couleurs
+        var degrade = [
+          '255, 0, 0, 0.8',
+          '255, 36, 0, 0.75',
+          '255, 72, 0, 0.7',
+          '255, 126, 0, 0.7',
+          '255, 160, 0, 0.7',
+          '177, 180, 0, 0.7',
+          '140, 200, 0, 0.7',
+          '114, 255, 0, 0.7',
+          '51, 255, 0, 0.7',
+          '0, 255, 0, 0.7'
+        ]
+        console.log(degrade)
+        chart[1].backgroundColor.push('rgba(' + degrade[pour10] + ')')
       }
       return {label: label, chart: chart}
     }
@@ -132,7 +149,7 @@ export default {
 }
 #admin {
 }
-#admin .md-display-2 {
+.md-display-2 {
   color: rgba(0, 0, 0, 0.6);
 }
 </style>

@@ -11,7 +11,7 @@
     class="md-accent md-raised"
     v-bind:class="{ 'md-fab': roundStyle }"
     >
-    <md-icon>play_arrow</md-icon>
+        <md-icon class="bright-background">play_arrow</md-icon>
     </md-button>
 
       <md-button
@@ -20,7 +20,7 @@
     class="md-accent md-raised"
     v-bind:class="{ 'md-fab': roundStyle }"
     >
-    <md-icon>pause</md-icon>
+    <md-icon class="bright-background">pause</md-icon>
       </md-button>
 
     <md-button

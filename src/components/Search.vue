@@ -36,7 +36,7 @@
         <span></span>
 
         <div class="md-list-text-container">
-          <span> 
+          <span class="song-name"> 
             <i class="material-icons meta">audiotrack</i> {{ item.song }} 
           </span>
           <span> 
@@ -45,7 +45,6 @@
           <p v-show="item.album"> 
             <i class="material-icons meta">album</i> {{ item.album }} 
           </p>
-          <md-divider class="md-inset"></md-divider>
         </div>
 
         <md-button 
@@ -112,10 +111,19 @@ export default {
   text-align: center;
 }
 .error {
+  color: rgba(0,0,0,0.5);
   font-size: 1rem;
 }
 .error > p {
-  color: rgba(0,0,0,0.4);
   font-size: 8rem;
+}
+.list-item {
+  margin-bottom: 1rem;
+}
+i {
+  color: rgba(0,0,0,0.5);
+}
+.song-name {
+  font-size: 1.2rem;
 }
 </style>

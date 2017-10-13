@@ -5,8 +5,8 @@
         <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
       </md-button>
     </div>
-    <div>
 
+    <div class="download-card">
       <md-card-header>
         <div class="md-title">
           <i class="material-icons meta">audiotrack</i> {{ current.song }}
@@ -18,12 +18,11 @@
           <i class="material-icons">person</i> {{ current.artist }}
         </div>
       </md-card-header>
-    </div>
-    <div class="download-link">
-      <a class="md-button md-raised" :href="current.path" download>
-          Télécharger la chanson <i class="material-icons">file_download</i>
-      </a>
-      
+        <div class="download-link">
+          <a class="md-button md-raised" :href="current.path" download>
+              Télécharger la chanson <i class="material-icons">file_download</i>
+          </a>
+        </div>
     </div>
   </div>
 </template>
@@ -45,15 +44,21 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
+<style scoped>
 #download {
   margin: 0 auto;
-  width: 30em;
+  width: 40em;
 }
 .back {
   text-align: center;
 }
+.download-card {
+  padding: 1rem;
+}
 .download-link {
   text-align: center;
+}
+i {
+  color: rgba(0,0,0,0.5);
 }
 </style>
