@@ -110,7 +110,6 @@
     },
     methods: {
       toggleVideoMode () {
-        console.log('go go go')
         this.$store.commit('toggleVideoMode')
       }
     },

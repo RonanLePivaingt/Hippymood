@@ -39,12 +39,12 @@
           </p>
         </div>
 
-        <md-button 
-          class="md-raised"
+        <a
+          class="md-button md-raised"
           @click="play(index)"
           > 
           {{ item.mood }} 
-        </md-button>
+        </a>
 
       </md-list-item>
     </md-list>
@@ -89,7 +89,7 @@ export default {
 .list-item {
     margin-bottom: 0.5rem;
 }
-i {
+.list-item i {
   color: rgba(0,0,0,0.5);
 }
 span.song-name {

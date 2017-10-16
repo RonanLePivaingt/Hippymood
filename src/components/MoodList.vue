@@ -1,14 +1,13 @@
 <template>
-  <md-button 
-    @click.native="play" 
+  <a
+    @click="play" 
     :id="mood.id" 
+    class="md-button md-raised"
     :class="isActive"
-    class="md-raised"
     :disabled="videoMode && mood.nbVideo === 0"
-  >
+    >
     {{ mood.name }}
-
-  </md-button>
+  </a>
 </template>
 
 <script>
@@ -28,7 +27,7 @@
     computed: {
       isActive () {
         // Return the CSS classes to apply to the current mood button
-        return parseInt(this.$store.state.current.moodId) === parseInt(this.mood.id) ? 'md-raised md-primary' : ''
+        return parseInt(this.$store.state.current.moodId) === parseInt(this.mood.id) ? 'md-raised md-primary md-theme-default' : ''
       },
       playerState () {
         return this.$store.state.playerState
@@ -45,13 +44,13 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-button.md-primary {
+a.md-primary {
   text-shadow: 1px 0.1px 1px rgba(12,12,12,0.3);
 }
 i.material-icons{
   color: rgba(0, 0, 0, 0.54);
 }
-#app.video button.md-primary {
+#app.video a.md-primary {
   background-color: rgba(63, 81, 181, 0.7);
 }
 </style>

@@ -31,6 +31,7 @@
       <md-list-item 
         v-for="(item, index) in searchResults"
         :key="item.id"
+        class="list-item"
         >
 
         <span></span>
@@ -47,12 +48,12 @@
           </p>
         </div>
 
-        <md-button 
-          class="md-raised"
+        <a
+          class="md-button md-raised"
           @click="playSearchResult(index)"
           > 
           {{ item.mood }} 
-        </md-button>
+        </a>
 
       </md-list-item>
     </md-list>
@@ -120,7 +121,10 @@ export default {
 .list-item {
   margin-bottom: 1rem;
 }
-i {
+.list-item p {
+  color: rgba(0,0,0,0.87);
+}
+.list-item i {
   color: rgba(0,0,0,0.5);
 }
 .song-name {
