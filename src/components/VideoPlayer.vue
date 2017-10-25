@@ -13,11 +13,11 @@
                 ></youtube>
     </transition>
 
-    <md-card id="video-controls" v-show="youtubeId && videoMode">
-      <Player-Controls 
+    <md-card id="video-controls" v-show="videoMode">
+      <Player-Controls
                                  v-on:playVideo="play"
                                  v-on:pauseVideo="pause"
-                                 ></Player-Controls> 
+                                 ></Player-Controls>
     </md-card>
   </div>
 </template>

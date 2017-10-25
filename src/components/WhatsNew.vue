@@ -8,7 +8,7 @@
 
     <span class="md-display-2">Dernières chansons</span>
 
-    <md-list>
+    <md-list class="list">
       <md-list-item
         v-for="(item, index) in whatsNew"
         :key="item.id"

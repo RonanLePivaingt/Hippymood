@@ -10,7 +10,7 @@
       <p> Fait avec ♥ par Ronan Le Pivaingt </p>
     </v-touch>
 
-    <md-list class="keyboards-shortcuts">
+    <md-list class="list keyboards-shortcuts">
       <md-list-item>
         <md-icon>keyboard</md-icon>
           <span>Raccourcis clavier</span>
@@ -37,7 +37,7 @@
                 </div>
                 +
                 <div class="key">
-                  <span>🡸</span>
+                  <span><i class="material-icons meta">arrow_back</i></span>
                 </div>
               </div>
             </md-list-item>
@@ -49,7 +49,7 @@
                 </div>
                 +
                 <div class="key">
-                  <span>🡺</span>
+                  <span><i class="material-icons meta">arrow_forward</i></span>
                 </div>
               </div>
             </md-list-item>
@@ -113,7 +113,7 @@
                 </div>
               </div>
             </md-list-item>
-            <md-list-item 
+            <md-list-item
               v-show="betaMode"
               class="md-inset"
               >
@@ -228,13 +228,13 @@ hr.md-divider.md-inset.github-separator {
 
 /* Keyboard shortcuts style
    Thanks to Rizky Kurniawan Ritonga for this codepen : https://codepen.io/rizky_k_r/pen/wospJ */
-.keyboard-shortcuts * { 
-  outline: none !important; 
+.keyboard-shortcuts * {
+  outline: none !important;
 }
 
-a, a:visited, a:hover, a:active { 
+a, a:visited, a:hover, a:active {
   text-decoration: none;
-  color: inherit; 
+  color: inherit;
 }
 
 div.key {

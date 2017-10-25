@@ -5,7 +5,7 @@
     v-show="intro === 0"
     >
     <md-card id="playerCard">
-      <md-menu id="playerMenu" md-direction="bottom left" md-size="4">
+      <md-menu id="player-menu" md-direction="bottom left" md-size="4">
         <md-button class="md-icon-button" md-menu-trigger>
           <md-icon class="bright-background">more_vert</md-icon>
         </md-button>
@@ -14,6 +14,11 @@
           <md-menu-item href="#/download">
             <span>Télécharger</span>
             <md-icon>file_download</md-icon>
+          </md-menu-item>
+
+          <md-menu-item @click="changeVideoMode">
+            <span>Mode vidéo</span>
+            <md-switch v-model="videoMode" @change="changeVideoMode"></md-switch>
           </md-menu-item>
 
           <md-menu-item href="#/whatsNew">
@@ -29,32 +34,8 @@
       </md-menu>
 
       <md-card-header class="player-header">
-        <transition name="fade">
-        <md-button-toggle
-                    v-if="betaMode"
-                    @click.native="changeVideoMode"
-                    class="videoModeToggle"
-                    >
-                    <md-button
-                    v-bind:class="{ 'md-toggle': videoMode }"
-                    class="md-icon-button"
-                    >
-                    <md-icon class="bright-background">ondemand_video</md-icon>
-
-                      <md-tooltip
-                    v-show="videoMode"
-                    md-direction="bottom"
-                    >Activer le mode vidéo</md-tooltip>
-                        <md-tooltip
-                    v-show="videoMode"
-                    md-direction="bottom"
-                    >Désactiver le mode vidéo</md-tooltip>
-                    </md-button>
-        </md-button-toggle>
-        </transition>
-
         <md-button class="md-icon-button searchButton" @click="search">
-          <md-icon class="bright-background">search</md-icon>
+          <md-icon id="player-search" class="bright-background">search</md-icon>
           <md-tooltip md-direction="bottom">Rechercher par chanson, album ou artiste</md-tooltip>
         </md-button>
         <div class="md-title">
@@ -179,15 +160,11 @@ span.md-tooltip {
   font-size: 1.5rem;
   line-height: 1.5rem;
 }
-#app:not(.video) #playerCard {
+#app #playerCard {
   margin: 0 auto;
   width: 30rem;
 }
-#app.video #playerCard {
-  margin: 0 auto;
-  width: 640px;
-}
-#playerMenu {
+#player-menu {
   position: absolute;
   right: 0px;
   color: white;
@@ -215,6 +192,9 @@ span.md-tooltip {
   align-content: flex-start;
   align-items: flex-start;
 }
+.player-header i#player-search {
+  color: white;
+}
 .player-header .md-title i, .player-infos i {
   padding-right: 0.3rem;
 }
@@ -226,22 +206,60 @@ span.md-tooltip {
   font-size: 1rem;
   line-height: 2rem;
 }
+/*
+ * Video mode
+ */
+#app.video #playerCard {
+  margin: 0 auto;
+  width: 640px;
+}
 #app.video .player-header,
-#app.video:not(:hover) .player-header i.md-icon,
-#app.video:not(:hover) #playerMenu i.md-icon,
-#app.video .player-infos
+#app.video .player-header div.md-title,
+#app.video .player-header div.md-title i.md-icon,
+#app.video .player-header i.md-icon,
+#app.video #player-menu i.md-icon,
+#app.video .player-infos,
+#app.video .player-infos i
 {
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
-#app.video:not(:hover) .player-header,
-#app.video:not(:hover) .player-header i.md-icon,
-#app.video:not(:hover) #playerMenu i.md-icon,
-#app.video:not(:hover) .player-infos
+#app.video .player-header,
+#app.video .player-infos
 {
-  color: rgba(255, 255, 255, 0.6) !important;
+  color: rgba(255, 255, 255, 0.6);
+}
+#app.video .player-header i,
+#app.video #player-menu i.md-icon,
+#app.video .player-infos i
+{
+  color: rgba(255, 255, 255, 0.4);
+}
+/*
+#app.video:hover .player-infos
+*/
+#app.video:hover .player-header div.md-title,
+#app.video:hover #player-menu i.md-icon,
+#app.video:hover .player-header i,
+#app.video:hover .player-header i#player-search,
+#app.video:hover .player-infos i
+{
+  color: rgba(255, 255, 255, 0.6);
+}
+#app.video:hover .player-header div.md-title,
+#app.video:hover .player-header i#player-search,
+#app.video:hover #player-menu i.md-icon,
+#app.video:hover .player-infos
+{
+  color: rgba(255, 255, 255, 1);
 }
 #app.video .player-header {
   background: rgba(0,188,212,0.5);
+}
+#app.video {
+  color: rgba(255, 255, 255, 0.6);
+}
+#app.video .list {
+  background-color: rgba(0, 0, 0, 0);
 }
 .player-header .md-title {
   align-self: flex-end;
@@ -258,16 +276,13 @@ div.video .player-infos {
 .md-button-toggle .md-button {
   border-radius: 50% !important;
 }
-.videoModeToggle .md-icon {
-  color: white !important;
-}
 button.md-button.searchButton {
   position: absolute;
   top: 0;
   right: 36px;
 }
 .searchButton > i.md-icon {
-  color: white !important;
+  color: white;
 }
 .mood-songs-left {
   background-color: #e91e63;;
@@ -279,6 +294,9 @@ button.md-button.searchButton {
   border-radius: 50%;
   color: white;
   font-weight: bold;
+}
+#app.video .mood-songs-left {
+  background-color: rgba(233, 30, 99, 0.6);
 }
 .mood-list {
   max-width: 35rem;
@@ -293,8 +311,5 @@ button.md-button.searchButton {
 }
 .video .player-header {
   height: 100%;
-}
-#app.video {
-  color: rgba(255, 255, 255, 0.6);
 }
 </style>

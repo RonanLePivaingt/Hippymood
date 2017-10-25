@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     id="app"
     v-bind:class="{video: videoMode}"
     >
@@ -14,13 +14,12 @@
 
     <div class="intro" v-show="intro && unlocked > 0 && currentRouterComponent !== 'Admin'">
       <p> Un site pour écouter de la musique selon ta "mood" </p>
-      <p> 
+      <p>
         C'est comme une boite de chocolat, tant que t'as pas essayé tu ne sais pas!
         Des fois tu reviens, des fois pas...
       </p>
       <div class="actions">
         <md-switch
-            v-show="betaMode"
             v-model="videoMode"
             v-on:change="toggleVideoMode"
             class="md-primary"
@@ -30,7 +29,11 @@
             <md-icon>search</md-icon>
           </md-button>
 
-          <md-button href="#/whatsNew" class="md-button md-raised">
+          <md-button
+            id="intro-whats-new"
+            class="md-button md-raised"
+            href="#/whatsNew"
+            >
             <md-icon>fiber_new</md-icon> Quoi de neuf ?
           </md-button>
       </div>
@@ -48,7 +51,9 @@
                    :current="current"
                    ></html5-player>
 
-      <video-player></video-player>
+      <video-player
+                   v-if="!intro"
+        ></video-player>
     </div>
 
     <div class="mood-list">
@@ -202,6 +207,9 @@ i.material-icons {
 i.bright-background {
   text-shadow: 1px 0.1px 1px rgba(12,12,12,0.3);
 }
+.deep-background p, .deep-background i {
+  text-shadow: 1px 0.1px 1px rgba(12,12,12,0.3);
+}
 #app:not(.video) #main-container {
   width: 30rem;
 }
@@ -224,11 +232,25 @@ i.bright-background {
   max-width: 50rem;
   margin: 0 auto;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
+  margin-bottom: 2rem;
 }
 #app > h1 {
   text-align: center;
   font-size: 4rem;
   font-weight: 400;
+}
+#app.video #playerCard, #app.video #video-controls {
+  box-shadow: none;
+}
+#app.video .actions a.md-raised {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: rgba(255,255,255,0.8);
+}
+#app.video #main-container {
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12);
+}
+#app.video a.md-accent {
+  background-color: rgba(233, 30, 99, 0.6);
 }
 @font-face {
   font-family: 'Roboto';
@@ -274,19 +296,25 @@ i.material-icons{
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 1rem;
 }
 .mood-list {
   margin-top: 1rem;
 }
-#app.video .mood-list button.md-raised {
-  background-color: rgba(255, 255, 255, 0.2);
+#app.video .mood-list a.md-raised:not([disabled]) {
+  color: rgba(0, 0, 0, 0.87);
+  background-color: rgba(255, 255, 255, 0.8);
 }
-#app.video .mood-list:hover button.md-raised:not(.md-primary) {
-  background-color: rgba(255, 255, 255, 0.6);
+#app.video .mood-list a.md-raised:not([disabled]):hover {
+  color: rgba(255, 255,255, 0.87);
+  background-color: rgba(63, 81, 181, 0.4);
 }
 #app.video h1 {
   color: rgba(255, 255, 255, 0.9);
 }
+/*
+ * Transition animation
+ */
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s
 }

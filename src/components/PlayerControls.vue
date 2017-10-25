@@ -2,7 +2,7 @@
   <div
     id="playerControls"
     >
-    <md-card-actions 
+    <md-card-actions
     class="player-controls-buttons"
     >
     <md-button

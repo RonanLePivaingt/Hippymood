@@ -327,6 +327,7 @@ window.vm = new Vue({
       this.$router.push('/about')
     },
     extActivateBetaFeatures: function () {
+      /* Video go open
       if (this.$store.state.betaMode === false) {
         this.$children[0].$refs.snackbar.open()
       } else if (this.$store.state.videoMode === true) {
@@ -335,6 +336,7 @@ window.vm = new Vue({
       }
 
       this.$store.commit('toggleBetaMode')
+      */
     },
     extToggleVideoMode: function () {
       if (this.$store.state.betaMode) {

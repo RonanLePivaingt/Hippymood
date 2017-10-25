@@ -5,13 +5,13 @@
         <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
       </md-button>
     </div>
-    <form 
-      id="searchForm" 
+    <form
+      id="search-form"
       action="/#/Search"
       v-on:submit.prevent="onSubmit"
       >
       <md-input-container md-clearable>
-        <label>Artiste, chanson ou album à rechercher</label>
+        <label class="search-label">Artiste, chanson ou album à rechercher</label>
         <md-input v-model="searchKeywords"></md-input>
       </md-input-container>
     </form>
@@ -27,8 +27,8 @@
       Aucun résultat de recherche pour la recherche : <b> {{ previousSearchKeywords }} </b>
     </div>
 
-    <md-list>
-      <md-list-item 
+    <md-list class="list">
+      <md-list-item
         v-for="(item, index) in searchResults"
         :key="item.id"
         class="list-item"
@@ -37,22 +37,22 @@
         <span></span>
 
         <div class="md-list-text-container">
-          <span class="song-name"> 
-            <i class="material-icons meta">audiotrack</i> {{ item.song }} 
+          <span class="song-name">
+            <i class="material-icons meta">audiotrack</i> {{ item.song }}
           </span>
-          <span> 
-            <i class="material-icons meta">person</i> {{ item.artist }} 
+          <span>
+            <i class="material-icons meta">person</i> {{ item.artist }}
           </span>
-          <p v-show="item.album"> 
-            <i class="material-icons meta">album</i> {{ item.album }} 
+          <p v-show="item.album">
+            <i class="material-icons meta">album</i> {{ item.album }}
           </p>
         </div>
 
         <a
           class="md-button md-raised"
           @click="playSearchResult(index)"
-          > 
-          {{ item.mood }} 
+          >
+          {{ item.mood }}
         </a>
 
       </md-list-item>
@@ -108,6 +108,16 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#search-form {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+#app.video #search-form .search-label {
+  color: white;
+}
+#app.video #search-form input, #app.video #search-form .md-input-focused input {
+  color: white;
+}
 .loading, .error {
   text-align: center;
 }
