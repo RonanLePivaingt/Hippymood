@@ -1,6 +1,6 @@
 <template>
-  <div 
-    class="player" 
+  <div
+    class="player"
     v-bind:class="{ video: videoMode }"
     v-show="intro === 0"
     >
@@ -30,12 +30,12 @@
 
       <md-card-header class="player-header">
         <transition name="fade">
-        <md-button-toggle 
+        <md-button-toggle
                     v-if="betaMode"
-                    @click.native="changeVideoMode" 
+                    @click.native="changeVideoMode"
                     class="videoModeToggle"
                     >
-                    <md-button 
+                    <md-button
                     v-bind:class="{ 'md-toggle': videoMode }"
                     class="md-icon-button"
                     >
@@ -77,7 +77,7 @@
         </div>
       </md-card-content>
 
-      <player-controls 
+      <player-controls
            v-show="videoMode === false"
            roundStyle="1"
            ></player-controls>

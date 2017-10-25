@@ -13,5 +13,5 @@ module.exports = function(app){
     app.get('/search/:keywords', HomeController.Search);
     app.get('/resetMood/:id', HomeController.ResetMood);
     app.get('/searchSongPlayed/:songId', HomeController.searchSongPlayed);
-    app.get('/newSongs/', HomeController.newSongs);
+    app.get('/newSongs/:page', HomeController.newSongs);
 };

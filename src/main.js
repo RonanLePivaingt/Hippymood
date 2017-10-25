@@ -106,7 +106,7 @@ const store = new Vuex.Store({
       }
     },
     setWhatsNew (state, whatsNew) {
-      state.whatsNew = whatsNew
+      state.whatsNew = state.whatsNew.concat(whatsNew)
     }
   },
   actions: {
@@ -223,9 +223,9 @@ const store = new Vuex.Store({
       commit('setUnlocked', status)
     },
     askWhatsNew: function ({ dispatch, commit }) {
-      Vue.http.get(
-        '/newSongs/',
-      ).then(
+      var url = '/newSongs/' + store.state.whatsNew.length.toString()
+
+      Vue.http.get(url).then(
         response => {
           console.log(response)
           if (response.body.newSongs !== undefined) {

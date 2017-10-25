@@ -47,7 +47,7 @@ exports.Moods = function(req, res){
       .join('genreAssociation', 'genres.id', '=', 'genreAssociation.id')
       .join('songs', 'songs.id', '=', 'genreAssociation.id_songs')
       .groupBy('genres.id')
-      .then(function(rows) { 
+      .then(function(rows) {
         res.send(
           shuffleArray(rows)
         );
@@ -91,7 +91,7 @@ exports.Mood = function(req, res){
       select = select.whereNotNull('songs.youtube');
     }
 
-    select.then(function(rows) {       
+    select.then(function(rows) {
         if (rows.length > 0) {
           var randomIndex1 = Math.floor(Math.random() * rows.length);
 
@@ -136,9 +136,9 @@ exports.Mood = function(req, res){
           req.session.lastVisit = Date.now();
 
           // Saving song played id
-          if (req.session.playedSongs == undefined) 
+          if (req.session.playedSongs == undefined)
             req.session.playedSongs = [randomSongs[0]['id']];
-          else 
+          else
             req.session.playedSongs.push(randomSongs[0]['id']);
 
           // Creating response
@@ -175,7 +175,7 @@ exports.Search = function(req, res){
     .where('songs.name', 'like', keywords)
     .orWhere('artists.name', 'like', keywords)
     .orWhere('albums.name', 'like', keywords)
-    .then(function(rows) {       
+    .then(function(rows) {
       var data = {};
       if (rows.length > 0)
         data.searchResults = rows;
@@ -188,6 +188,8 @@ exports.Search = function(req, res){
 
 // Function to get song infos by submitting a genre
 exports.newSongs = function(req, res){
+  var page = req.params.page;
+
   var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'genres.id AS moodId', 'genres.name AS mood', 'songs.path', 'albums.name AS album', 'songs.youtube', 'songs.timestamp')
     .from('songs')
     .join('genreAssociation', 'songs.id', '=', 'genreAssociation.id_songs')
@@ -195,16 +197,22 @@ exports.newSongs = function(req, res){
     .join('artists', 'artists.id', '=', 'songs.id_artists')
     .join('albums', 'albums.id', '=', 'songs.id_albums')
     .limit(10)
-    .orderBy('songs.timestamp', 'desc')
-    .then(function(rows) {       
-      var data = {};
-      if (rows.length > 0)
-        data.newSongs = rows;
-      res.send(data);
-    })
-    .catch(function(error) {
-      console.error(error);
-    });
+    .orderBy('songs.timestamp', 'desc');
+
+  if (page)
+    select.offset(page * 10);
+
+  select.then(function(rows) {
+    var data = {};
+
+    if (rows.length > 0)
+      data.newSongs = rows;
+
+    res.send(data);
+  })
+  .catch(function(error) {
+    console.error(error);
+  });
 };
 
 // If a song is played from the search result, this function will add it to the played songs list
@@ -229,7 +237,7 @@ exports.ResetMood = function(req, res){
 
   knex('genreAssociation')
     .where('id', moodId)
-    .then(function(rows) {       
+    .then(function(rows) {
       rows.forEach(function(entry, index) {
         var i = req.session.playedSongs.indexOf(entry.id_songs);
         req.session.playedSongs.splice(i, 1);

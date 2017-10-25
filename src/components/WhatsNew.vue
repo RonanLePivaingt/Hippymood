@@ -6,20 +6,10 @@
       </md-button>
     </div>
 
-    <div class="loading" v-show="loading">
-      <md-spinner :md-size="150" md-indeterminate></md-spinner>
-    </div>
-
-    <div class="error" v-show="error">
-      <p>
-        (>_<)
-      </p>
-    </div>
-
     <span class="md-display-2">Dernières chansons</span>
 
     <md-list>
-      <md-list-item 
+      <md-list-item
         v-for="(item, index) in whatsNew"
         :key="item.id"
         class="list-item"
@@ -28,27 +18,46 @@
         <span></span>
 
         <div class="md-list-text-container">
-          <span class="song-name"> 
-            <i class="material-icons meta">audiotrack</i> {{ item.song }} 
+          <span class="song-name">
+            <i class="material-icons meta">audiotrack</i> {{ item.song }}
           </span>
-          <span> 
-            <i class="material-icons meta">person</i> {{ item.artist }} 
+          <span>
+            <i class="material-icons meta">person</i> {{ item.artist }}
           </span>
-          <p v-show="item.album"> 
-            <i class="material-icons meta">album</i> {{ item.album }} 
+          <p v-show="item.album">
+            <i class="material-icons meta">album</i> {{ item.album }}
           </p>
         </div>
 
         <a
           class="md-button md-raised"
           @click="play(index)"
-          > 
-          {{ item.mood }} 
+          >
+          {{ item.mood }}
         </a>
 
       </md-list-item>
     </md-list>
 
+    <transition name="fade">
+      <div class="loading" v-show="!error && loading">
+        <md-spinner :md-size="150" md-indeterminate></md-spinner>
+      </div>
+    </transition>
+
+    <div class="error" v-show="error">
+      <p>
+        (>_<)
+      </p>
+    </div>
+
+    <transition name="fade">
+      <div class="more" v-show="!loading">
+        <md-button class="md-raised md-accent" @click="loadMore">
+          <i class="material-icons">add_circle_outline</i> Plus de chansons
+        </md-button>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -57,7 +66,7 @@ export default {
   name: 'whats-new',
   data: function () {
     return {
-      loading: false,
+      loading: true,
       error: false
     }
   },
@@ -66,13 +75,22 @@ export default {
   },
   computed: {
     whatsNew: function () {
-      return this.$store.state.whatsNew
+      if (this.$store.state.whatsNew.length === 0) {
+        return false
+      } else {
+        this.loading = false
+        return this.$store.state.whatsNew
+      }
     }
   },
   methods: {
     play (index) {
       this.$root.$store.dispatch('askNextSong', this.whatsNew[index])
       this.$router.push('/')
+    },
+    loadMore () {
+      this.loading = true
+      this.$root.$store.dispatch('askWhatsNew')
     }
   }
 }
@@ -80,7 +98,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.loading, .error {
+.loading, .error, .more {
   text-align: center;
 }
 .error {
@@ -94,6 +112,9 @@ export default {
 }
 span.song-name {
   font-size: 1.2rem;
+}
+.list-item p {
+  color: rgba(0,0,0,0.87);
 }
 </style>
 
