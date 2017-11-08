@@ -31,7 +31,7 @@ export default {
 
       var datChipsCenter = {
         x: datChipsPos.left + (datChipsPos.width / 2),
-        y: datChipsPos.top + (datChipsPos.height / 2) - 60,
+        y: datChipsPos.top + (datChipsPos.height / 2),
       }
       var chipsUp = {
         x: datChipsCenter.x - windowCenter.x,
@@ -63,7 +63,7 @@ export default {
     }
   },
   setSmoke: function () {
-    // Animations 
+    // Animations
     var DURATION = 400
 
     this.smoke = new mojs.Burst({
@@ -109,14 +109,14 @@ export default {
   upAnim: function () {
     if (this.coordinates) {
       this.smoke
-        .tune({ 
-          children: { 
+        .tune({
+          children: {
             fill: 'cyan'
           },
-          x: this.coordinates.chipsUp.x, 
-          y: this.coordinates.chipsUp.y, 
-          degree: 0, 
-          radius: { 10: 100 } 
+          x: this.coordinates.chipsUp.x,
+          y: this.coordinates.chipsUp.y,
+          degree: 0,
+          radius: { 10: 100 }
         })
         .generate()
         .replay();
@@ -125,14 +125,14 @@ export default {
   downAnim : function () {
     if (this.coordinates && this.smoke) {
       this.smoke
-        .tune({ 
-          children: { 
+        .tune({
+          children: {
             fill: 'cyan'
           },
-          x: this.coordinates.chipsDown.x, 
-          y: this.coordinates.chipsDown.y, 
-          degree: 0, 
-          radius: { 10: -100 } 
+          x: this.coordinates.chipsDown.x,
+          y: this.coordinates.chipsDown.y,
+          degree: 0,
+          radius: { 10: -100 }
         })
         .generate()
         .replay();
@@ -141,14 +141,14 @@ export default {
   leftAnim : function () {
     if (this.coordinates) {
       this.smoke
-        .tune({ 
-          children: { 
+        .tune({
+          children: {
             fill: 'cyan'
           },
-          x: this.coordinates.chipsLeft.x, 
-          y: this.coordinates.chipsLeft.y, 
-          degree: 180, 
-          radius: { 20: -100 } 
+          x: this.coordinates.chipsLeft.x,
+          y: this.coordinates.chipsLeft.y,
+          degree: 180,
+          radius: { 20: -100 }
         })
         .generate()
         .replay();
@@ -157,14 +157,14 @@ export default {
   rightAnim : function () {
     if (this.coordinates) {
       this.smoke
-        .tune({ 
-          children: { 
+        .tune({
+          children: {
             fill: 'cyan'
           },
-          x: this.coordinates.chipsRight.x, 
-          y: this.coordinates.chipsRight.y, 
-          degree: 180, 
-          radius: { 100: 0 } 
+          x: this.coordinates.chipsRight.x,
+          y: this.coordinates.chipsRight.y,
+          degree: 180,
+          radius: { 100: 0 }
         })
         .generate()
         .replay();

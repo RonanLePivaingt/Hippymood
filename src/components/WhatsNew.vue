@@ -13,9 +13,8 @@
         v-for="(item, index) in whatsNew"
         :key="item.id"
         class="list-item"
+        @click="play(index)"
         >
-
-        <span></span>
 
         <div class="md-list-text-container">
           <span class="song-name">

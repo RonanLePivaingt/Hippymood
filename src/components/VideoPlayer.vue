@@ -54,7 +54,7 @@
       play () {
         this.player.playVideo()
         // Setting global player state as play
-        // window.vm.extPlay()
+        window.vm.extPlay()
       },
       nextSong () {
         window.vm.extPlayNextSong()

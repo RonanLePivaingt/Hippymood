@@ -12,7 +12,7 @@
       >
       <md-input-container md-clearable>
         <label class="search-label">Artiste, chanson ou album à rechercher</label>
-        <md-input v-model="searchKeywords"></md-input>
+        <md-input v-model="searchKeywords" ref="searchInput"></md-input>
       </md-input-container>
     </form>
 
@@ -32,9 +32,8 @@
         v-for="(item, index) in searchResults"
         :key="item.id"
         class="list-item"
+        @click="play(index)"
         >
-
-        <span></span>
 
         <div class="md-list-text-container">
           <span class="song-name">
@@ -50,7 +49,7 @@
 
         <a
           class="md-button md-raised"
-          @click="playSearchResult(index)"
+          @click="play(index)"
           >
           {{ item.mood }}
         </a>
@@ -75,12 +74,14 @@ export default {
   },
   mounted: function () {
     this.$nextTick(function () {
-      var searchInput = document.querySelectorAll('#searchForm input')[0]
-      searchInput.focus()
+      // Setting focus on search input
+      this.$refs.searchInput.$el.focus()
     })
   },
   methods: {
     onSubmit () {
+      // Removing focus from search input
+      this.$refs.searchInput.$el.blur()
       this.searchResults = {}
       this.loading = true
       this.error = false
@@ -98,7 +99,7 @@ export default {
         }
       )
     },
-    playSearchResult (index) {
+    play (index) {
       this.$root.$store.dispatch('askNextSong', this.searchResults[index])
       this.$router.push('/')
     }

@@ -196,7 +196,6 @@
 
 <style src="../node_modules/vue-material/dist/vue-material.css"></style>
 <style>
-
 /* Disabling icon selection */
 i.material-icons {
   -webkit-user-select: none;  /* Chrome all / Safari all */
@@ -238,6 +237,8 @@ i.bright-background {
   text-align: center;
   font-size: 4rem;
   font-weight: 400;
+  margin: 0;
+  padding: 4rem;
 }
 #app.video #playerCard, #app.video #video-controls {
   box-shadow: none;

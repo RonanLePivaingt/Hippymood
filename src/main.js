@@ -339,9 +339,7 @@ window.vm = new Vue({
       */
     },
     extToggleVideoMode: function () {
-      if (this.$store.state.betaMode) {
-        this.$store.commit('toggleVideoMode')
-      }
+      this.$store.commit('toggleVideoMode')
     }
   }
 })
