@@ -1,70 +1,73 @@
 <template>
-  <div
-    id="app"
-    v-bind:class="{video: videoMode}"
-    >
+  <transition name="leave-intro" appear>
+    <div
+      id="app"
+      v-bind:class="{video: videoMode}"
+      v-show="leaveIntro"
+      >
 
-    <div id="mask"></div>
+      <div id="mask"></div>
 
-    <h1> Hippy Mood </h1>
+      <h1> Hippy Mood </h1>
 
-    <div v-if="unlocked === -1">
-      <p>Loading</p>
-    </div>
-
-    <div class="intro" v-show="intro && unlocked > 0 && currentRouterComponent !== 'Admin'">
-      <p> Un site pour écouter de la musique selon ta "mood" </p>
-      <p>
-        C'est comme une boite de chocolat, tant que t'as pas essayé tu ne sais pas!
-        Des fois tu reviens, des fois pas...
-      </p>
-      <div class="actions">
-        <md-switch
-            v-model="videoMode"
-            v-on:change="toggleVideoMode"
-            class="md-primary"
-            >Mode vidéo</md-switch>
-
-          <md-button href="#/search" class="md-icon-button md-raised">
-            <md-icon>search</md-icon>
-          </md-button>
-
-          <md-button
-            id="intro-whats-new"
-            class="md-button md-raised"
-            href="#/whatsNew"
-            >
-            <md-icon>fiber_new</md-icon> Quoi de neuf ?
-          </md-button>
+      <div v-if="unlocked === -1">
+        <p>Loading</p>
       </div>
+
+      <div class="intro" v-show="intro && unlocked > 0 && currentRouterComponent !== 'Admin'">
+        <p> Un site pour écouter de la musique selon ta "mood" </p>
+        <p>
+          C'est comme une boite de chocolat, tant que t'as pas essayé tu ne sais pas!
+          Des fois tu reviens, des fois pas...
+        </p>
+        <div class="actions">
+          <md-switch
+              v-model="videoMode"
+              v-on:change="toggleVideoMode"
+              class="md-primary"
+              >Mode vidéo</md-switch>
+
+            <md-button href="#/search" class="md-icon-button md-raised">
+              <md-icon>search</md-icon>
+            </md-button>
+
+            <md-button
+              id="intro-whats-new"
+              class="md-button md-raised"
+              href="#/whatsNew"
+              >
+              <md-icon>fiber_new</md-icon> Quoi de neuf ?
+            </md-button>
+        </div>
+      </div>
+
+      <div id="main-container">
+        <chips-lock v-if="unlocked === 0"></chips-lock>
+
+        <transition name="fastfade" mode="out-in">
+          <router-view v-if="unlocked === 1"></router-view>
+        </transition>
+
+        <html5-player
+                     v-if="videoMode === false || hasYoutubeLink === false"
+                     :current="current"
+                     ></html5-player>
+
+        <video-player
+                     v-if="!intro"
+          ></video-player>
+      </div>
+
+      <div class="mood-list">
+        <mood-list  v-for="mood in moods" :mood="mood" :key="mood.id"></mood-list>
+      </div>
+
+      <md-snackbar md-position="bottom center" ref="snackbar" md-duration="10000">
+        <span>Les vidéos sont en test avec le bouton à gauche de la recherche. Enjoy ;)</span>
+        <md-button class="md-accent" @click="$refs.snackbar.close()">Fermer</md-button>
+      </md-snackbar>
     </div>
-
-    <div id="main-container">
-      <chips-lock v-if="unlocked === 0"></chips-lock>
-
-      <transition name="fastfade" mode="out-in">
-        <router-view v-if="unlocked === 1"></router-view>
-      </transition>
-
-      <html5-player
-                   v-if="videoMode === false || hasYoutubeLink === false"
-                   :current="current"
-                   ></html5-player>
-
-      <video-player
-                   v-if="!intro"
-        ></video-player>
-    </div>
-
-    <div class="mood-list">
-      <mood-list  v-for="mood in moods" :mood="mood" :key="mood.id"></mood-list>
-    </div>
-
-    <md-snackbar md-position="bottom center" ref="snackbar" md-duration="10000">
-      <span>Les vidéos sont en test avec le bouton à gauche de la recherche. Enjoy ;)</span>
-      <md-button class="md-accent" @click="$refs.snackbar.close()">Fermer</md-button>
-    </md-snackbar>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -75,6 +78,10 @@
   import MoodList from './components/MoodList'
   import Html5Player from './components/HTML5Player'
   import VideoPlayer from './components/VideoPlayer'
+  function removeFirstIntro () {
+    var firstIntro = document.getElementById('first-intro')
+    document.body.removeChild(firstIntro)
+  }
   export default {
     name: 'app',
     components: {
@@ -82,6 +89,11 @@
       MoodList,
       Html5Player,
       VideoPlayer
+    },
+    data () {
+      return {
+        leaveIntro: false
+      }
     },
     computed: {
       current: function () {
@@ -119,6 +131,9 @@
       }
     },
     mounted: function keyboardShortcuts () {
+      // Removing intro before Vue loading
+      window.setTimeout(removeFirstIntro, 500)
+
       var myScope = document
       myCombos = listener.register_many([
         {
@@ -186,6 +201,10 @@
           'this': myScope
         }
       ])
+    },
+    updated: function () {
+      // Not placed in mounted hook, otherwise its
+      this.leaveIntro = true
     },
     destroyed: function () {
       // Removing listeners when the component is removed
@@ -314,8 +333,22 @@ i.material-icons{
   color: rgba(255, 255, 255, 0.9);
 }
 /*
- * Transition animation
+ * Transition animations
  */
+/* Leave intro */
+#first-intro {
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: all .5s;
+}
+.leave-intro-enter-active, .leave-intro-leave-active {
+  transition: all .5s;
+}
+.leave-intro-enter, .leave-intro-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(+20%);
+}
+/* Fade */
 .fade-enter-active, .fade-leave-active {
   transition: opacity .5s
 }
