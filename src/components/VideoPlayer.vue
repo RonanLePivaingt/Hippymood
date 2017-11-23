@@ -13,6 +13,20 @@
                 ></youtube>
     </transition>
 
+    <md-card-content
+      v-show="!youtubeId"
+      class="player-video-error">
+      <div>
+        <div class="icon">
+          <p>(>_<)</p>
+        </div>
+        <div class="message">
+          <p>Il y a un problème de vidéo pour cette chanson</p>
+          <p>Pour continuer en mode vidéo avant la fin de la chanson, cliquer sur suivant ou 2 fois sur une autre mood</p>
+        </div>
+      </div>
+    </md-card-content>
+
     <md-card id="video-controls" v-show="videoMode">
       <Player-Controls
                                  v-on:playVideo="play"
@@ -91,5 +105,31 @@
   overflow: hidden;
   width: 640px;
   background-color: rgba(0,0,0,0.0) !important;
+}
+.player-video-error {
+  padding-left: 0px;
+  font-size: 1rem;
+}
+#app.video:hover .player-video-error {
+  color: rgba(255, 255, 255, 0.8);
+}
+.player-video-error > div {
+  display:flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: stretch;
+  align-items: stretch;
+}
+.player-video-error .icon, .player-video-error .message {
+  display: inline-block;
+}
+.player-video-error .icon {
+  width: 25%;
+  font-size: 3rem;
+  text-align: center;
+}
+.player-video-error .message {
+  width: 74%;
 }
 </style>

@@ -54,7 +54,7 @@
                      ></html5-player>
 
         <video-player
-                     v-if="!intro"
+                     v-if="!intro && videoMode"
           ></video-player>
       </div>
 
