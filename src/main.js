@@ -27,6 +27,15 @@ VueTouch.registerCustomEvent('quintupletap', {
 })
 Vue.use(VueTouch, {name: 'v-touch'})
 
+// Youtube like progress bar
+import VueProgressBar from 'vue-progressbar'
+
+Vue.use(VueProgressBar, {
+  color: 'rgb(0, 188, 212)',
+  failedColor: 'red',
+  thickness: '3px'
+})
+
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
@@ -112,16 +121,19 @@ const store = new Vuex.Store({
   actions: {
     askPlayMood: function ({ commit }, moodId) {
       var videoMode = store.state.videoMode
+      window.vm.$Progress.start()
       Vue.http.post('/mood/', {moodId: moodId, videoMode: videoMode}).then(response => {
         if (response.body.songs) {
           commit('setCurrent', response.body.songs[0])
           commit('setPlaying')
+          window.vm.$Progress.finish()
         }
         if (response.body.nbSongsLeft !== undefined) {
           commit('setCurrentSongsLeft', response.body.nbSongsLeft)
         }
       }, response => {
         console.log('Shit it the fan !')
+        window.vm.$Progress.fail()
         commit('setPaused')
       })
     },
@@ -165,23 +177,27 @@ const store = new Vuex.Store({
         var moodId
         var videoMode
         if (store.state.next.type === undefined) {
+          window.vm.$Progress.start()
           moodId = store.state.current.moodId
           videoMode = store.state.videoMode
           Vue.http.post('/mood/', {moodId: moodId, videoMode: videoMode}).then(response => {
             if (response.body.songs) {
               commit('setCurrent', response.body.songs[0])
               commit('setPlaying')
+              window.vm.$Progress.finish()
             }
             if (response.body.nbSongsLeft !== undefined) {
               commit('setCurrentSongsLeft', response.body.nbSongsLeft)
             }
           }, response => {
+            window.vm.$Progress.fail()
             commit('setPaused')
           })
         } else if (store.state.next.type === 'mood') {
           moodId = store.state.next.moodId
           videoMode = store.state.next.videoMode
           store.state.next = {}
+          window.vm.$Progress.start()
           Vue.http.post('/mood/', {moodId: moodId, videoMode: videoMode}).then(response => {
             if (response.body.songs) {
               commit('setCurrent', response.body.songs[0])
@@ -189,9 +205,11 @@ const store = new Vuex.Store({
                 commit('setCurrentSongsLeft', response.body.nbSongsLeft)
               }
               commit('setPlaying')
+              window.vm.$Progress.finish()
             }
           }, response => {
             console.log('Shit it the fan !')
+            window.vm.$Progress.fail()
             commit('setPaused')
             store.state.next = {}
           })

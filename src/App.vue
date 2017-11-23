@@ -6,6 +6,8 @@
       v-show="leaveIntro"
       >
 
+      <vue-progress-bar></vue-progress-bar>
+
       <div id="mask"></div>
 
       <h1> Hippy Mood </h1>
