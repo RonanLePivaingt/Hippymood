@@ -19,7 +19,21 @@
         </div>
       </md-card-header>
         <div class="download-link dark-background">
-          <a class="md-button md-raised md-accent md-theme-default" :href="current.path" download>
+          <a
+            class="md-button md-raised md-accent md-theme-default"
+            :href="current.path"
+            download
+            v-if="demoMode === 0"
+            >
+              Télécharger la chanson <i class="material-icons">file_download</i>
+          </a>
+          <a
+            class="md-button md-raised md-accent md-theme-default"
+            href=""
+            download
+            v-if="demoMode === 1"
+            disabled
+            >
               Télécharger la chanson <i class="material-icons">file_download</i>
           </a>
         </div>
@@ -38,6 +52,9 @@
     computed: {
       current: function () {
         return this.$store.state.current
+      },
+      demoMode: function () {
+        return this.$store.state.demoMode
       }
     }
   }

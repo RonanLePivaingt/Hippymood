@@ -54,7 +54,7 @@
         </transition>
 
         <html5-player
-                     v-if="videoMode === false || hasYoutubeLink === false"
+                     v-if="(videoMode === false || hasYoutubeLink === false) && demoMode === 0"
                      :current="current"
                      ></html5-player>
 
@@ -118,6 +118,9 @@
       },
       betaMode: function () {
         return this.$store.state.betaMode
+      },
+      demoMode: function () {
+        return this.$store.state.demoMode
       },
       hasYoutubeLink: function () {
         if (this.$store.state.current.youtube) {

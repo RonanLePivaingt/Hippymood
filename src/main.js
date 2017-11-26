@@ -58,7 +58,8 @@ const store = new Vuex.Store({
     authCombination: Config.auth.combination,
     authCombinationCode: Config.auth.combinationCode,
     videoMode: false,
-    betaMode: false
+    betaMode: false,
+    demoMode: Config.demoMode
   },
   mutations: {
     setMoods (state, moods) {
