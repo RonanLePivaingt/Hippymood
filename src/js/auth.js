@@ -23,42 +23,35 @@ export default {
         */
 
     if (this.combination.length > 0 && this.combination + key != window.vm.$store.state.authCombinationCode.substring(0, this.combination.length + 2)) {
-      window.vm.$children[0].$children[5].failAnim();
-      // window.chipslock.failAnim();
+      window.vm.$children[0].$refs.chipslock.failAnim();
       this.combination = '';
     }
     else if (key === "38" && this.combination != "38") {
       this.combination = key;
       this.checkCombination();
-      window.vm.$children[0].$children[5].upAnim();
-      // window.chipslock.upAnim();
+      window.vm.$children[0].$refs.chipslock.upAnim();
     }
     else if (key === "38") {
       this.combination += key;
       this.checkCombination();
-      window.vm.$children[0].$children[5].upAnim();
-      // window.chipslock.upAnim();
+      window.vm.$children[0].$refs.chipslock.upAnim();
     }
     else if (key === "40") {
       this.combination += key;
       this.checkCombination();
-      window.vm.$children[0].$children[5].downAnim();
-      // window.chipslock.downAnim();
+      window.vm.$children[0].$refs.chipslock.downAnim();
     }
     else if (key === "37") {
       this.combination += key;
       this.checkCombination();
-      window.vm.$children[0].$children[5].leftAnim();
-      // window.chipslock.leftAnim();
+      window.vm.$children[0].$refs.chipslock.leftAnim();
     }
     else if (key === "39") {
       this.combination += key;
       this.checkCombination();
-      window.vm.$children[0].$children[5].rightAnim();
-      // window.chipslock.rightAnim();
+      window.vm.$children[0].$refs.chipslock.rightAnim();
       if (this.combination == "3838404037393739") {
-        // Faire apparaître les touches A et B
-        // removeClass(document.getElementById("NESgamepad"), "hide");
+        // This event is catched in the chipslock component to display the NES Gamepad
         var event = new Event('displayNESGamepad');
         document.dispatchEvent(event);
       }

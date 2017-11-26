@@ -44,7 +44,10 @@
       </div>
 
       <div id="main-container">
-        <chips-lock v-if="unlocked === 0"></chips-lock>
+        <chips-lock
+          v-if="unlocked === 0"
+          ref="chipslock"
+          ></chips-lock>
 
         <transition name="fastfade" mode="out-in">
           <router-view v-if="unlocked === 1"></router-view>
