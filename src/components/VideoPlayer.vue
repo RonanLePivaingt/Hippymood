@@ -5,7 +5,7 @@
                 v-if="youtubeId && videoMode"
                 class="video"
                 @ready="ready"
-                @paused="pause"
+                @paused="setPausedState"
                 @playing="play"
                 @ended="nextSong"
                 :video-id="youtubeId"
@@ -52,16 +52,14 @@
       PlayerControls
     },
     methods: {
-      resetMood () {
-        this.$http.get('/resetMood/' + this.current.moodId).then(response => {
-          this.nextSong()
-        })
-      },
       ready (player) {
         this.player = player
       },
       pause () {
+        // Pause video playing
         this.player.pauseVideo()
+      },
+      setPausedState () {
         // Setting global player state as paused
         window.vm.extPause()
       },
@@ -72,6 +70,11 @@
       },
       nextSong () {
         window.vm.extPlayNextSong()
+      },
+      resetMood () {
+        this.$http.get('/resetMood/' + this.current.moodId).then(response => {
+          this.nextSong()
+        })
       }
     },
     computed: {
