@@ -3,6 +3,10 @@ Web app to play your music smoothly by genre/mood.
 
 [Demo](http://hippymood.xyz)
 
+Demo disclaimer :
+- Not responsive yet
+- Only the Youtube based video mode will play music, not direct mp3 playing for legal reasons
+
 # Build setup
 
 ## Install dependencies
@@ -34,6 +38,8 @@ npm run build
 
 # Roadmap
 
+Not a version but build a Dockerfile / Docker image to ease development jump in and ease deployment.
+
 ## 0.5 (ongoing version)
 - Migration of Vuejs from v1 to v2
 - Use a query builder to prevent SQL injections (Knex.js)
@@ -41,15 +47,11 @@ npm run build
 - Move to an architecture more friendly to Hippymood behavior change without touching to the core (with extensions, vuejs components maybe)
 
 ## 0.whoKnows
+- New responsive UI
+
+## 0.whoKnows
 - Support multiple mood per song
 - Define subgenres and adapt UI to browse them (electronic music is a good example)
-
-## 0.whoKnows
-- Search system
-    - Play selected song, then the genre of the searched song
-
-## 0.whoKnows
-- New responsive UI
 
 ## 0.whoKnows
 - Control the player with a mobile device and a QRcode (+url ?)
