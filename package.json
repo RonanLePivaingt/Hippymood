@@ -21,6 +21,7 @@
     "knex": "^0.13.0",
     "musicmetadata": "^2.0.5",
     "socket.io": "^2.0.3",
+    "v-tooltip": "^2.0.0-rc.25",
     "vue": "^2.2.2",
     "vue-material": "^0.7.1",
     "vue-progressbar": "^0.7.3",

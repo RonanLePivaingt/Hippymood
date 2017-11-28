@@ -36,6 +36,9 @@ Vue.use(VueProgressBar, {
   thickness: '3px'
 })
 
+import VTooltip from 'v-tooltip'
+Vue.use(VTooltip)
+
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
