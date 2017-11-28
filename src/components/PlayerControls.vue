@@ -61,11 +61,9 @@ export default {
   methods: {
     play () {
       this.$emit('playVideo')
-      window.vm.extPlay()
     },
     pause () {
       this.$emit('pauseVideo')
-      window.vm.extPause()
     },
     nextSong () {
       window.vm.extPlayNextSong()
