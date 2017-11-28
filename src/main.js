@@ -320,10 +320,14 @@ window.vm = new Vue({
     extTogglePlayPause: function () {
       var playerHTML5 = document.getElementById('playerHTML5')
       if (this.$store.state.playerState === 'playing') {
-        playerHTML5.pause()
+        if (playerHTML5) {
+          playerHTML5.pause()
+        }
         this.$store.commit('setPaused')
       } else {
-        playerHTML5.play()
+        if (playerHTML5) {
+          playerHTML5.play()
+        }
         this.$store.commit('setPlaying')
       }
     },

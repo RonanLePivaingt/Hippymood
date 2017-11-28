@@ -2,6 +2,7 @@
   <transition name="leave-intro" appear>
     <div
       id="app"
+      ref="app"
       v-bind:class="{video: videoMode}"
       v-show="leaveIntro"
       >
@@ -136,6 +137,21 @@
     methods: {
       toggleVideoMode () {
         this.$store.commit('toggleVideoMode')
+      },
+      setTogglePlayPauseKeyboardShortcut () {
+        listener.register_many([
+          {
+            'keys': 'meta space',
+            'on_keydown': function () {
+              window.vm.extTogglePlayPause()
+            },
+            'this': document,
+            'prevent_default': true
+          }
+        ])
+      },
+      removeTogglePlayPauseKeyboardShortcut () {
+        listener.unregister_combo('meta space')
       }
     },
     mounted: function keyboardShortcuts () {
@@ -144,14 +160,6 @@
 
       var myScope = document
       myCombos = listener.register_many([
-        {
-          'keys': 'meta space',
-          'on_keydown': function () {
-            window.vm.extTogglePlayPause()
-          },
-          'this': myScope,
-          'prevent_default': true
-        },
         {
           'keys': 'meta left',
           'on_keydown': function () {
@@ -217,6 +225,16 @@
     destroyed: function () {
       // Removing listeners when the component is removed
       listener.unregister_many(myCombos)
+    },
+    watch: {
+      '$route' (to, from) {
+        // Set because of troubles with the ctrl+space keyboard shortcut between the player and search input (doesn't take spaces anymore)
+        if (to.name === 'Search') {
+          this.removeTogglePlayPauseKeyboardShortcut()
+        } else if (from.name === 'Search') {
+          this.setTogglePlayPauseKeyboardShortcut()
+        }
+      }
     }
   }
 </script>
