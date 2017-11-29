@@ -64,9 +64,28 @@
           ></video-player>
       </div>
 
-      <div class="mood-list">
-        <mood-list  v-for="mood in moods" :mood="mood" :key="mood.id"></mood-list>
-      </div>
+        <div class="mood-list">
+          <v-popover
+             trigger="manual"
+             :open="!intro && !videoMode"
+             offset="350"
+             :auto-hide="false"
+             placement="right"
+             delay="1000"
+             >
+             <div id="no-sound-tooltip"></div>
+             <template slot="popover">
+               <div class="tooltip-volume">
+                 <md-icon>volume_off</md-icon>
+                 <p> La lecture directe de musique est désactivée pour des raisons légales.</p>
+                 <p>
+                   Clique sur <a @click="toggleVideoMode">activer le mode vidéo</a> pour écouter de la musique avec la démo.
+                 </p>
+               </div>
+             </template>
+          </v-popover>
+          <mood-list  v-for="mood in moods" :mood="mood" :key="mood.id"></mood-list>
+        </div>
 
       <md-snackbar md-position="bottom center" ref="snackbar" md-duration="10000">
         <span>Les vidéos sont en test avec le bouton à gauche de la recherche. Enjoy ;)</span>
@@ -386,5 +405,141 @@ i.material-icons{
 }
 .fastfade-enter, .fastfade-leave-to /* .fastfade-leave-active below version 2.1.8 */ {
   opacity: 0
+}
+.tooltip .popover .popover-inner {
+  background: #f9f9f9;
+  color: black;
+  padding: 24px;
+  border-radius: 5px;
+  box-shadow: 0 5px 30px rgba(black, .1);
+}
+
+.tooltip .popover .popover-arrow {
+  background: #f9f9f9;
+}
+.tooltip {
+  display: block !important;
+  z-index: 10000;
+}
+
+.tooltip .tooltip-inner {
+  background: black;
+  color: white;
+  border-radius: 16px;
+  padding: 5px 10px 4px;
+}
+
+.tooltip .tooltip-arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  margin: 5px;
+  border-color: black;
+  z-index: 1;
+}
+
+.tooltip[x-placement^="top"] {
+  margin-bottom: 5px;
+}
+
+.tooltip[x-placement^="top"] .tooltip-arrow {
+  border-width: 5px 5px 0 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  bottom: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.tooltip[x-placement^="bottom"] {
+  margin-top: 5px;
+}
+
+.tooltip[x-placement^="bottom"] .tooltip-arrow {
+  border-width: 0 5px 5px 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+  top: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.tooltip[x-placement^="right"] {
+  margin-left: 5px;
+}
+
+.tooltip[x-placement^="right"] .tooltip-arrow {
+  border-width: 5px 5px 5px 0;
+  border-left-color: transparent !important;
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+  left: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.tooltip[x-placement^="left"] {
+  margin-right: 5px;
+}
+
+.tooltip[x-placement^="left"] .tooltip-arrow {
+  border-width: 5px 0 5px 5px;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  right: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.tooltip.popover .popover-inner {
+  background: #f9f9f9;
+  color: black;
+  padding: 24px;
+  border-radius: 5px;
+  box-shadow: 0 5px 30px rgba(black, .1);
+}
+
+.tooltip.popover .popover-arrow {
+  border-color: #f9f9f9;
+}
+
+.tooltip[aria-hidden='true'] {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .30s, visibility .30s;
+}
+
+.tooltip[aria-hidden='false'] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity .30s;
+}
+.tooltip a {
+  font-weight: bold;
+}
+div.v-popover  {
+  height: 1px;
+}
+.tooltip-volume {
+  color: rgba(0, 0, 0, 0.7);
+}
+.tooltip-volume {
+  width: 20rem;
+}
+.tooltip-volume a {
+  cursor: pointer;
+}
+.tooltip-volume i.md-icon {
+  font-size: 4rem;
+  width: 100%;
+  margin: 0.5rem;
 }
 </style>

@@ -29,12 +29,11 @@
           </a>
           <a
             class="md-button md-raised md-accent md-theme-default"
-            href=""
-            download
+            href="#"
             v-if="demoMode === 1"
-            disabled
             >
               Télécharger la chanson <i class="material-icons">file_download</i>
+             <md-tooltip md-direction="bottom">Désolé, le téléchargement est désactivé dans la démo</md-tooltip>
           </a>
         </div>
     </div>

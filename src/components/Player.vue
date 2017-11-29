@@ -33,6 +33,21 @@
         </md-menu-content>
       </md-menu>
 
+          <v-popover
+             trigger="manual"
+             :open="!intro"
+             offset="580"
+             :auto-hide="1500"
+             placement="right"
+             delay="1000"
+             >
+             <div id="function-tooltip"></div>
+             <template slot="popover">
+               <div class="tooltip-volume">
+                 <p>Clique en haut à droite du lecteur pour découvrir de nouvelles fonctionnalités</p>
+               </div>
+             </template>
+          </v-popover>
       <md-card-header class="player-header">
         <md-button class="md-icon-button searchButton" @click="search">
           <md-icon id="player-search" class="bright-background">search</md-icon>
@@ -311,5 +326,8 @@ button.md-button.searchButton {
 }
 .video .player-header {
   height: 100%;
+}
+.function-tooltip {
+  width: 15rem;
 }
 </style>
