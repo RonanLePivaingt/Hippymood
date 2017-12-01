@@ -279,6 +279,7 @@ window.vm = new Vue({
   },
   methods: {
     extUnlock: function () {
+      window.vm.$Progress.start()
       this.$http.post(
         '/',
         {combination: window.combination}
@@ -287,6 +288,7 @@ window.vm = new Vue({
           function (response) {
             // Redirecting to main page if server response is good
             if (response.body === 'OK') {
+              window.vm.$Progress.finish()
               this.$http.get('/moods').then(response => {
                 if (response.body === 'Must auth') {
                   this.$store.commit('setUnlocked', 0)
@@ -298,6 +300,8 @@ window.vm = new Vue({
               }, response => {
                 console.log('Shit it the fan !')
               })
+            } else {
+              window.vm.$Progress.fail()
             }
           }
         )

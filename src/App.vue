@@ -26,7 +26,7 @@
           <md-switch
               v-model="videoMode"
               v-on:change="toggleVideoMode"
-              class="md-primary"
+              class="md-primary video-switch"
               >Mode vidéo</md-switch>
 
             <md-button href="#/search" class="md-icon-button md-raised">
@@ -322,6 +322,9 @@ i.material-icons{
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
+}
+.video-switch {
+  font-size: 1rem;
 }
 .mood-list {
   margin-top: 1rem;
