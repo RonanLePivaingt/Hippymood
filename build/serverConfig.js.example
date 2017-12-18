@@ -22,4 +22,6 @@ config.auth.combinationCode = ''; /* 1 to activate authentification, 0 to disabl
 config.songList = {};
 config.songList.timeSinceVisitReset = 28800000; // 8 hour
 
+config.videoScan = true;
+
 module.exports = config;

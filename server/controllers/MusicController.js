@@ -1,43 +1,10 @@
-/**
- * Randomize array element order in-place.
- * Using Durstenfeld shuffle algorithm.
- */
-function shuffleArray(array) {
-  for (var i = array.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
-  }
-  return array;
-}
-
-// Loading configuration file with database credentials
 var config = require('../../build/serverConfig');
+var dbConfig = require('../knex.js');
+var knex = require('knex')(dbConfig);
 
-var knex = require('knex')({
-  client: 'mysql',
-  connection: {
-    host: config.db.host,
-    user: config.db.user,
-    password: config.db.password,
-    database: config.db.database
-  }
-});
-
-exports.Index = function(req, res){
-  res.sendFile(__dirname + '/../public/index.html');
-};
-
-// Registering session as authentified
-exports.Auth = function(req, res){
-  if (req.body.combination == config.auth.combinationCode) {
-    req.session.auth = 1;
-    res.send("OK");
-  }
-};
-
-// Function to return the list of mood
+/*
+ * Function to return the list of mood
+ */
 exports.Moods = function(req, res){
   if (req.session.auth || config.auth.activate === 0) {
     knex.select('genres.id', 'genres.name')
@@ -60,7 +27,9 @@ exports.Moods = function(req, res){
   }
 }
 
-// Function to get song infos by submitting a genre
+/*
+ * Function to get song infos by submitting a genre
+ */
 exports.Mood = function(req, res){
   if (req.session.auth || config.auth.activate === 0) {
     // Disabling cache for myurl.com/genre/id URLs to prevent some browser to play the same song again and again and again...
@@ -79,7 +48,7 @@ exports.Mood = function(req, res){
       });
     }
 
-    var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'songs.path', 'albums.name AS album', 'songs.youtube', 'songs.timestamp')
+    var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'songs.path', 'albums.name AS album', 'songs.youtube', 'songs.created_at')
       .from('songs')
       .join('genreAssociation', 'songs.id', '=', 'genreAssociation.id_songs')
       .join('artists', 'artists.id', '=', 'songs.id_artists')
@@ -162,7 +131,9 @@ exports.Mood = function(req, res){
   }
 };
 
-// Function to get song infos by submitting a genre
+/*
+ * Function to get song infos by submitting a genre
+ */
 exports.Search = function(req, res){
   var keywords = '%' + req.params.keywords + '%';
 
@@ -186,18 +157,20 @@ exports.Search = function(req, res){
     });
 };
 
-// Function to get song infos by submitting a genre
+/*
+ * Function to get song infos by submitting a genre
+ */
 exports.newSongs = function(req, res){
   var page = req.params.page;
 
-  var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'genres.id AS moodId', 'genres.name AS mood', 'songs.path', 'albums.name AS album', 'songs.youtube', 'songs.timestamp')
+  var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'genres.id AS moodId', 'genres.name AS mood', 'songs.path', 'albums.name AS album', 'songs.youtube', 'songs.created_at')
     .from('songs')
     .join('genreAssociation', 'songs.id', '=', 'genreAssociation.id_songs')
     .join('genres', 'genreAssociation.id', '=', 'genres.id')
     .join('artists', 'artists.id', '=', 'songs.id_artists')
     .join('albums', 'albums.id', '=', 'songs.id_albums')
     .limit(10)
-    .orderBy('songs.timestamp', 'desc');
+    .orderBy('songs.created_at', 'desc');
 
   if (page)
     select.offset(page * 10);
@@ -210,12 +183,14 @@ exports.newSongs = function(req, res){
 
     res.send(data);
   })
-  .catch(function(error) {
-    console.error(error);
+  .catch(function(err) {
+    console.error(err);
   });
 };
 
-// If a song is played from the search result, this function will add it to the played songs list
+/*
+ * If a song is played from the search result, this function will add it to the played songs list
+ */
 exports.searchSongPlayed = function(req, res){
   var songId = req.params.songId;
 
@@ -231,7 +206,9 @@ exports.searchSongPlayed = function(req, res){
   res.send("Done");
 }
 
-// Reset list of songs stored in sessions
+/*
+ * Reset list of songs stored in sessions
+ */
 exports.ResetMood = function(req, res){
   var moodId = req.params.id;
 
@@ -249,92 +226,25 @@ exports.ResetMood = function(req, res){
     });
 };
 
-// Reset sessions
+/*
+ * Reset session
+ */
 exports.ResetSession = function(req, res){
   req.session.playedSongs = [];
   res.send("Done");
 };
 
-// Reset list of songs stored in sessions
-exports.ResetDatabase = function(req, res){
-  // Could be cleaner with promises
-  knex('genreAssociation').del().then(function () {
-    knex('genres').del().then(function () {
-      knex('songs').del().then(function () {
-        knex('artists').del().then(function () {
-          knex('albums').del().then(function () {
-            res.send("Bim bim");
-          });
-        });
-      });
-    });
-  });
-};
-
-exports.ScanMusic = function(req, res) {
-  var async = require("async");
-  var id3tags = require('./id3tags');
-
-  // Initializing music scan queue
-  var queue = async.queue(id3tags.scan, 10); // Run ten simultaneous uploads
-  var files = getFileList("music");
-  queue.push(files);
-
-  // Setting up an interval to check indexing progress
-  var nbFiles = files.length;
-  var percentage = 0;
-  var newPercentage = 0;
-
-  function percentageCheckedFiles () {
-    var nbFilesLeft = queue.length();
-    var percentageFilesLeft = nbFilesLeft / nbFiles;
-    newPercentage = Math.round((1 - percentageFilesLeft) * 100);
-
-    // Sending data to client and log if any progress is made
-    if (percentage !== newPercentage) {
-      percentage = newPercentage;
-      req.io.emit('scan', percentage);
-      console.log("Music scan progress : " + percentage + "%");
-    }
+/**
+ * Randomize array element order in-place.
+ * Using Durstenfeld shuffle algorithm.
+ */
+function shuffleArray(array) {
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
   }
-  var percentageInterval = setInterval(percentageCheckedFiles, 500);
-
-  // Adding event on queue end processing
-  queue.drain = function() {
-    req.io.emit('scan', 'Done');
-
-    console.log("All files are indexed");
-    // Stoping previous interval
-    clearInterval(percentageInterval);
-  };
-
-  // Sending a response back to client
-  res.send("Music scan started");
-};
-
-// Function to get all files from a directory
-function getFileList (directory) {
-  // Getting all files of the music directory
-  var fs = require('fs');
-  var path = require('path');
-
-  var walk = function(dir) {
-    var results = []
-    var list = fs.readdirSync(dir)
-    list.forEach(function(file) {
-      file = dir + '/' + file
-      var stat = fs.statSync(file)
-      if (stat && stat.isDirectory()) {
-        results = results.concat(walk(file))
-      }
-      else if (file.split('.').pop() === 'mp3') {
-        results.push({
-          path: file,
-          timestamp: Date.parse(stat.mtime)
-        })
-      }
-    })
-    return results;
-  }
-  return walk(directory);
+  return array;
 }
+
