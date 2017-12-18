@@ -23,5 +23,6 @@ config.songList = {};
 config.songList.timeSinceVisitReset = 28800000; // 8 hour
 
 config.demoMode = 1;
+config.videoScan = true;
 
 module.exports = config;

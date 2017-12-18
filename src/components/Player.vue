@@ -74,6 +74,8 @@
       </md-card-content>
 
       <player-controls
+           v-on:playVideo="play"
+           v-on:pauseVideo="pause"
            v-show="videoMode === false"
            roundStyle="1"
            ></player-controls>

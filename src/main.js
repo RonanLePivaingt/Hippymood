@@ -293,6 +293,7 @@ window.vm = new Vue({
             // Redirecting to main page if server response is good
             window.vm.$Progress.finish()
             if (response.body === 'OK') {
+              window.vm.$Progress.finish()
               this.$http.get('/moods').then(response => {
                 if (response.body === 'Must auth') {
                   this.$store.commit('setUnlocked', 0)
@@ -305,6 +306,8 @@ window.vm = new Vue({
                 console.log('Shit it the fan !')
                 window.vm.$Progress.fail()
               })
+            } else {
+              window.vm.$Progress.fail()
             }
           }
         )

@@ -1,17 +1,21 @@
-var HomeController = require('./controllers/HomeController');
-var id3tags = require('./controllers/id3tags.js');
+var AuthController = require('./controllers/AuthController');
+var AdminController = require('./controllers/AdminController');
+var MusicController = require('./controllers/MusicController');
+var ScanController = require('./controllers/ScanController');
 
 // Routes
 module.exports = function(app){
-    // Checked routes for branch vue2fromscratch
-    app.post('/', HomeController.Auth);
-    app.get('/moods', HomeController.Moods);
-    app.post('/mood/', HomeController.Mood);
-    app.get('/admin/resetSession', HomeController.ResetSession);
-    app.get('/admin/resetDatabase', HomeController.ResetDatabase);
-    app.get('/admin/scanMusic', HomeController.ScanMusic);
-    app.get('/search/:keywords', HomeController.Search);
-    app.get('/resetMood/:id', HomeController.ResetMood);
-    app.get('/searchSongPlayed/:songId', HomeController.searchSongPlayed);
-    app.get('/newSongs/:page', HomeController.newSongs);
+    app.post('/', AuthController.Unlock);
+
+    app.get('/moods', MusicController.Moods);
+    app.post('/mood/', MusicController.Mood);
+    app.get('/resetMood/:id', MusicController.ResetMood);
+    app.get('/newSongs/:page', MusicController.newSongs);
+    app.get('/search/:keywords', MusicController.Search);
+    app.get('/searchSongPlayed/:songId', MusicController.searchSongPlayed);
+    app.get('/admin/resetSession', MusicController.ResetSession);
+
+    app.get('/admin/resetDatabase', AdminController.ResetDatabase);
+
+    app.get('/admin/scanMusic', ScanController.ScanMusic);
 };
