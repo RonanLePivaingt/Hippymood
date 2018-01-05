@@ -2,34 +2,38 @@ var dbConfig = require('../knex.js');
 var knex = require('knex')(dbConfig);
 
 return Promise.all([
-  knex.schema.createTableIfNotExists('albums', function(table) {
-    table.increments('id').primary();
-    table.string('name');
+  knex.schema.createTableIfNotExists('albums', function(t) {
+    t.increments('id').primary();
+    t.string('name');
   }),
-  knex.schema.createTableIfNotExists('artists', function(table) {
-    table.increments('id').primary();
-    table.string('name');
+  knex.schema.createTableIfNotExists('artists', function(t) {
+    t.increments('id').primary();
+    t.string('name');
   }),
-  knex.schema.createTableIfNotExists('genres', function(table) {
-    table.increments('id').primary();
-    table.string('name');
+  knex.schema.createTableIfNotExists('genres', function(t) {
+    t.increments('id').primary();
+    t.string('name');
   }),
-  knex.schema.createTableIfNotExists('songs', function(table) {
-    table.increments('id').primary();
-    table.string('name');
-    table.string('path');
-    table.string('youtube');
-    table.timestamps();
-    table.integer('id_albums').unsigned();
-    table.foreign('id_albums').references('albums.id');
-    table.integer('id_artists').unsigned();
-    table.foreign('id_artists').references('artists.id');
+  knex.schema.createTableIfNotExists('songs', function(t) {
+    t.increments('id').primary();
+    t.string('name');
+    t.string('path');
+    t.string('youtube');
+    t.timestamps();
+    t.integer('id_albums').unsigned();
+    t.foreign('id_albums').references('albums.id');
+    t.integer('id_artists').unsigned();
+    t.foreign('id_artists').references('artists.id');
   }),
-  knex.schema.createTableIfNotExists('genreAssociation', function(table) {
-    table.primary(['id', 'id_songs']);
-    table.integer('id');
-    table.foreign('id').references('genres.id');
-    table.integer('id_songs');
-    table.foreign('id_songs').references('songs.id');
+  knex.schema.createTableIfNotExists('genreAssociation', function(t) {
+    t.primary(['id', 'id_songs']);
+    t.integer('id');
+    t.foreign('id').references('genres.id');
+    t.integer('id_songs');
+    t.foreign('id_songs').references('songs.id');
+  }),
+  knex.schema.createTableIfNotExists('seeds', function(t) {
+    t.increments('id').primary();
+    t.string('name');
   })
 ]);

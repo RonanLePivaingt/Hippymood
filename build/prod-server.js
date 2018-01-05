@@ -1,6 +1,10 @@
 var config = require('./serverConfig.js');
 var express = require('express');
 var app = express();
+var cors = require('cors')
+
+// Enable all CORS request to get POST data working
+app.use(cors())
 
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);

@@ -9,3 +9,11 @@ exports.Unlock = function(req, res){
     res.send("OK");
   }
 };
+
+// Login and seed creation
+exports.Login = function(req, res){
+  console.log(req.body);
+  // Check if the seed name already exist
+  // If exist associate the seed to the session
+  // If it doesn't create the user and the associate it to the session
+};

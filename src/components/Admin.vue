@@ -30,7 +30,7 @@
             <a class="md-button md-raised" @click="scanMusic()"> Scan music </a>
             <div v-show="scanProgress > -1">
               {{ scanProgress }} %
-              <md-progress 
+              <md-progress
                  class="md-accent"
                  :md-progress="scanProgress"></md-progress>
             </div>

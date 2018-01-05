@@ -6,6 +6,7 @@ var ScanController = require('./controllers/ScanController');
 // Routes
 module.exports = function(app){
     app.post('/', AuthController.Unlock);
+    app.post('/login', AuthController.Login);
 
     app.get('/moods', MusicController.Moods);
     app.post('/mood/', MusicController.Mood);

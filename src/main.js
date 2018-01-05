@@ -262,6 +262,10 @@ window.vm = new Vue({
   el: '#app',
   store,
   router,
+  http: {
+    emulateJSON: true,
+    emulateHTTP: true
+  },
   template: '<App/>',
   components: { App },
   created: function () {

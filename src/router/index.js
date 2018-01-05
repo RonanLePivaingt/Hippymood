@@ -6,6 +6,7 @@ import About from '@/components/About'
 import Download from '@/components/Download'
 import Search from '@/components/Search'
 import WhatsNew from '@/components/WhatsNew'
+import Login from '@/components/Login'
 
 Vue.use(Router)
 
@@ -40,6 +41,11 @@ export default new Router({
       path: '/whatsNew',
       name: 'WhatsNew',
       component: WhatsNew
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
     }
   ]
 })
