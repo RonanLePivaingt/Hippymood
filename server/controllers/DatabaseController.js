@@ -27,9 +27,16 @@ return Promise.all([
   }),
   knex.schema.createTableIfNotExists('genreAssociation', function(table) {
     table.primary(['id', 'id_songs']);
-    table.integer('id');
+    table.integer('id').unsigned();
     table.foreign('id').references('genres.id');
-    table.integer('id_songs');
+    table.integer('id_songs').unsigned();
     table.foreign('id_songs').references('songs.id');
   })
-]);
+]).then(() => {
+  console.log('Database successfully initialized');
+  // process.exit(0);
+}).catch(reason => {
+  console.log(reason)
+  // process.exit(1);
+});
+

@@ -1,0 +1,20 @@
+version: '2'
+services:
+ mariadb:
+  container_name: mariadb
+  image: mariadb
+  environment:
+   MYSQL_ROOT_PASSWORD: 'yes'
+   MYSQL_DATABASE: hippymood
+   MYSQL_USER: hippymood_user
+   MYSQL_PASSWORD: hippymood_password
+  ports:
+   - "3307:3306"
+  restart: always
+ app:
+  build: .
+  links:
+   - mariadb
+  ports:
+   - "8080:8080"
+  command: ["bash", "-c", "./docker-wait-for-mariadb.sh && npm run dbInit && npm run dev"]
