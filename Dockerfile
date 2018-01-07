@@ -9,4 +9,4 @@ COPY .eslintignore .eslintignore
 RUN apt-get -qq update
 RUN apt-get -qq install -y mysql-client
 
-CMD ["npm","run", "dev"]
+RUN npm run dev

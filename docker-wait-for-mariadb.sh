@@ -9,8 +9,9 @@ cmd="$@"
 
 while ! mysqladmin ping -h"$host" --silent; do
   >&2 echo "Mariadb is unavailable - sleeping"
-  sleep 1
+  sleep 2
 done
 
 >&2 echo "Mariadb is up - executing command"
-exec $cmd
+# exec $cmd
+exec npm run dbInit

@@ -24,19 +24,22 @@ return Promise.all([
     table.foreign('id_albums').references('albums.id');
     table.integer('id_artists').unsigned();
     table.foreign('id_artists').references('artists.id');
-  }),
+  })
+  /*
+  ,
   knex.schema.createTableIfNotExists('genreAssociation', function(table) {
     table.primary(['id', 'id_songs']);
     table.integer('id').unsigned();
-    table.foreign('id').references('genres.id');
+    // table.foreign('id').references('genres.id');
     table.integer('id_songs').unsigned();
-    table.foreign('id_songs').references('songs.id');
+    // table.foreign('id_songs').references('songs.id');
   })
+  */
 ]).then(() => {
   console.log('Database successfully initialized');
-  // process.exit(0);
+  process.exit(0);
 }).catch(reason => {
   console.log(reason)
-  // process.exit(1);
+  process.exit(1);
 });
 
