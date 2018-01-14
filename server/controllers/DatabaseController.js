@@ -24,9 +24,7 @@ return Promise.all([
     table.foreign('id_albums').references('albums.id');
     table.integer('id_artists').unsigned();
     table.foreign('id_artists').references('artists.id');
-  })
-  /*
-  ,
+  }),
   knex.schema.createTableIfNotExists('genreAssociation', function(table) {
     table.primary(['id', 'id_songs']);
     table.integer('id').unsigned();
@@ -34,7 +32,6 @@ return Promise.all([
     table.integer('id_songs').unsigned();
     // table.foreign('id_songs').references('songs.id');
   })
-  */
 ]).then(() => {
   console.log('Database successfully initialized');
   process.exit(0);

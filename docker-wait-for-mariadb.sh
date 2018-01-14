@@ -13,5 +13,5 @@ while ! mysqladmin ping -h"$host" --silent; do
 done
 
 >&2 echo "Mariadb is up - executing command"
-# exec $cmd
-exec npm run dbInit
+
+exec $cmd

@@ -1,12 +1,13 @@
 FROM node:9
 
-COPY package.json package.json
-RUN npm install
+RUN mkdir /app
+WORKDIR /app
+
 COPY . .
-COPY .eslintrc.js .eslintrc.js
-COPY .eslintignore .eslintignore
+RUN npm install
 
 RUN apt-get -qq update
 RUN apt-get -qq install -y mysql-client
 
-RUN npm run dev
+# RUN npm run build
+CMD [ "npm", "run", "dev" ]
