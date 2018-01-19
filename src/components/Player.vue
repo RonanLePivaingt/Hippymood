@@ -7,7 +7,7 @@
     <md-card id="playerCard">
       <md-menu id="player-menu" md-direction="bottom left" md-size="4">
         <md-button class="md-icon-button" md-menu-trigger>
-          <md-icon class="bright-background">more_vert</md-icon>
+          <md-icon class="bright-background">menu</md-icon>
         </md-button>
 
         <md-menu-content>
