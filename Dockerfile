@@ -9,5 +9,5 @@ RUN npm install
 RUN apt-get -qq update
 RUN apt-get -qq install -y mysql-client
 
-# RUN npm run build
-CMD [ "npm", "run", "dev" ]
+RUN npm run build
+CMD [ "npm", "run", "prod" ]

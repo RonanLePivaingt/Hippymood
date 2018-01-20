@@ -1,5 +1,5 @@
 #!/bin/bash
-# docker-wait-for-mariadb.sh
+# wait-for-mariadb.sh
 
 set -e
 
