@@ -1,4 +1,4 @@
-var config = require('./serverConfig.js');
+var config = require('../config/server.config.js');
 var express = require('express');
 var app = express();
 
@@ -9,7 +9,6 @@ var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-var config = require('./serverConfig');
 var dbOptions = {
     host: config.db.host,
     port: config.db.port || 3306,

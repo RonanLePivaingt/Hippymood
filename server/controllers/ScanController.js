@@ -1,4 +1,4 @@
-var config = require('../../build/serverConfig');
+var config = require('../../config/server.config');
 var dbConfig = require('../knex.js');
 var knex = require('knex')(dbConfig);
 var fs = require('fs');

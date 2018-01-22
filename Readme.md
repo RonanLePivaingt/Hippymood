@@ -16,7 +16,7 @@ npm install
 ```
 
 ## Configuration
-In the build directory, rename the serverConfig.js.example without the .example extension and set database credentials and others.
+In the config directory, rename the server.config.js.example without the .example extension and set database credentials and others.
 
 Create a music directory full of mp3s at the root of the hippymood directory.
 

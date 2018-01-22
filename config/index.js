@@ -1,6 +1,6 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
-var config = require('../build/serverConfig.js')
+var config = require('../config/server.config.js')
 
 module.exports = {
   build: {
