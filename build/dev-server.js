@@ -88,7 +88,7 @@ var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-var config = require('./serverConfig');
+var config = require('../config/server.config.js');
 var dbOptions = {
     host: config.db.host,
     port: 3306,

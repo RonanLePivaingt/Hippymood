@@ -7,7 +7,7 @@ import VueMaterial from 'vue-material'
 import router from '@/router'
 import App from '@/App'
 
-import Config from '@/../build/serverConfig.js'
+import Config from '@/../config/server.config.js'
 
 import VueYouTubeEmbed from 'vue-youtube-embed'
 Vue.use(VueYouTubeEmbed)

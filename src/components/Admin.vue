@@ -56,18 +56,30 @@ var gradient = [
 ]
 export default {
   name: 'admin',
-  data: {
-    chartWidth: 400,
-    scanProgress: -1,
-    gradient: gradient
+  data: function () {
+    return {
+      scanProgress: -1,
+      gradient: gradient
+    }
   },
   computed: {
     chartHeight: function () {
       if (this.$store.state.moods) {
         // Determined by the number of moods
-        return 20 + (this.$store.state.moods.length * 15)
+        return 20 + (this.$store.state.moods.length * 20)
       } else {
         return 0
+      }
+    },
+    chartWidth: function () {
+      // This is a hack but I can't get it done reactively on mount in the data object
+      if (this.$store.state.moods) {
+        // Determined by the number of moods
+        if (this.$refs.admin) {
+          return this.$refs.admin.offsetWidth
+        }
+      } else {
+        return 600
       }
     },
     sortedMoods: function () {
@@ -129,27 +141,47 @@ export default {
   },
   methods: {
     resetSession () {
+      window.vm.$Progress.start()
+
       this.$http.get('/admin/resetSession').then(response => {
+        window.vm.$Progress.finish()
+
         console.log(response)
       }, response => {
+        window.vm.$Progress.fail()
+
         console.log('Shit it the fan !')
       })
     },
     resetDatabase () {
+      window.vm.$Progress.start()
+
       this.$http.get('/admin/resetDatabase').then(response => {
+        window.vm.$Progress.finish()
+
         console.log(response)
       }, response => {
+        window.vm.$Progress.fail()
+
         console.log('Shit it the fan !')
       })
     },
     scanMusic () {
+      window.vm.$Progress.start()
+
       this.$socket.scan = (data) => {
+        console.log('Socket response :')
         console.log(data)
       }
 
       this.$http.get('/admin/scanMusic').then(response => {
+        this.scanProgress = 0
+        window.vm.$Progress.finish()
+
         console.log(response)
       }, response => {
+        window.vm.$Progress.fail()
+
         console.log('Shit it the fan !')
       })
     }
