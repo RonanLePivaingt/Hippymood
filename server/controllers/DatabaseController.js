@@ -1,6 +1,7 @@
 var dbConfig = require('../knex.js');
 var knex = require('knex')(dbConfig);
 
+// Database creation
 return Promise.all([
   knex.schema.createTableIfNotExists('albums', function(t) {
     t.increments('id').primary();
@@ -36,4 +37,29 @@ return Promise.all([
     t.increments('id').primary();
     t.string('name');
   })
+  /* How to register the suggestions and message around
+  knex.schema.createTableIfNotExists('suggestions', function(t) {
+    t.increments('id').primary();
+    t.string('name');
+    t.string('file');
+    t.string('status');
+    t.string('url');
+    t.string('user_id');
+    t.timestamps();
+  })
+  knex.schema.createTableIfNotExists('messages', function(t) {
+    t.increments('id').primary();
+    t.string('content');
+    t.string('suggestion_id');
+    t.string('user_id');
+    t.timestamps();
+  })
+
+  Storyboard of suggestion exchange :
+  - A user login, is redirected to the list of suggestion made and can ad one (record unfinished suggestion ? => offline with local storage for privacy reasons)
+  (Master user receive a push notification and have a notification displayed)
+  - Master user can write a message to clarify the suggestion and validate some exchange
+  - User see a message next time it does login (remember user in localstorage ? Propose to send a mail notification)
+  - When exchanges are set, the master user manually add the song, possibly give a link to the song and set status as added ;)
+  */
 ]);
