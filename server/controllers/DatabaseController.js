@@ -32,7 +32,7 @@ return Promise.all([
     t.integer('id_songs');
     t.foreign('id_songs').references('songs.id');
   }),
-  knex.schema.createTableIfNotExists('seeds', function(t) {
+  knex.schema.createTableIfNotExists('users', function(t) {
     t.increments('id').primary();
     t.string('name');
   })

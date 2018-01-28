@@ -50,8 +50,9 @@ export default {
           this.loading = false
           console.log(response)
 
-          if (response.body.searchResults !== undefined) {
+          if (!isNaN(parseInt(response.body.id))) {
             window.vm.$Progress.finish()
+            this.$root.$store.dispatch('askSetUser', response.body)
           } else {
             window.vm.$Progress.fail()
             this.error = true

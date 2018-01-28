@@ -2,18 +2,70 @@ var config = require('../../config/server.config');
 var dbConfig = require('../knex.js');
 var knex = require('knex')(dbConfig);
 
-// Registering session as authentified
+// Server side authentification validation
 exports.Unlock = function(req, res){
   if (req.body.combination == config.auth.combinationCode) {
+    // Associating current session with successful authentification
     req.session.auth = 1;
-    res.send("OK");
+
+    // Sending response to client
+    res.send({
+      success: true
+    });
+  } else {
+    // Sending response to client
+    res.send({
+      success: false
+    });
   }
 };
 
-// Login and seed creation
+// Login and eventual user creation
 exports.Login = function(req, res){
-  console.log(req.body);
-  // Check if the seed name already exist
-  // If exist associate the seed to the session
-  // If it doesn't create the user and the associate it to the session
+  var user = req.body.seed;
+
+  knex.select('*')
+    .from('users')
+    .where({name: user})
+    .then(function(rows) {
+      // Checking if a new user was found
+      if (rows[0]) {
+        // Creating the object that will be returned to client
+        return new Promise((resolve, reject) => {
+          resolve({
+            id: rows[0].id,
+            name: user,
+            status: 'Found'
+          });
+        });
+      } else {
+        // Inserting new user in database & creating the object that will be returned to client
+        return knex.
+          insert({name: user}, 'id')
+          .into('users')
+          .then(function(id) {
+            return new Promise((resolve, reject) => {
+              resolve({
+                id: id[0],
+                name: user,
+                status: 'Created'
+              });
+            });
+          })
+        ;
+      }
+    })
+    .then(function(result) {
+      // Associating current session with user ID
+      req.session.userId = result.id;
+
+      // Sending result to client
+      res.send(result);
+    })
+    .catch(function(error) {
+      console.error(error);
+      res.send({
+        error: true
+      });
+    });
 };

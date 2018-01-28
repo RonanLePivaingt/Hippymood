@@ -58,7 +58,12 @@ const store = new Vuex.Store({
     authCombination: Config.auth.combination,
     authCombinationCode: Config.auth.combinationCode,
     videoMode: false,
-    betaMode: false
+    betaMode: false,
+    user: {
+      id: 0,
+      name: '',
+      status: ''
+    }
   },
   mutations: {
     setMoods (state, moods) {
@@ -116,6 +121,9 @@ const store = new Vuex.Store({
     },
     setWhatsNew (state, whatsNew) {
       state.whatsNew = state.whatsNew.concat(whatsNew)
+    },
+    setUser (state, userData) {
+      state.user = userData
     }
   },
   actions: {
@@ -251,6 +259,16 @@ const store = new Vuex.Store({
           } else {
             console.log('Shit it the fan !')
           }
+        }
+      )
+    },
+    askSetUser: function ({ commit }, id, name, status) {
+      commit(
+        'setUser',
+        {
+          id: id,
+          name: name || '',
+          status: status || ''
         }
       )
     }
