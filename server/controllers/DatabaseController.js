@@ -37,22 +37,25 @@ return Promise.all([
     t.increments('id').primary();
     t.string('name');
   })
+
   /* How to register the suggestions and message around
   knex.schema.createTableIfNotExists('suggestions', function(t) {
     t.increments('id').primary();
-    t.string('name');
+    t.string('title');
     t.string('file');
-    t.string('status');
     t.string('url');
-    t.string('user_id');
+    t.boolean('video');
+    t.string('status');
     t.timestamps();
+    t.string('user_id');
   })
   knex.schema.createTableIfNotExists('messages', function(t) {
     t.increments('id').primary();
     t.string('content');
-    t.string('suggestion_id');
-    t.string('user_id');
+    t.json('suggestionMoods');
     t.timestamps();
+    t.string('user_id');
+    t.string('suggestion_id');
   })
 
   Storyboard of suggestion exchange :
