@@ -7,6 +7,7 @@ import Download from '@/components/Download'
 import Search from '@/components/Search'
 import WhatsNew from '@/components/WhatsNew'
 import Login from '@/components/Login'
+import Suggestions from '@/components/Suggestions'
 
 Vue.use(Router)
 
@@ -46,6 +47,11 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/suggestions',
+      name: 'Suggestions',
+      component: Suggestions
     }
   ]
 })

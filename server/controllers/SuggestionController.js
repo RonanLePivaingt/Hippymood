@@ -13,10 +13,13 @@ var knex = require('knex')(dbConfig);
  * @param array suggestionMoods
  */
 exports.CreateSuggestion = function(req, res){
-  // Check authentification on userId
-  // Create suggestion
-  // Add first message to proposal
-  // Restrict request to authentified userId to prevent modification of other proposals
+  // Check authentification
+  if (req.session.userId) {
+    console.log(req.body);
+    // Create suggestion
+    // Add first message to proposal
+    // Restrict request to authentified userId to prevent modification of other proposals
+  }
 };
 
 /*

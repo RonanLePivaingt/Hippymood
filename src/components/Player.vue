@@ -26,6 +26,11 @@
             <md-icon>fiber_new</md-icon>
           </md-menu-item>
 
+          <md-menu-item href="#/Suggestions">
+            <span>Suggestions</span>
+            <md-icon class="idea-icon">wb_incandescent</md-icon>
+          </md-menu-item>
+
           <md-menu-item href="#/about">
             <span>À propos</span>
             <md-icon>info_outline</md-icon>
@@ -313,5 +318,8 @@ button.md-button.searchButton {
 }
 .video .player-header {
   height: 100%;
+}
+i.idea-icon {
+  transform: rotate(180deg);
 }
 </style>

@@ -5,7 +5,7 @@
     <p> Hippymood fonctionne avec un simple nom de compte sans demander un mot de passe. </p>
     <p> Plutôt que de l'appeler un compte on va plutôt dire qu'on va donner un nom à une graine, Hippymood va la planter et il suffira de donner le nom de la graine à ta prochaine venue pour voir apparaîtres tes suggestions et où elles en sont. </p>
     <p> C'est le moment de choisir un nom de graine ou se souvenir de celui qu'on a déjà donné : </p>
-    <form novalidate @submit.stop.prevent="submit">
+    <form novalidate v-on:submit.prevent="submit">
       <md-input-container>
         <md-input
           ref="seed"
@@ -34,7 +34,6 @@ export default {
   },
   methods: {
     submit () {
-      // Removing focus from search input
       var seed = this.$refs.seed.$el.value
 
       this.loading = true
@@ -53,6 +52,7 @@ export default {
           if (!isNaN(parseInt(response.body.id))) {
             window.vm.$Progress.finish()
             this.$root.$store.dispatch('askSetUser', response.body)
+            window.vm.$router.go(-1)
           } else {
             window.vm.$Progress.fail()
             this.error = true

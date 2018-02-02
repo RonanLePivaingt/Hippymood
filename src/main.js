@@ -63,7 +63,8 @@ const store = new Vuex.Store({
       id: 0,
       name: '',
       status: ''
-    }
+    },
+    suggestions: []
   },
   mutations: {
     setMoods (state, moods) {
@@ -124,6 +125,9 @@ const store = new Vuex.Store({
     },
     setUser (state, userData) {
       state.user = userData
+    },
+    setSuggestions (state, suggestions) {
+      state.suggestions = suggestions
     }
   },
   actions: {
@@ -262,13 +266,25 @@ const store = new Vuex.Store({
         }
       )
     },
-    askSetUser: function ({ commit }, id, name, status) {
+    askSetUser: function ({ commit }, user) {
       commit(
         'setUser',
         {
-          id: id,
-          name: name || '',
-          status: status || ''
+          id: user.id,
+          name: user.name || '',
+          status: user.status || ''
+        }
+      )
+    },
+    askSuggestions: function ({ commit }) {
+      Vue.http.get('/suggestions/').then(
+        response => {
+          console.log(response)
+          if (response.body.success) {
+            commit('setSuggestions', response.body.suggestions)
+          } else {
+            console.log('Shit it the fan !')
+          }
         }
       )
     }
