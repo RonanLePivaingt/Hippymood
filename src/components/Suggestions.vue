@@ -2,24 +2,52 @@
   <div id="suggestions">
     <span class="md-display-2">Suggestions</span>
 
-    <p> Aucune suggestion transmise avec la graine {{ user.name }}. </p>
+    <p> Tu n'as pas de suggestion avec la graine <b>{{ user.name }}</b>.</p>
 
     <p> Fait ta 1ère suggestion avec le formulaire ci-dessous : </p>
 
-    <form enctype="multipart/form-data" novalidate v-on:submit.prevent="submit">
+    <form enctype="multipart/form-data" action="/suggestion" novalidate v-on:submit.prevent="submit">
       <md-tabs md-fixed>
         <md-tab id="addSong" md-label="Ajouter une chanson">
-          <md-input-container>
-            <label>Fichier MP3</label>
-            <md-file v-model="newSuggestion.file" accept="audio/mpeg"></md-file>
-          </md-input-container>
+          <vue-clip
+            ref="vc"
+            :options="uploadOptions"
+            :on-added-file="addedFile"
+            :on-removed-file="removeFile"
+            >
+            <template slot="clip-uploader-action">
+              <div>
+                <div class="dz-message">
+                  <p>
+                    <md-icon>file_upload</md-icon>
+                    Cliquer ou déposer un fichier MP3 ici
+                  </p>
+                </div>
+              </div>
+            </template>
 
-          <input v-model="newSuggestion.url" placeholder="URL de la vidéo">
+            <template slot="clip-uploader-body" scope="props">
+              <md-list v-for="file in props.files">
+                <md-list-item>
+                  {{ file.name }} {{ file.status }} {{ file.errorMessage }}
+                  <md-icon @click="removeFile(file)">delete_forever</md-icon>
+                </md-list-item>
+              </md-list>
+            </template>
+          </vue-clip>
+
+
+          <input v-model="newSuggestion.url" placeholder="URL d'une vidéo youtube" lazy>
           <md-checkbox v-model="newSuggestion.video" v-show="newSuggestion.url" type="checkbox">
             Utiliser cette chanson en mode vidéo ?
           </md-checkbox>
-        </md-tab>
 
+          <youtube
+            v-if="newSuggestion.url"
+            :video-id="videoId"
+            >
+          </youtube>
+        </md-tab>
 
         <md-tab id="move" md-label="Reclasser une chanson">
           <md-input-container>
@@ -35,13 +63,13 @@
         </md-tab>
       </md-tabs>
 
-      <md-chips v-model="newSuggestion.selectedMoods" v-show="newSuggestion.selectedMoods.length !== 0" class="inline mood-chips">
+      <md-chips v-model="newSuggestion.selectedMoods" v-show="newSuggestion.selectedMoods.length !== 0" class="mood-chips">
         <template scope="chip" slot="chip">
           <span>{{ chip.value.name }}</span>
         </template>
       </md-chips>
 
-      <md-input-container class="inline">
+      <md-input-container>
         <label>Choisir une ou plusieurs mood</label>
         <md-autocomplete v-model="mood"
                          :list="alphaSortedMoods"
@@ -62,6 +90,7 @@
 
       <md-button @click="submit" class="md-raised md-accent">Envoyer la suggestion</md-button>
     </form>
+
     <!--
       TO DO :
       - Add a basic file upload
@@ -75,6 +104,14 @@
 </template>
 
 <script>
+function youtubeVideoId (url) {
+  var videoId = url.split('v=')[1]
+  var ampersandPosition = videoId.indexOf('&')
+  if (ampersandPosition !== -1) {
+    videoId = videoId.substring(0, ampersandPosition)
+  }
+  return videoId
+}
 // On mount search suggestions
 export default {
   name: 'suggestions',
@@ -83,14 +120,19 @@ export default {
       newSuggestion: {
         file: '',
         url: '',
-        video: '',
+        video: false,
         songPath: '',
         selectedMoods: [],
         message: '',
         status: ''
       },
       mood: '',
-      song: []
+      song: [],
+      uploadOptions: {
+        url: '/suggestion',
+        paramName: 'file',
+        maxFiles: 1
+      }
     }
   },
   beforeMount: function () {
@@ -102,6 +144,9 @@ export default {
   computed: {
     user: function () {
       return this.$store.state.user
+    },
+    videoId: function () {
+      return youtubeVideoId(this.newSuggestion.url)
     },
     moods: function () {
       return this.$store.state.moods
@@ -168,6 +213,7 @@ export default {
     },
     submit () {
       window.vm.$Progress.start()
+
       this.$http.post(
         '/suggestion/',
         { suggestion: this.newSuggestion }
@@ -176,12 +222,20 @@ export default {
           console.log(response)
         }
       )
+    },
+    addedFile (file) {
+      this.newSuggestion.file = file
+    },
+    removeFile (file) {
+      console.log(file)
+      this.$refs.vc.removeFile(file)
+      // Should remove file on server as well
     }
   }
 }
 </script>
 
-<style>
+<style slot-scope>
 input {
   display: block;
 }
@@ -196,5 +250,22 @@ input {
 }
 .md-input-container.mood-chips::after {
   height: 0px;
+}
+div:not(.md-tabs) .md-input-container {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+.dz-clickable {
+  cursor: pointer;
+  border: 2px dashed #0087F7;
+  border-radius: 5px;
+  margin: auto 0;
+  margin-bottom: 1rem;
+}
+.dz-clickable i {
+  color: rgba(0, 0, 0, 0.5);
+}
+.dz-clickable p {
+  text-align: center;
 }
 </style>

@@ -107,8 +107,7 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style slot-scope>
 #search-form {
   margin-left: 2rem;
   margin-right: 2rem;

@@ -43,8 +43,7 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style slot-scope>
 #download {
   margin: 0 auto;
   width: 40em;

@@ -50,8 +50,7 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style slot-scope>
 a.md-primary {
   text-shadow: 1px 0.1px 1px rgba(12,12,12,0.3);
 }

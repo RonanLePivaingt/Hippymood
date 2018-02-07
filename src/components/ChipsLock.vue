@@ -6,13 +6,13 @@
        v-on:swipeleft="padLeft"
        v-on:swiperight="padRight"
       >
-      <img 
+      <img
         id="datChips"
         src="/static/img/chipsN&B.jpg"
         />
     </v-touch>
     <transition name="fade">
-      <figure 
+      <figure
         id="nespad"
         v-show="NESGamepad"
         v-bind:class="{touch: touchDevice}"
@@ -169,7 +169,6 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 @font-face {
     font-family: 'Squada One';
@@ -196,4 +195,4 @@ p.teaser {
   margin-top: 2.5rem;
 }
 </style>
-<style type="text/css" src="../css/NESButtons.css" scoped></style>
+<style type="text/css" src="../css/NESButtons.css" slot-scope></style>

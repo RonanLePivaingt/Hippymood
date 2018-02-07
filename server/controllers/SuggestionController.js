@@ -1,6 +1,9 @@
 var config = require('../../config/server.config');
 var dbConfig = require('../knex.js');
 var knex = require('knex')(dbConfig);
+var multer  = require('multer')
+var upload = multer({ dest: '../tmp/' })
+var fs  = require('fs')
 
 /*
  * Expected parameters from client request :
@@ -12,13 +15,46 @@ var knex = require('knex')(dbConfig);
  * @param string status
  * @param array suggestionMoods
  */
-exports.CreateSuggestion = function(req, res){
+exports.CreateSuggestion = function (req, res, next) {
   // Check authentification
-  if (req.session.userId) {
-    console.log(req.body);
+  if (req.session.userId && req.body.suggestion) {
     // Create suggestion
-    // Add first message to proposal
-    // Restrict request to authentified userId to prevent modification of other proposals
+    var data = req.body.suggestion;
+    console.log(data);
+    var destinationPath = './tmp/' + req.session.userId + '_' + req.file.originalname;
+
+    // Moving music file
+    fs.rename(req.file.path, destinationPath, function (err) {
+      if (err) throw err;
+
+      knex
+        .insert(
+          {
+            file: destinationPath,
+            url: data.url,
+            video: data.video,
+            id_user: req.session.userId
+          },
+          'id'
+        )
+        .into('suggestions')
+        .then(function(id) {
+          // Add first message to proposal
+          console.log("Suggestion id " + id)
+          knex
+            .insert({
+              content: data.message,
+              id_user: req.session.userId,
+              id_suggestion: id
+            })
+            .into('messages')
+            .then(function(id) {
+              console.log("Message id " + id)
+            })
+        })
+      ;
+
+    });
   }
 };
 

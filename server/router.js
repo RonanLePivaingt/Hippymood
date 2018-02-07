@@ -1,3 +1,6 @@
+var multer  = require('multer')
+var upload = multer({ dest: './tmp/' })
+
 var AuthController = require('./controllers/AuthController');
 var AdminController = require('./controllers/AdminController');
 var MusicController = require('./controllers/MusicController');
@@ -18,7 +21,8 @@ module.exports = function(app){
     app.get('/admin/resetSession', MusicController.ResetSession);
 
     app.get('/suggestions', SuggestionController.List);
-    app.post('/suggestion', SuggestionController.CreateSuggestion);
+    app.post('/suggestion', upload.single('file'), SuggestionController.CreateSuggestion);
+    // app.post('/suggestion', SuggestionController.CreateSuggestion);
 
     app.get('/admin/resetDatabase', AdminController.ResetDatabase);
 

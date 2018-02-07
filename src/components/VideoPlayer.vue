@@ -102,8 +102,7 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style slot-scope>
 #app.video div.md-card.md-theme-default {
   overflow: hidden;
   width: 640px;

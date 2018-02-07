@@ -36,11 +36,26 @@ Vue.use(VueProgressBar, {
   thickness: '3px'
 })
 
+import VueClip from 'vue-clip'
+Vue.use(VueClip)
+
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
 Vue.use(VueResource)
 Vue.use(VueMaterial)
+
+var savedUser = localStorage.getItem('user')
+var user
+if (savedUser) {
+  user = JSON.parse(savedUser)
+} else {
+  user = {
+    id: 0,
+    name: '',
+    status: ''
+  }
+}
 
 const store = new Vuex.Store({
   state: {
@@ -59,11 +74,7 @@ const store = new Vuex.Store({
     authCombinationCode: Config.auth.combinationCode,
     videoMode: false,
     betaMode: false,
-    user: {
-      id: 0,
-      name: '',
-      status: ''
-    },
+    user: user,
     suggestions: []
   },
   mutations: {
@@ -125,6 +136,8 @@ const store = new Vuex.Store({
     },
     setUser (state, userData) {
       state.user = userData
+
+      localStorage.setItem('user', JSON.stringify(userData))
     },
     setSuggestions (state, suggestions) {
       state.suggestions = suggestions

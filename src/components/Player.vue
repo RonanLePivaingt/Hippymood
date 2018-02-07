@@ -155,7 +155,6 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 span.md-tooltip {
   transform: translateX(-5rem) scale(1.5) !important;

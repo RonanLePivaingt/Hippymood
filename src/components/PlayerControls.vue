@@ -142,7 +142,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 #app.video div.md-card.md-theme-default {
   overflow: hidden;
