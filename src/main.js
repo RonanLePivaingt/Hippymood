@@ -45,18 +45,6 @@ Vue.use(Vuex)
 Vue.use(VueResource)
 Vue.use(VueMaterial)
 
-var savedUser = localStorage.getItem('user')
-var user
-if (savedUser) {
-  user = JSON.parse(savedUser)
-} else {
-  user = {
-    id: 0,
-    name: '',
-    status: ''
-  }
-}
-
 const store = new Vuex.Store({
   state: {
     moods: [],
@@ -74,7 +62,7 @@ const store = new Vuex.Store({
     authCombinationCode: Config.auth.combinationCode,
     videoMode: false,
     betaMode: false,
-    user: user,
+    user: {},
     suggestions: []
   },
   mutations: {
@@ -279,13 +267,30 @@ const store = new Vuex.Store({
         }
       )
     },
-    askSetUser: function ({ commit }, user) {
-      commit(
-        'setUser',
-        {
-          id: user.id,
-          name: user.name || '',
-          status: user.status || ''
+    askSetUser: function ({ commit }, seed) {
+      window.vm.$Progress.start()
+
+      Vue.http.post(
+        '/login/',
+        {seed: seed}
+      ).then(
+        response => {
+          if (!isNaN(parseInt(response.body.id))) {
+            window.vm.$Progress.finish()
+            commit(
+              'setUser',
+              {
+                id: response.body.id,
+                name: response.body.name || '',
+                status: response.body.status || ''
+              }
+            )
+            if (window.vm.$route.name === 'Login') {
+              window.vm.$router.go(-1)
+            }
+          } else {
+            window.vm.$Progress.fail()
+          }
         }
       )
     },
@@ -416,3 +421,10 @@ window.vm = new Vue({
     }
   }
 })
+
+// Loading user information if saved
+var savedUser = localStorage.getItem('user')
+if (savedUser) {
+  var user = JSON.parse(savedUser)
+  window.vm.$store.dispatch('askSetUser', user.name)
+}

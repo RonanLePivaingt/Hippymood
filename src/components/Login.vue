@@ -35,30 +35,7 @@ export default {
   methods: {
     submit () {
       var seed = this.$refs.seed.$el.value
-
-      this.loading = true
-      this.error = false
-
-      window.vm.$Progress.start()
-
-      this.$http.post(
-        '/login/',
-        {seed: seed}
-      ).then(
-        response => {
-          this.loading = false
-          console.log(response)
-
-          if (!isNaN(parseInt(response.body.id))) {
-            window.vm.$Progress.finish()
-            this.$root.$store.dispatch('askSetUser', response.body)
-            window.vm.$router.go(-1)
-          } else {
-            window.vm.$Progress.fail()
-            this.error = true
-          }
-        }
-      )
+      this.$root.$store.dispatch('askSetUser', seed)
     }
   }
 }

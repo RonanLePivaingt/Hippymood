@@ -137,7 +137,7 @@ export default {
   },
   beforeMount: function () {
     // Redirecting non-identified users to login page
-    if (this.user.id === 0) {
+    if (this.$store.state.user.id === undefined) {
       this.$router.push('/Login')
     }
   },
