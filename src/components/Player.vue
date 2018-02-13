@@ -77,6 +77,7 @@
     }
     return videoId
   }
+  var myCombos
   import PlayerControls from './PlayerControls'
   export default {
     name: 'player',
@@ -146,6 +147,30 @@
           return false
         }
       }
+    },
+    mounted: function keyboardShortcuts () {
+      var myScope = document
+      myCombos = window.listener.register_many([
+        {
+          'keys': 'meta space',
+          'on_keydown': function () {
+            window.vm.extTogglePlayPause()
+          },
+          'this': myScope,
+          'prevent_default': true
+        },
+        {
+          'keys': 'meta v',
+          'on_keydown': function () {
+            window.vm.extToggleVideoMode()
+          },
+          'this': myScope
+        }
+      ])
+    },
+    destroyed: function () {
+      // Removing listeners when the component is removed
+      window.listener.unregister_many(myCombos)
     }
   }
 </script>
