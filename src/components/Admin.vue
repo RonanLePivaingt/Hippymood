@@ -1,43 +1,58 @@
 <template>
   <div id="admin" ref="admin">
-    <span class="md-display-2">Administration</span>
-    <md-list>
-      <md-list-item md-expand-multiple>
-        <md-icon>trending_up</md-icon>
-        <span>Répartition des chansons par mood</span>
+    <div v-if="user.masterUser">
+      <span class="md-display-2">Administration</span>
+      <md-list>
+        <md-list-item md-expand-multiple>
+          <md-icon>trending_up</md-icon>
+          <span>Répartition des chansons par mood</span>
 
-        <md-list-expand>
-          <chartjs-horizontal-bar
-            :height="chartHeight"
-            :width="chartWidth"
-            :labels="sortedMoods.label"
-            :datasets="sortedMoods.chart">
-          </chartjs-horizontal-bar>
-        </md-list-expand>
-      </md-list-item>
-      <md-list-item>
-        <md-icon>build</md-icon>
-        <span>Actions d'administration</span>
+          <md-list-expand>
+            <chartjs-horizontal-bar
+              :height="chartHeight"
+              :width="chartWidth"
+              :labels="sortedMoods.label"
+              :datasets="sortedMoods.chart">
+            </chartjs-horizontal-bar>
+          </md-list-expand>
+        </md-list-item>
+        <md-list-item>
+          <md-icon>build</md-icon>
+          <span>Actions d'administration</span>
 
-        <md-list-expand>
-          <p>
-          <a class="md-button md-raised" @click="resetSession()">Reset session</a>
-          </p>
-          <p>
-          <md-button class="md-raised md-warn" @click="resetDatabase()">Reset database</md-button>
-          </p>
-          <div>
-            <a class="md-button md-raised" @click="scanMusic()"> Scan music </a>
-            <div v-show="scanProgress > -1">
-              {{ scanProgress }} %
-              <md-progress
-                 class="md-accent"
-                 :md-progress="scanProgress"></md-progress>
+          <md-list-expand>
+            <p>
+            <a class="md-button md-raised" @click="resetSession()">Reset session</a>
+            </p>
+            <p>
+            <md-button class="md-raised md-warn" @click="resetDatabase()">Reset database</md-button>
+            </p>
+            <div>
+              <a class="md-button md-raised" @click="scanMusic()"> Scan music </a>
+              <div v-show="scanProgress > -1">
+                {{ scanProgress }} %
+                <md-progress
+                   class="md-accent"
+                   :md-progress="scanProgress"></md-progress>
+              </div>
             </div>
-          </div>
-        </md-list-expand>
-      </md-list-item>
-    </md-list>
+          </md-list-expand>
+        </md-list-item>
+      </md-list>
+    </div>
+    <div v-if="user.masterUser === false">
+      <div class="error">
+        <p>
+          (>_<)
+        </p>
+        Hey {{ user.name }}, tu n'es pas le compte administrateur et tu n'as rien à faire ici.
+        <div class="back">
+          <md-button class="md-raised md-accent" href="#/" >
+            <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
+          </md-button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -62,7 +77,16 @@ export default {
       gradient: gradient
     }
   },
+  beforeMount: function () {
+    if (this.$store.state.user.id === undefined) {
+      // Redirecting non-identified users to login page
+      this.$router.push('/Login')
+    }
+  },
   computed: {
+    user: function () {
+      return this.$store.state.user
+    },
     chartHeight: function () {
       if (this.$store.state.moods) {
         // Determined by the number of moods
@@ -197,5 +221,12 @@ export default {
 }
 .md-display-2 {
   color: rgba(0, 0, 0, 0.6);
+}
+.error {
+  color: rgba(0,0,0,0.5);
+  font-size: 1rem;
+}
+.error > p {
+  font-size: 8rem;
 }
 </style>

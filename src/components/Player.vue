@@ -26,9 +26,14 @@
             <md-icon>fiber_new</md-icon>
           </md-menu-item>
 
-          <md-menu-item href="#/Suggestions">
+          <md-menu-item href="#/suggestions">
             <span>Suggestions</span>
             <md-icon class="idea-icon">wb_incandescent</md-icon>
+          </md-menu-item>
+
+          <md-menu-item href="#/admin" v-if="user.masterUser">
+            <span>Administration</span>
+            <md-icon>build</md-icon>
           </md-menu-item>
 
           <md-menu-item href="#/about">
@@ -106,6 +111,9 @@
       }
     },
     computed: {
+      user: function () {
+        return this.$store.state.user
+      },
       intro: function () {
         return this.$store.state.intro
       },

@@ -59,6 +59,15 @@ exports.Login = function(req, res){
       // Associating current session with user ID
       req.session.userId = result.id;
 
+      // Telling to client if it's the master user
+      if (result.name === config.admin.masterUser) {
+        req.session.masterUser = true;
+        result.masterUser = true;
+      } else {
+        req.session.masterUser = false;
+        result.masterUser = false;
+      }
+
       // Sending result to client
       res.send(result);
     })

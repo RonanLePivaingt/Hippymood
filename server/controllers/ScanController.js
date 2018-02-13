@@ -7,43 +7,47 @@ var mm = require('musicmetadata');
 var id3 = require('id3js');
 
 exports.ScanMusic = function(req, res) {
-  var async = require("async");
+  if (req.session.masterUser === true) {
+    var async = require("async");
 
-  // Initializing music scan queue
-  var queue = async.queue(scan, 10); // Run ten simultaneous uploads
-  var files = getFileList("music");
-  queue.push(files);
+    // Initializing music scan queue
+    var queue = async.queue(scan, 10); // Run ten simultaneous uploads
+    var files = getFileList("music");
+    queue.push(files);
 
-  // Setting up an interval to check indexing progress
-  var nbFiles = files.length;
-  var percentage = 0;
-  var newPercentage = 0;
+    // Setting up an interval to check indexing progress
+    var nbFiles = files.length;
+    var percentage = 0;
+    var newPercentage = 0;
 
-  function percentageCheckedFiles () {
-    var nbFilesLeft = queue.length();
-    var percentageFilesLeft = nbFilesLeft / nbFiles;
-    newPercentage = Math.round((1 - percentageFilesLeft) * 100);
+    function percentageCheckedFiles () {
+      var nbFilesLeft = queue.length();
+      var percentageFilesLeft = nbFilesLeft / nbFiles;
+      newPercentage = Math.round((1 - percentageFilesLeft) * 100);
 
-    // Sending data to client and log if any progress is made
-    if (percentage !== newPercentage) {
-      percentage = newPercentage;
-      req.io.emit('scan', percentage);
-      console.log("Music scan progress : " + percentage + "%");
+      // Sending data to client and log if any progress is made
+      if (percentage !== newPercentage) {
+        percentage = newPercentage;
+        req.io.emit('scan', percentage);
+        console.log("Music scan progress : " + percentage + "%");
+      }
     }
+    var percentageInterval = setInterval(percentageCheckedFiles, 500);
+
+    // Adding event on queue end processing
+    queue.drain = function() {
+      req.io.emit('scan', 'Done');
+
+      console.log("All files are indexed");
+      // Stoping previous interval
+      clearInterval(percentageInterval);
+    };
+
+    // Sending a response back to client
+    res.send("Music scan started");
+  } else {
+    res.send("Not your business");
   }
-  var percentageInterval = setInterval(percentageCheckedFiles, 500);
-
-  // Adding event on queue end processing
-  queue.drain = function() {
-    req.io.emit('scan', 'Done');
-
-    console.log("All files are indexed");
-    // Stoping previous interval
-    clearInterval(percentageInterval);
-  };
-
-  // Sending a response back to client
-  res.send("Music scan started");
 };
 
 // Function to get all files from a directory

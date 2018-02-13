@@ -284,7 +284,8 @@ const store = new Vuex.Store({
               {
                 id: response.body.id,
                 name: response.body.name || '',
-                status: response.body.status || ''
+                status: response.body.status || '',
+                masterUser: response.body.masterUser
               }
             )
             if (window.vm.$route.name === 'Login') {
