@@ -257,7 +257,7 @@ function checkSong(path, metadata, callback) {
       })
     .then(function(rows) {
       metadata['song_id'] = rows[0];
-      return genreAssociation(metadata, callback);
+      return genreRelation(metadata, callback);
     })
     .catch(function(err) {
       console.log("Error while inserting song : " + metadata.title + ", path : " + path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);
@@ -282,11 +282,11 @@ function checkSong(path, metadata, callback) {
   // return true;
 }
 
-function genreAssociation(metadata, callback) {
+function genreRelation(metadata, callback) {
   genre_id = metadata.genre_id;
   song_id = metadata.song_id;
 
-  knex('genreAssociation')
+  knex('genres_relations')
     .insert({id : genre_id, id_songs: song_id})
     .then(function(rows) {
       console.log("Song successfully inserted for : " + metadata.title + ", path : " + metadata.path +", album : " + metadata.album +", artist : " + metadata.artist + ", genre: " + metadata.genre);

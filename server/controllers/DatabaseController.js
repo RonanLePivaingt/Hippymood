@@ -26,7 +26,7 @@ return Promise.all([
     t.integer('id_artists').unsigned();
     t.foreign('id_artists').references('artists.id');
   }),
-  knex.schema.createTableIfNotExists('genreAssociation', function(t) {
+  knex.schema.createTableIfNotExists('genres_relations', function(t) {
     t.primary(['id', 'id_songs']);
     t.integer('id').unsigned();
     t.foreign('id').references('genres.id');
@@ -41,19 +41,23 @@ return Promise.all([
     t.increments('id').primary();
     t.string('title');
     t.string('file');
+    t.string('file_originalname');
     t.string('url');
     t.boolean('video');
     t.string('song_path');
     t.string('status');
-    t.timestamps();
+    t.timestamps(true, knex.fn.now());
     t.integer('id_user').unsigned();
     t.foreign('id_user').references('users.id');
   }),
-  knex.schema.createTableIfNotExists('messages', function(t) {
+  knex.schema.createTableIfNotExists('suggestions_messages', function(t) {
     t.increments('id').primary();
     t.string('content');
-    t.json('suggestionMoods');
-    t.timestamps();
+    t.string('song_name');
+    t.string('artist');
+    t.string('album');
+    t.json('suggestion_moods');
+    t.timestamps(true, knex.fn.now());
     t.integer('id_user').unsigned();
     t.foreign('id_user').references('users.id');
     t.integer('id_suggestion').unsigned();

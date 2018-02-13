@@ -2,9 +2,29 @@
   <div id="suggestions">
     <span class="md-display-2">Suggestions</span>
 
-    <p> Tu n'as pas de suggestion avec la graine <b>{{ user.name }}</b>.</p>
+    <div v-if="!suggestions">
+      <p> Tu n'as pas de suggestion avec la graine <b>{{ user.name }}</b>.</p>
 
-    <p> Fait ta 1ère suggestion avec le formulaire ci-dessous : </p>
+      <p> Fait ta 1ère suggestion avec le formulaire ci-dessous : </p>
+    </div>
+
+    <md-list v-if="suggestions">
+      <md-list-item v-for="suggestion in suggestions">
+        <span>{{ suggestion.file }}</span>
+
+        <md-list-expand md-list-expand-multiple>
+          <md-list>
+              <md-list-item class="md-inset" v-for="message in messages[suggestion.id]">
+                <md-icon>message</md-icon>
+                <span>{{ message.content }}</span>
+                <md-chip v-for="mood in JSON.parse(message.suggestion_moods)">{{mood.name}}</md-chip>
+              </md-list-item>
+          </md-list>
+        </md-list-expand>
+      </md-list-item>
+    </md-list>
+
+    <span class="md-display-2">Nouvelle suggestion</span>
 
     <form enctype="multipart/form-data" action="/suggestion" novalidate v-on:submit.prevent="submit">
       <md-tabs md-fixed>
@@ -14,6 +34,7 @@
             :options="uploadOptions"
             :on-added-file="addedFile"
             :on-removed-file="removeFile"
+            :on-complete="complete"
             >
             <template slot="clip-uploader-action">
               <div>
@@ -63,14 +84,15 @@
         </md-tab>
       </md-tabs>
 
-      <md-chips v-model="newSuggestion.selectedMoods" v-show="newSuggestion.selectedMoods.length !== 0" class="mood-chips">
+      <md-chips v-model="newSuggestion.selectedMoods" v-show="newSuggestion.selectedMoods.length !== 0" class="mood-chips" md-input-placeholder="Nouvelle mood (Il faut au moins 5 chansons)">
         <template scope="chip" slot="chip">
-          <span>{{ chip.value.name }}</span>
+          <span v-if="chip.value.name">{{ chip.value.name }}</span>
+          <span v-if="!chip.value.name">{{ chip.value }} (N'existe pas encore)</span>
         </template>
       </md-chips>
 
       <md-input-container>
-        <label>Choisir une ou plusieurs mood</label>
+        <label>Choisir parmi les moods existantes</label>
         <md-autocomplete v-model="mood"
                          :list="alphaSortedMoods"
                          print-attribute="name"
@@ -136,14 +158,23 @@ export default {
     }
   },
   beforeMount: function () {
-    // Redirecting non-identified users to login page
     if (this.$store.state.user.id === undefined) {
+      // Redirecting non-identified users to login page
       this.$router.push('/Login')
+    } else {
+      // Getting the list of suggestions made
+      this.$root.$store.dispatch('askSuggestions')
     }
   },
   computed: {
     user: function () {
       return this.$store.state.user
+    },
+    suggestions: function () {
+      return this.$store.state.suggestions
+    },
+    messages: function () {
+      return this.$store.state.messages
     },
     videoId: function () {
       return youtubeVideoId(this.newSuggestion.url)
@@ -230,6 +261,15 @@ export default {
       console.log(file)
       this.$refs.vc.removeFile(file)
       // Should remove file on server as well
+    },
+    complete (file, status, xhr) {
+      // Adding server id to be used for deleting
+      // the file.
+      // var serverResponse = JSON.parse(xhr.response.file)
+      var response = JSON.parse(xhr.response.replace(/\\\//g, '/'))
+      console.log(response.file.path)
+      file.addAttribute('serverpath', response.file.path)
+      console.log(file)
     }
   }
 }
@@ -246,7 +286,7 @@ input {
   display: none;
 }
 .mood-chips .md-input {
-  display: none !important;
+  /* display: none !important; */
 }
 .md-input-container.mood-chips::after {
   height: 0px;

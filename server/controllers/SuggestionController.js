@@ -20,11 +20,10 @@ exports.CreateSuggestion = function (req, res, next) {
   if (req.session.userId && req.body.suggestion) {
     // Create suggestion
     var data = req.body.suggestion;
-    console.log(data);
-    var destinationPath = './tmp/' + req.session.userId + '_' + req.file.originalname;
+    var destinationPath = './tmp/' + req.session.userId + '_' + data.file.name;
 
     // Moving music file
-    fs.rename(req.file.path, destinationPath, function (err) {
+    fs.rename(data.file.customAttributes.serverpath, destinationPath, function (err) {
       if (err) throw err;
 
       knex
@@ -44,17 +43,21 @@ exports.CreateSuggestion = function (req, res, next) {
           knex
             .insert({
               content: data.message,
+              suggestion_moods: JSON.stringify(data.selectedMoods),
               id_user: req.session.userId,
               id_suggestion: id
             })
-            .into('messages')
+            .into('suggestions_messages')
             .then(function(id) {
-              console.log("Message id " + id)
+              console.log("Message id " + id);
+              res.send("Yes");
             })
         })
       ;
 
     });
+  } else if (req.file) {
+    res.send({file: req.file});
   }
 };
 
@@ -90,6 +93,37 @@ exports.UpdateMessage = function(req, res){
 
 exports.List = function(req, res){
   // Return all proposals AND associated messages
+  // Return two (associate ?) array ?
+  // 1st with the suggestions for the user
+  // 2nd with suggestion_id as key with all messages related to those suggestions
+  knex
+    .from('suggestions')
+    .where('id_user', req.session.userId)
+    .orderBy('created_at', 'desc')
+    .then(function(rawSuggestions) {
+      knex
+        .from('suggestions_messages')
+        .where('id_user', req.session.userId)
+        .orderBy('id_suggestion', 'desc')
+        .orderBy('created_at', 'asc')
+        .then(function(rawMessages) {
+          var sortedMessages = {};
+          rawMessages.forEach(function(message, index) {
+            if (sortedMessages[message.id_suggestion] !== undefined) {
+              message.suggestion_moods = JSON.parse(message.suggestion_moods);
+              sortedMessages[message.id_suggestion].push(message);
+            } else {
+              sortedMessages[message.id_suggestion] = [message];
+            }
+          });
+
+          res.send({
+            suggestions: rawSuggestions,
+            messages: sortedMessages
+          });
+
+        })
+    })
 };
 
 /*
