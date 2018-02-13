@@ -43,7 +43,6 @@ return Promise.all([
     t.string('file');
     t.string('file_originalname');
     t.string('url');
-    t.boolean('video');
     t.string('song_path');
     t.string('status');
     t.timestamps(true, knex.fn.now());
@@ -57,6 +56,7 @@ return Promise.all([
     t.string('artist');
     t.string('album');
     t.json('suggestion_moods');
+    t.boolean('video');
     t.timestamps(true, knex.fn.now());
     t.integer('id_user').unsigned();
     t.foreign('id_user').references('users.id');

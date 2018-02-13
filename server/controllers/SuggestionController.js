@@ -29,9 +29,10 @@ exports.CreateSuggestion = function (req, res, next) {
       knex
         .insert(
           {
+            title: data.title,
             file: destinationPath,
+            file_originalname: data.file.originalname,
             url: data.url,
-            video: data.video,
             id_user: req.session.userId
           },
           'id'
@@ -43,6 +44,10 @@ exports.CreateSuggestion = function (req, res, next) {
           knex
             .insert({
               content: data.message,
+              video: data.video,
+              song_name: data.songName,
+              artist: data.artist,
+              album: data.album,
               suggestion_moods: JSON.stringify(data.selectedMoods),
               id_user: req.session.userId,
               id_suggestion: id

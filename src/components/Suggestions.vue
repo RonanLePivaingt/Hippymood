@@ -2,13 +2,13 @@
   <div id="suggestions">
     <span class="md-display-2">Suggestions</span>
 
-    <div v-if="!suggestions">
+    <div v-if="suggestions.length === 0">
       <p> Tu n'as pas de suggestion avec la graine <b>{{ user.name }}</b>.</p>
 
       <p> Fait ta 1ère suggestion avec le formulaire ci-dessous : </p>
     </div>
 
-    <md-list v-if="suggestions">
+    <md-list v-if="suggestions.length > 0">
       <md-list-item v-for="suggestion in suggestions">
         <span>{{ suggestion.file }}</span>
 
@@ -24,11 +24,14 @@
       </md-list-item>
     </md-list>
 
-    <span class="md-display-2">Nouvelle suggestion</span>
-
-    <form enctype="multipart/form-data" action="/suggestion" novalidate v-on:submit.prevent="submit">
+    <form v-on:submit.prevent="submit">
       <md-tabs md-fixed>
         <md-tab id="addSong" md-label="Ajouter une chanson">
+          <md-input-container>
+            <label>Tu peux donner un nom à ta suggestion</label>
+            <md-input v-model="newSuggestion.title"></md-input>
+          </md-input-container>
+
           <vue-clip
             ref="vc"
             :options="uploadOptions"
@@ -58,7 +61,11 @@
           </vue-clip>
 
 
-          <input v-model="newSuggestion.url" placeholder="URL d'une vidéo youtube" lazy>
+          <md-input-container>
+            <label>URL d'une vidéo youtube</label>
+            <md-input v-model="newSuggestion.url"></md-input>
+          </md-input-container>
+
           <md-checkbox v-model="newSuggestion.video" v-show="newSuggestion.url" type="checkbox">
             Utiliser cette chanson en mode vidéo ?
           </md-checkbox>
@@ -84,7 +91,25 @@
         </md-tab>
       </md-tabs>
 
-      <md-chips v-model="newSuggestion.selectedMoods" v-show="newSuggestion.selectedMoods.length !== 0" class="mood-chips" md-input-placeholder="Nouvelle mood (Il faut au moins 5 chansons)">
+      <md-input-container>
+        <md-icon>audiotrack</md-icon>
+        <label>Nom de la chanson</label>
+        <md-input v-model="newSuggestion.songName"></md-input>
+      </md-input-container>
+
+      <md-input-container>
+        <md-icon>person</md-icon>
+        <label>Artiste</label>
+        <md-input v-model="newSuggestion.artist"></md-input>
+      </md-input-container>
+
+      <md-input-container>
+        <md-icon>album</md-icon>
+        <label>Album (optionnel)</label>
+        <md-input v-model="newSuggestion.album"></md-input>
+      </md-input-container>
+
+      <md-chips v-model="newSuggestion.selectedMoods" v-show="newSuggestion.selectedMoods.length !== 0" class="mood-chips" md-input-placeholder="Tu peux aussi taper le nom d'une nouvelle mood (Il faut au moins 5 chansons pour créer une nouvelle mood)">
         <template scope="chip" slot="chip">
           <span v-if="chip.value.name">{{ chip.value.name }}</span>
           <span v-if="!chip.value.name">{{ chip.value }} (N'existe pas encore)</span>
@@ -115,8 +140,6 @@
 
     <!--
       TO DO :
-      - Add a basic file upload
-      - Add a dynamic video retriever for youtube
       - Validator
       - Possibility to suggest a new mood
       - Add indicators to guide the user through is suggestion
@@ -140,11 +163,15 @@ export default {
   data: function () {
     return {
       newSuggestion: {
+        title: '',
         file: '',
         url: '',
         video: false,
         songPath: '',
         selectedMoods: [],
+        songName: '',
+        artist: '',
+        album: '',
         message: '',
         status: ''
       },
@@ -251,6 +278,7 @@ export default {
       ).then(
         response => {
           console.log(response)
+          this.$root.$store.dispatch('askSuggestions')
         }
       )
     },
@@ -267,8 +295,9 @@ export default {
       // the file.
       // var serverResponse = JSON.parse(xhr.response.file)
       var response = JSON.parse(xhr.response.replace(/\\\//g, '/'))
-      console.log(response.file.path)
+      console.log(response.file)
       file.addAttribute('serverpath', response.file.path)
+      file.addAttribute('originalname', response.file.originalname)
       console.log(file)
     }
   }
