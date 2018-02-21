@@ -86,7 +86,7 @@
 
 <script>
   import Keypress from './js/keypress-2.1.4.min.js'
-  var listener = new Keypress.Listener()
+  window.listener = new Keypress.Listener()
   var myCombos
   import ChipsLock from './components/ChipsLock'
   import MoodList from './components/MoodList'
@@ -149,15 +149,7 @@
       window.setTimeout(removeFirstIntro, 500)
 
       var myScope = document
-      myCombos = listener.register_many([
-        {
-          'keys': 'meta space',
-          'on_keydown': function () {
-            window.vm.extTogglePlayPause()
-          },
-          'this': myScope,
-          'prevent_default': true
-        },
+      myCombos = window.listener.register_many([
         {
           'keys': 'meta left',
           'on_keydown': function () {
@@ -206,13 +198,6 @@
             window.vm.extActivateBetaFeatures()
           },
           'this': myScope
-        },
-        {
-          'keys': 'meta v',
-          'on_keydown': function () {
-            window.vm.extToggleVideoMode()
-          },
-          'this': myScope
         }
       ])
     },
@@ -222,7 +207,7 @@
     },
     destroyed: function () {
       // Removing listeners when the component is removed
-      listener.unregister_many(myCombos)
+      window.listener.unregister_many(myCombos)
     }
   }
 </script>
