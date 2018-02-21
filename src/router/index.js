@@ -8,6 +8,7 @@ import Search from '@/components/Search'
 import WhatsNew from '@/components/WhatsNew'
 import Login from '@/components/Login'
 import Suggestions from '@/components/Suggestions'
+import SuggestionReply from '@/components/suggestions/Reply'
 
 Vue.use(Router)
 
@@ -52,6 +53,11 @@ export default new Router({
       path: '/suggestions',
       name: 'Suggestions',
       component: Suggestions
+    },
+    {
+      path: '/suggestions/:id',
+      name: 'Suggestion response',
+      component: SuggestionReply
     }
   ]
 })

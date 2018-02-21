@@ -117,6 +117,7 @@ app.use(session({
 );
 
 app.use('/music', express.static('music'));
+app.use('/tmp', express.static('tmp'));
 
 var io = require('socket.io');
 var http = require('http');

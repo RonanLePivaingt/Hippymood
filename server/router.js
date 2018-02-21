@@ -22,7 +22,7 @@ module.exports = function(app){
 
     app.get('/suggestions', SuggestionController.List);
     app.post('/suggestion', upload.single('file'), SuggestionController.CreateSuggestion);
-    // app.post('/suggestion', SuggestionController.CreateSuggestion);
+    app.post('/suggestion/:id', SuggestionController.CreateMessage);
 
     app.get('/admin/resetDatabase', AdminController.ResetDatabase);
 

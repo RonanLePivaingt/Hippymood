@@ -56,7 +56,7 @@ exports.CreateSuggestion = function (req, res, next) {
             .then(function(id) {
               console.log("Message id " + id);
               res.send("Yes");
-            })
+            });
         })
       ;
 
@@ -83,8 +83,36 @@ exports.UpdateSuggestion = function(req, res){
  * @param array suggestionMoods
  */
 exports.CreateMessage = function(req, res){
-  // Check authentification on userId
-  // Create message for current suggestion
+  var suggestionId = req.params.id;
+  var data = req.body.suggestion;
+
+  // This should make a proper check on suggestion user ownership except for the master user
+
+  knex
+    .select('id')
+    .from('suggestions')
+    .where('id', req.params.id)
+    .where('id_user', req.session.userId)
+    .then(function(ids) {
+      console.log(ids);
+      if (ids) {
+        knex
+          .insert({
+            content: data.message,
+            song_name: data.songName,
+            artist: data.artist,
+            album: data.album,
+            suggestion_moods: JSON.stringify(data.selectedMoods),
+            id_user: req.session.userId,
+            id_suggestion: suggestionId
+          })
+          .into('suggestions_messages')
+          .then(function(id) {
+            console.log("Message id " + id);
+            res.send("Yes");
+          });
+      }
+    });
 };
 
 /*
@@ -101,34 +129,42 @@ exports.List = function(req, res){
   // Return two (associate ?) array ?
   // 1st with the suggestions for the user
   // 2nd with suggestion_id as key with all messages related to those suggestions
-  knex
+  var suggestionRequest = knex
     .from('suggestions')
-    .where('id_user', req.session.userId)
-    .orderBy('created_at', 'desc')
-    .then(function(rawSuggestions) {
-      knex
-        .from('suggestions_messages')
-        .where('id_user', req.session.userId)
-        .orderBy('id_suggestion', 'desc')
-        .orderBy('created_at', 'asc')
-        .then(function(rawMessages) {
-          var sortedMessages = {};
-          rawMessages.forEach(function(message, index) {
-            if (sortedMessages[message.id_suggestion] !== undefined) {
-              message.suggestion_moods = JSON.parse(message.suggestion_moods);
-              sortedMessages[message.id_suggestion].push(message);
-            } else {
-              sortedMessages[message.id_suggestion] = [message];
-            }
-          });
+    .orderBy('created_at', 'desc');
 
-          res.send({
-            suggestions: rawSuggestions,
-            messages: sortedMessages
-          });
+  if (req.session.masterUser !== true) {
+    suggestionRequest.where('id_user', req.session.userId);
+  }
 
-        })
-    })
+  suggestionRequest.then(function(rawSuggestions) {
+    var associativeSuggestions = {};
+    rawSuggestions.forEach(function(suggestion, index) {
+      associativeSuggestions[suggestion.id] = suggestion;
+    });
+
+    console.log(associativeSuggestions);
+
+    knex
+      .from('suggestions_messages')
+      .orderBy('id_suggestion', 'desc')
+      .orderBy('created_at', 'asc')
+      .then(function(rawMessages) {
+        // Associating messages with suggestions
+        rawMessages.forEach(function(message, index) {
+          if (associativeSuggestions[message.id_suggestion].messages !== undefined) {
+            message.suggestion_moods = JSON.parse(message.suggestion_moods);
+            associativeSuggestions[message.id_suggestion].messages.push(message);
+          } else {
+            associativeSuggestions[message.id_suggestion].messages = [message];
+          }
+        });
+
+        res.send({
+          suggestions: associativeSuggestions
+        });
+      })
+  })
 };
 
 /*

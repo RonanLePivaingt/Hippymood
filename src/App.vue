@@ -41,6 +41,15 @@
               <md-icon>fiber_new</md-icon> Quoi de neuf ?
             </md-button>
         </div>
+
+        <div class="actions">
+            <md-button
+              class="md-button md-raised"
+              href="#/Suggestions"
+              >
+              <md-icon class="idea-icon">wb_incandescent</md-icon> Faire une suggestion
+            </md-button>
+        </div>
       </div>
 
       <div id="main-container">
@@ -50,7 +59,7 @@
           ></chips-lock>
 
         <transition name="fastfade" mode="out-in">
-          <router-view v-if="unlocked === 1"></router-view>
+          <router-view v-if="unlocked === 1" :key="$route.fullPath"></router-view>
         </transition>
 
         <html5-player

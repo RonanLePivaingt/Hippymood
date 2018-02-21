@@ -63,8 +63,7 @@ const store = new Vuex.Store({
     videoMode: false,
     betaMode: false,
     user: {},
-    suggestions: {},
-    messages: {}
+    suggestions: {}
   },
   mutations: {
     setMoods (state, moods) {
@@ -128,9 +127,8 @@ const store = new Vuex.Store({
 
       localStorage.setItem('user', JSON.stringify(userData))
     },
-    setSuggestions (state, data) {
-      state.suggestions = data.suggestions
-      state.messages = data.messages
+    setSuggestions (state, suggestions) {
+      state.suggestions = suggestions
     }
   },
   actions: {
@@ -301,9 +299,8 @@ const store = new Vuex.Store({
       window.vm.$Progress.start()
       Vue.http.get('/suggestions/').then(
         response => {
-          console.log(response)
           if (response.body.suggestions) {
-            commit('setSuggestions', response.body)
+            commit('setSuggestions', response.body.suggestions)
             window.vm.$Progress.finish()
           } else {
             console.log('Shit it the fan !')
