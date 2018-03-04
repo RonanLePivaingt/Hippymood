@@ -8,12 +8,16 @@ var knex = require('knex')(dbConfig);
 exports.ResetDatabase = function(req, res){
   if (req.session.masterUser === true) {
     // Could be cleaner with promises
-    knex('genres').del().then(function () {
-      knex('genres_relations').del().then(function () {
-        knex('songs').del().then(function () {
-          knex('artists').del().then(function () {
-            knex('albums').del().then(function () {
-              res.send("Bim bim");
+    knex('suggestions_messages').del().then(function () {
+      knex('suggestions').del().then(function () {
+        knex('genres_relations').del().then(function () {
+          knex('genres').del().then(function () {
+            knex('songs').del().then(function () {
+              knex('artists').del().then(function () {
+                knex('albums').del().then(function () {
+                  res.send("Bim bim");
+                });
+              });
             });
           });
         });
