@@ -1,5 +1,11 @@
 <template>
   <div id="suggestions">
+    <div class="back">
+      <md-button class="md-raised md-accent dark-background" href="#/" >
+        <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
+      </md-button>
+    </div>
+
     <span class="md-display-2">Suggestions</span>
 
     <div v-if="suggestions.length === 0">
@@ -9,20 +15,39 @@
     </div>
 
     <md-list v-if="suggestions">
-      <md-list-item v-for="(suggestion, suggestionId) in suggestions">
+      <md-list-item v-for="(suggestion, suggestionId) in suggestions" :key="suggestion.id">
         <span v-if="suggestion.title">{{ suggestion.title }}</span>
         <span v-if="!suggestion.title">{{ suggestion.file }}</span>
         <span> par user {{ suggestion.id_user }}</span>
 
         <md-list-expand md-list-expand-multiple>
-          <md-list v-for="(message, index) in suggestion.messages">
-            <suggestion-message :message="message"></suggestion-message>
+          <md-list>
+            <youtube
+              v-if="suggestion.url"
+              :video-id="videoId(suggestion.url)"
+              >
+            </youtube>
+            <audio v-if="suggestion.file" controls="controls">
+               <source :src="suggestion.file" type="audio/mpeg"/>
+            </audio>
+          </md-list>
+          <md-list v-for="(message, index) in suggestion.messages" :key="message.id">
+            <suggestion-message :message="message" v-if="index < suggestion.messages.length - 1"></suggestion-message>
+            <suggestion-message :message="message" reply="true" v-else></suggestion-message>
           </md-list>
         </md-list-expand>
       </md-list-item>
     </md-list>
 
-    <suggestion-form state="creation"></suggestion-form>
+    <div class="show-form">
+      <md-button class="md-raised md-accent" @click="showForm = !showForm">
+        + Faire une nouvelle suggestion
+      </md-button>
+    </div>
+
+    <transition name="fastfade" mode="out-in">
+      <suggestion-form state="creation" v-show="showForm"></suggestion-form>
+    </transition>
 
     <!--
       TO DO :
@@ -38,6 +63,7 @@
 import SuggestionForm from './suggestions/Form'
 import SuggestionMessage from './suggestions/Message'
 function youtubeVideoId (url) {
+  console.log(url)
   var videoId = url.split('v=')[1]
   var ampersandPosition = videoId.indexOf('&')
   if (ampersandPosition !== -1) {
@@ -54,26 +80,14 @@ export default {
   },
   data: function () {
     return {
-      newSuggestion: {
-        title: '',
-        file: '',
-        url: '',
-        video: false,
-        songPath: '',
-        selectedMoods: [],
-        songName: '',
-        artist: '',
-        album: '',
-        message: '',
-        status: ''
-      },
       mood: '',
       song: [],
       uploadOptions: {
         url: '/suggestion',
         paramName: 'file',
         maxFiles: 1
-      }
+      },
+      showForm: false
     }
   },
   beforeMount: function () {
@@ -95,9 +109,6 @@ export default {
     messages: function () {
       return this.$store.state.messages
     },
-    videoId: function () {
-      return youtubeVideoId(this.newSuggestion.url)
-    },
     moods: function () {
       return this.$store.state.moods
     },
@@ -111,6 +122,11 @@ export default {
     }
   },
   methods: {
+    videoId (url) {
+      console.log(typeof url)
+      console.log(url)
+      return youtubeVideoId(url)
+    },
     moodFilter (list, query) {
       var arr = []
 
@@ -138,4 +154,14 @@ export default {
 </script>
 
 <style slot-scope>
+div.show-form {
+  display: inline-block;
+  width: 100%;
+  height: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+}
+div.show-form > button {
+  float: right;
+}
 </style>

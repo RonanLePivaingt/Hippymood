@@ -1,8 +1,6 @@
 var config = require('../../config/server.config');
 var dbConfig = require('../knex.js');
 var knex = require('knex')(dbConfig);
-var multer  = require('multer')
-var upload = multer({ dest: '../tmp/' })
 var fs  = require('fs')
 
 /*
@@ -23,18 +21,32 @@ exports.CreateSuggestion = function (req, res, next) {
     var destinationPath = './tmp/' + req.session.userId + '_' + data.file.name;
 
     // Moving music file
-    fs.rename(data.file.customAttributes.serverpath, destinationPath, function (err) {
-      if (err) throw err;
+    if (data.file) {
+      fs.rename(data.file.customAttributes.path, destinationPath, function (err) {
+        if (err) throw err;
+
+        insert();
+      });
+    } else {
+      insert();
+    }
+
+    function insert() {
+      var suggestionData = {
+        title: data.title,
+        url: data.url,
+        id_user: req.session.userId
+      };
+
+      if (data.file) {
+        console.log(data.file);
+        suggestionData.file = destinationPath;
+        suggestionData.file_originalname = data.file.originalname;
+      }
 
       knex
         .insert(
-          {
-            title: data.title,
-            file: destinationPath,
-            file_originalname: data.file.originalname,
-            url: data.url,
-            id_user: req.session.userId
-          },
+          suggestionData,
           'id'
         )
         .into('suggestions')
@@ -60,9 +72,9 @@ exports.CreateSuggestion = function (req, res, next) {
         })
       ;
 
-    });
-  } else if (req.file) {
-    res.send({file: req.file});
+    }
+  } else if (req.files) {
+    res.send({file: req.files[0]});
   }
 };
 
@@ -139,19 +151,24 @@ exports.List = function(req, res){
 
   suggestionRequest.then(function(rawSuggestions) {
     var associativeSuggestions = {};
+    var suggestionsIds = [];
     rawSuggestions.forEach(function(suggestion, index) {
       associativeSuggestions[suggestion.id] = suggestion;
+      suggestionsIds.push(suggestion.id);
     });
 
     console.log(associativeSuggestions);
+    console.log("1");
 
     knex
       .from('suggestions_messages')
+      .whereIn('id_suggestion', suggestionsIds)
       .orderBy('id_suggestion', 'desc')
       .orderBy('created_at', 'asc')
       .then(function(rawMessages) {
         // Associating messages with suggestions
         rawMessages.forEach(function(message, index) {
+          console.log(message);
           if (associativeSuggestions[message.id_suggestion].messages !== undefined) {
             message.suggestion_moods = JSON.parse(message.suggestion_moods);
             associativeSuggestions[message.id_suggestion].messages.push(message);
@@ -172,7 +189,26 @@ exports.List = function(req, res){
  * @param integer suggestionId
  * @param text content
  */
-exports.Delete = function(req, res){
+exports.DeleteFile = function(req, res){
   // Restrict on userId anyway to avoid client hacking
   // Change status to deleted
+  console.log('delete');
+  console.log(req.body);
+
+  var filePath = "tmp/" + req.body.filename;
+
+  fs.access(filePath, error => {
+    if (!error) {
+      fs.unlink(filePath,function(error){
+        console.log(error);
+        res.send({status: 'success'});
+      });
+    } else {
+      console.log(error);
+      res.send({
+        status: 'error',
+        error: error
+      });
+    }
+  });
 };

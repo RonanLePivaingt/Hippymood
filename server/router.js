@@ -21,8 +21,9 @@ module.exports = function(app){
     app.get('/admin/resetSession', MusicController.ResetSession);
 
     app.get('/suggestions', SuggestionController.List);
-    app.post('/suggestion', upload.single('file'), SuggestionController.CreateSuggestion);
-    app.post('/suggestion/:id', SuggestionController.CreateMessage);
+    app.post('/suggestion', upload.array('file'), SuggestionController.CreateSuggestion);
+    app.post('/suggestion/message/:id', SuggestionController.CreateMessage);
+    app.post('/suggestion/deleteFile', SuggestionController.DeleteFile);
 
     app.get('/admin/resetDatabase', AdminController.ResetDatabase);
 

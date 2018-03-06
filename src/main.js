@@ -258,7 +258,6 @@ const store = new Vuex.Store({
 
       Vue.http.get(url).then(
         response => {
-          console.log(response)
           if (response.body.newSongs !== undefined) {
             commit('setWhatsNew', response.body.newSongs)
           } else {

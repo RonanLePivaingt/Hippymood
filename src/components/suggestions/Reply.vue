@@ -15,8 +15,11 @@
         <suggestion-message :message="message"></suggestion-message>
       </md-list>
 
-      <suggestion-form state="response" :message="message"></suggestion-form>
-    </div>
+      <suggestion-form
+        v-if="index === suggestion.messages.length - 1"
+        state="response"
+        :message="message"
+        ></suggestion-form></div>
   </div>
 </template>
 
@@ -42,11 +45,6 @@ export default {
   data: function () {
     return {
       suggestionId: this.$route.params.id
-    }
-  },
-  route: {
-    data () {
-      console.log('The current ID is ' + this.$route.params.id)
     }
   },
   computed: {

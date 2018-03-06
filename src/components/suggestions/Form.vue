@@ -1,41 +1,61 @@
 <template>
   <div>
-    <form v-on:submit.prevent="submit">
-      <md-tabs md-fixed v-if="state === 'creation'">
-        <md-tab id="addSong" md-label="Ajouter une chanson">
+    <form class="suggestion-form" v-on:submit.prevent="submit">
+      <md-tabs md-fixed v-if="state == 'creation'">
+        <md-tab id="add-song" md-label="Ajouter une chanson">
           <md-input-container>
             <label>Tu peux donner un nom à ta suggestion</label>
             <md-input v-model="suggestion.title"></md-input>
           </md-input-container>
 
+          <p class="source-separator">
+            <md-icon>info_outline</md-icon>
+             Il faut reseigner au moins un fichier de musique ou une vidéo
+          </p>
+
           <vue-clip
             ref="vc"
-            :options="uploadOptions"
-            :on-added-file="addedFile"
-            :on-removed-file="removeFile"
+            :options="upload"
+            :on-total-progress="totalProgress"
             :on-complete="complete"
             >
             <template slot="clip-uploader-action">
-              <div>
+              <div v-show="upload.progress === 0">
                 <div class="dz-message">
+                  <div class="file-upload">
+                    <md-button class="md-fab" @click="restartProgress" :class="{ 'md-primary': upload.done }">
+        <md-icon v-if="!upload.done">cloud_upload</md-icon>
+        <md-icon v-if="upload.done">done</md-icon>
+      </md-button>
+
+      <md-spinner :md-size="74" :md-stroke="2.2" :md-progress="upload.progress" v-if="upload.transition && upload.progress < 115"></md-spinner>
+                  </div>
                   <p>
-                    <md-icon>file_upload</md-icon>
-                    Cliquer ou déposer un fichier MP3 ici
+                    Clique ou dépose un fichier MP3 ici
                   </p>
                 </div>
               </div>
             </template>
 
             <template slot="clip-uploader-body" scope="props">
-              <md-list v-for="file in props.files">
-                <md-list-item>
-                  {{ file.name }} {{ file.status }} {{ file.errorMessage }}
-                  <md-icon @click="removeFile(file)">delete_forever</md-icon>
-                </md-list-item>
+              <md-list class="downloaded-files" v-for="file in props.files" :key="file.name">
+                <div class="file-upload">
+                  <md-button class="md-fab md-secondary">
+                    <md-icon v-if="!upload.done">cloud_upload</md-icon>
+                    <md-icon v-if="upload.done">done</md-icon>
+                  </md-button>
+
+                  <md-spinner :md-size="74" :md-stroke="2.2" :md-progress="upload.progress" v-if="upload.transition && upload.progress < 115"></md-spinner>
+                </div>
+                <audio controls="controls">
+                   <source v-if="suggestion.file" :src="'/' + suggestion.file.customAttributes.path" type="audio/mpeg"/>
+                </audio>
+                <md-button class="md-fab md-clean" title="Supprimer le fichier" @click="removeFile(file)">
+                  <md-icon>delete</md-icon>
+                </md-button>
               </md-list>
             </template>
           </vue-clip>
-
 
           <md-input-container>
             <label>URL d'une vidéo youtube</label>
@@ -43,6 +63,7 @@
           </md-input-container>
 
           <md-checkbox v-model="suggestion.video" v-show="suggestion.url" type="checkbox">
+
             Utiliser cette chanson en mode vidéo ?
           </md-checkbox>
 
@@ -155,10 +176,14 @@ export default {
       id: this.$route.params.id,
       mood: '',
       song: [],
-      uploadOptions: {
+      upload: {
         url: '/suggestion',
         paramName: 'file',
-        maxFiles: 1
+        maxFiles: 42,
+        progress: 0,
+        done: false,
+        transition: true,
+        progressInterval: 0
       }
     }
   },
@@ -191,6 +216,22 @@ export default {
     }
   },
   methods: {
+    totalProgress (progress, totalBytes, bytesSent) {
+      this.upload.progress = progress
+
+      if (this.upload.progress === 100) {
+        this.upload.done = true
+      }
+    },
+    restartProgress () {
+      this.upload.transition = false
+      this.upload.done = false
+
+      window.clearInterval(this.upload.progressInterval)
+      window.setTimeout(() => {
+        this.upload.transition = true
+      }, 600)
+    },
     moodFilter (list, query) {
       var arr = []
 
@@ -246,7 +287,7 @@ export default {
       // Adding suggestion ID to request to tell
       if (this.state !== 'creation') {
         this.suggestion.id = this.message.id_suggestion
-        url = '/suggestion/' + this.id
+        url = '/suggestion/message/' + this.id
       }
 
       this.$http.post(
@@ -258,23 +299,30 @@ export default {
         }
       )
     },
-    addedFile (file) {
+    complete (file, status, xhr) {
+      var response = JSON.parse(xhr.response.replace(/\\\//g, '/'))
+
+      file.addAttribute('filename', response.file.filename)
+      file.addAttribute('path', response.file.path)
+      file.addAttribute('originalname', response.file.originalname)
+
       this.suggestion.file = file
     },
     removeFile (file) {
-      console.log(file)
-      this.$refs.vc.removeFile(file)
-      // Should remove file on server as well
-    },
-    complete (file, status, xhr) {
-      // Adding server id to be used for deleting
-      // the file.
-      // var serverResponse = JSON.parse(xhr.response.file)
-      var response = JSON.parse(xhr.response.replace(/\\\//g, '/'))
-      console.log(response.file)
-      file.addAttribute('serverpath', response.file.path)
-      file.addAttribute('originalname', response.file.originalname)
-      console.log(file)
+      if (this.$refs) {
+        this.$refs.vc.files.pop()
+      }
+
+      this.$http.post(
+        '/suggestion/deleteFile',
+        { filename: file.customAttributes.filename }
+      ).then(
+        response => {
+          this.suggestion.file = ''
+          this.upload.progress = 0
+          this.upload.done = false
+        }
+      )
     },
     response (messageId) {
       // Redirecting to the response page
@@ -300,7 +348,10 @@ input {
 .md-input-container.mood-chips::after {
   height: 0px;
 }
-div:not(.md-tabs) .md-input-container {
+div:not(.md-tabs) .md-input-container,
+div:not(.md-tabs) .md-checkbox-container,
+div:not(.md-tabs) .source-separator
+{
   margin-left: 16px;
   margin-right: 16px;
 }
@@ -320,5 +371,43 @@ div:not(.md-tabs) .md-input-container {
 iframe {
   width: 100%;
 }
-</style>
+.file-upload {
+  width: 56px;
+  height: 56px;
+  position: relative;
+}
 
+.file-upload  .md-fab {
+  margin: 0;
+}
+
+.file-upload .md-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.dz-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+.dz-message > p {
+  display: inline-block;
+  margin-left: 0.5rem;
+}
+
+ul.downloaded-files {
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+ul.downloaded-files audio {
+  margin-left: 2rem;
+  width: 80%;
+}
+.source-separator:not(i) {
+  color: rgba(0, 0, 0, 0.7);
+}
+</style>
