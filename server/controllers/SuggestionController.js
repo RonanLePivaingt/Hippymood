@@ -39,7 +39,6 @@ exports.CreateSuggestion = function (req, res, next) {
       };
 
       if (data.file) {
-        console.log(data.file);
         suggestionData.file = destinationPath;
         suggestionData.file_originalname = data.file.originalname;
       }
@@ -52,7 +51,6 @@ exports.CreateSuggestion = function (req, res, next) {
         .into('suggestions')
         .then(function(id) {
           // Add first message to proposal
-          console.log("Suggestion id " + id)
           knex
             .insert({
               content: data.message,
@@ -66,7 +64,6 @@ exports.CreateSuggestion = function (req, res, next) {
             })
             .into('suggestions_messages')
             .then(function(id) {
-              console.log("Message id " + id);
               res.send("Yes");
             });
         })
@@ -106,7 +103,6 @@ exports.CreateMessage = function(req, res){
     .where('id', req.params.id)
     .where('id_user', req.session.userId)
     .then(function(ids) {
-      console.log(ids);
       if (ids) {
         knex
           .insert({
@@ -120,7 +116,6 @@ exports.CreateMessage = function(req, res){
           })
           .into('suggestions_messages')
           .then(function(id) {
-            console.log("Message id " + id);
             res.send("Yes");
           });
       }
@@ -157,9 +152,6 @@ exports.List = function(req, res){
       suggestionsIds.push(suggestion.id);
     });
 
-    console.log(associativeSuggestions);
-    console.log("1");
-
     knex
       .from('suggestions_messages')
       .whereIn('id_suggestion', suggestionsIds)
@@ -168,7 +160,6 @@ exports.List = function(req, res){
       .then(function(rawMessages) {
         // Associating messages with suggestions
         rawMessages.forEach(function(message, index) {
-          console.log(message);
           if (associativeSuggestions[message.id_suggestion].messages !== undefined) {
             message.suggestion_moods = JSON.parse(message.suggestion_moods);
             associativeSuggestions[message.id_suggestion].messages.push(message);
@@ -192,9 +183,6 @@ exports.List = function(req, res){
 exports.DeleteFile = function(req, res){
   // Restrict on userId anyway to avoid client hacking
   // Change status to deleted
-  console.log('delete');
-  console.log(req.body);
-
   var filePath = "tmp/" + req.body.filename;
 
   fs.access(filePath, error => {

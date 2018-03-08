@@ -1,5 +1,10 @@
 <template>
   <div id="suggestion-reply">
+    <div class="back">
+      <md-button class="md-raised md-accent" href="#/suggestions" >
+        <i class="material-icons">keyboard_backspace</i> Revenir aux suggestion
+      </md-button>
+    </div>
     <youtube
       v-if="videoId"
       :video-id="videoId"

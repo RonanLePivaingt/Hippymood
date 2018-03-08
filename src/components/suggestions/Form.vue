@@ -3,12 +3,13 @@
     <form class="suggestion-form" v-on:submit.prevent="submit">
       <md-tabs md-fixed v-if="state == 'creation'">
         <md-tab id="add-song" md-label="Ajouter une chanson">
+
           <md-input-container>
-            <label>Tu peux donner un nom à ta suggestion</label>
+            <label>Nom de la suggestion</label>
             <md-input v-model="suggestion.title"></md-input>
           </md-input-container>
 
-          <p class="source-separator">
+          <p class="source-separator" :class="{ 'md-input-invalid': errors.song }">
             <md-icon>info_outline</md-icon>
              Il faut reseigner au moins un fichier de musique ou une vidéo
           </p>
@@ -18,6 +19,7 @@
             :options="upload"
             :on-total-progress="totalProgress"
             :on-complete="complete"
+            :class="{ 'md-input-invalid': errors.song }"
             >
             <template slot="clip-uploader-action">
               <div v-show="upload.progress === 0">
@@ -57,9 +59,9 @@
             </template>
           </vue-clip>
 
-          <md-input-container>
+          <md-input-container :class="{ 'md-input-invalid': errors.song === true}">
             <label>URL d'une vidéo youtube</label>
-            <md-input v-model="suggestion.url"></md-input>
+            <md-input v-model="suggestion.url" @blur="checkError('song')"></md-input>
           </md-input-container>
 
           <md-checkbox v-model="suggestion.video" v-show="suggestion.url" type="checkbox">
@@ -72,8 +74,10 @@
             :video-id="videoId"
             >
           </youtube>
+
         </md-tab>
 
+        <!--
         <md-tab id="move" md-label="Reclasser une chanson">
           <md-input-container>
             <label>Choisir une chanson</label>
@@ -86,23 +90,24 @@
               :debounce="200"></md-autocomplete>
           </md-input-container>
         </md-tab>
+        -->
       </md-tabs>
 
-      <md-input-container>
+      <md-input-container :class="{ 'md-input-invalid': errors.songName }">
         <md-icon>audiotrack</md-icon>
         <label>Nom de la chanson</label>
-        <md-input v-model="suggestion.songName"></md-input>
+        <md-input required v-model="suggestion.songName" @blur="checkError('songName')"></md-input>
       </md-input-container>
 
-      <md-input-container>
+      <md-input-container :class="{ 'md-input-invalid': errors.artist }">
         <md-icon>person</md-icon>
         <label>Artiste</label>
-        <md-input v-model="suggestion.artist"></md-input>
+        <md-input required v-model="suggestion.artist" @blur="checkError('artist')"></md-input>
       </md-input-container>
 
       <md-input-container>
         <md-icon>album</md-icon>
-        <label>Album (optionnel)</label>
+        <label>Album</label>
         <md-input v-model="suggestion.album"></md-input>
       </md-input-container>
 
@@ -113,7 +118,7 @@
         </template>
       </md-chips>
 
-      <md-input-container>
+      <md-input-container :class="{ 'md-input-invalid': errors.selectedMoods }">
         <label>Choisir parmi les moods existantes</label>
         <md-autocomplete v-model="mood"
                          :list="alphaSortedMoods"
@@ -122,7 +127,9 @@
                          :min-chars="0"
                          :max-height="0"
                          @selected="moodCallback"
-                         :debounce="200">
+                         @change="checkError('moods')"
+                         :debounce="200"
+                         :required="errors.selectedMoods === true">
         </md-autocomplete>
       </md-input-container>
 
@@ -132,12 +139,16 @@
         <md-textarea v-model="suggestion.message"></md-textarea>
       </md-input-container>
 
-      <md-button @click="submit" class="md-raised md-accent">Envoyer la suggestion</md-button>
+      <div class="submit">
+        <md-button @click="submit" class="md-raised md-accent" :disabled="errorNumber > 0">
+          <span v-if="state === 'creation'">Envoyer la suggestion</span>
+          <span v-if="state === 'response'">Répondre</span>
+        </md-button>
+      </div>
     </form>
 
     <!--
       TO DO :
-      - Validator
       - Possibility to suggest a new mood
       - Add indicators to guide the user through is suggestion
       - Auto reset incompatible fields
@@ -184,17 +195,16 @@ export default {
         done: false,
         transition: true,
         progressInterval: 0
+      },
+      errors: {
+        song: false,
+        songName: false,
+        artist: false,
+        selectedMoods: false
       }
     }
   },
   beforeMount: function () {
-    if (this.message) {
-      // Populate with the current data
-      this.suggestion.songName = this.message.song_name
-      this.suggestion.artist = this.message.artist
-      this.suggestion.album = this.message.album
-      this.suggestion.selectedMoods = JSON.parse(this.message.suggestion_moods)
-    }
   },
   computed: {
     user: function () {
@@ -213,6 +223,11 @@ export default {
       return moods.sort(function (a, b) {
         return a.name.localeCompare(b.name)
       })
+    },
+    errorNumber: function () {
+      var errorArray = Object.values(this.errors)
+      const reducer = (accumulator, currentValue) => accumulator + currentValue
+      return errorArray.reduce(reducer)
     }
   },
   methods: {
@@ -279,25 +294,72 @@ export default {
         }
       )
     },
-    submit () {
-      window.vm.$Progress.start()
+    checkErrors () {
+      this.checkError('song')
+      this.checkError('songName')
+      this.checkError('artist')
+      this.checkError('moods')
+    },
+    checkError (type) {
+      var data = this.suggestion
 
-      var url = '/suggestion/'
-
-      // Adding suggestion ID to request to tell
-      if (this.state !== 'creation') {
-        this.suggestion.id = this.message.id_suggestion
-        url = '/suggestion/message/' + this.id
-      }
-
-      this.$http.post(
-        url,
-        { suggestion: this.suggestion }
-      ).then(
-        response => {
-          this.$root.$store.dispatch('askSuggestions')
+      if (this.state === 'creation') {
+        switch (type) {
+          case 'song':
+            if (data.url === '' && data.file.customAttributes === undefined) {
+              this.errors.song = true
+            } else {
+              this.errors.song = false
+            }
+            break
+          case 'songName':
+            if (data.songName === '') {
+              this.errors.songName = true
+            } else {
+              this.errors.songName = false
+            }
+            break
+          case 'artist':
+            if (data.artist === '') {
+              this.errors.artist = true
+            } else {
+              this.errors.artist = false
+            }
+            break
+          case 'moods':
+            if (Object.keys(data.selectedMoods).length === 0) {
+              this.errors.selectedMoods = true
+            } else {
+              this.errors.selectedMoods = false
+            }
+            break
         }
-      )
+      }
+    },
+    submit (e) {
+      // Form validation
+      this.checkErrors()
+
+      if (this.errorNumber) {
+        window.vm.$Progress.start()
+
+        var url = '/suggestion/'
+
+        // Adding suggestion ID to request to tell
+        if (this.state !== 'creation') {
+          this.suggestion.id = this.message.id_suggestion
+          url = '/suggestion/message/' + this.id
+        }
+
+        this.$http.post(
+          url,
+          { suggestion: this.suggestion }
+        ).then(
+          response => {
+            this.$root.$store.dispatch('askSuggestions')
+          }
+        )
+      }
     },
     complete (file, status, xhr) {
       var response = JSON.parse(xhr.response.replace(/\\\//g, '/'))
@@ -307,6 +369,8 @@ export default {
       file.addAttribute('originalname', response.file.originalname)
 
       this.suggestion.file = file
+
+      this.checkError('song')
     },
     removeFile (file) {
       if (this.$refs) {
@@ -321,6 +385,7 @@ export default {
           this.suggestion.file = ''
           this.upload.progress = 0
           this.upload.done = false
+          this.errors.song = true
         }
       )
     },
@@ -409,5 +474,16 @@ ul.downloaded-files audio {
 }
 .source-separator:not(i) {
   color: rgba(0, 0, 0, 0.7);
+}
+.md-input-invalid,
+.source-separator .md-input-invalid,
+.source-separator.md-input-invalid i.material-icons
+{
+  color: #ff5722 !important;
+}
+.submit {
+  display: block;
+  width: 100%;
+  text-align: right;
 }
 </style>
