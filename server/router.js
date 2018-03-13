@@ -24,6 +24,7 @@ module.exports = function(app){
     app.post('/suggestion', upload.array('file'), SuggestionController.CreateSuggestion);
     app.post('/suggestion/message/:id', SuggestionController.CreateMessage);
     app.post('/suggestion/deleteFile', SuggestionController.DeleteFile);
+    app.post('/suggestion/deleteSuggestion/:id', SuggestionController.DeleteSuggestion);
 
     app.get('/admin/resetDatabase', AdminController.ResetDatabase);
 

@@ -6,7 +6,7 @@
       </md-avatar>
       <div class="column">
         <div>
-          <div>
+          <div v-show="message.song_name">
             <i class="material-icons meta">audiotrack</i>
             <span> {{ message.song_name }} </span>
           </div>
@@ -15,7 +15,7 @@
             <span> {{ message.album }} </span>
             </br>
           </div>
-          <div>
+          <div v-show="message.artist">
             <i class="material-icons">person</i>
             <span> {{ message.artist }} </span>
           </div>

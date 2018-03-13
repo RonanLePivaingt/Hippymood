@@ -59,7 +59,7 @@
             </template>
           </vue-clip>
 
-          <md-input-container :class="{ 'md-input-invalid': errors.song === true}">
+          <md-input-container :class="{ 'md-input-invalid': errors.song === true && state === 'creation' }">
             <label>URL d'une vidéo youtube</label>
             <md-input v-model="suggestion.url" @blur="checkError('song')"></md-input>
           </md-input-container>
@@ -93,13 +93,18 @@
         -->
       </md-tabs>
 
-      <md-input-container :class="{ 'md-input-invalid': errors.songName }">
+      <p class="source-separator" v-show="show.noValuesFilled" @click="show.noValuesFilled = !show.noValuesFilled">
+        <md-icon>info_outline</md-icon>
+         Il faut reseigner au moins une info avant de répondre ;)
+      </p>
+
+      <md-input-container :class="{ 'md-input-invalid': errors.songName && state === 'creation' }">
         <md-icon>audiotrack</md-icon>
         <label>Nom de la chanson</label>
         <md-input required v-model="suggestion.songName" @blur="checkError('songName')"></md-input>
       </md-input-container>
 
-      <md-input-container :class="{ 'md-input-invalid': errors.artist }">
+      <md-input-container :class="{ 'md-input-invalid': errors.artist && state === 'creation' }">
         <md-icon>person</md-icon>
         <label>Artiste</label>
         <md-input required v-model="suggestion.artist" @blur="checkError('artist')"></md-input>
@@ -118,7 +123,7 @@
         </template>
       </md-chips>
 
-      <md-input-container :class="{ 'md-input-invalid': errors.selectedMoods }">
+      <md-input-container :class="{ 'md-input-invalid': errors.selectedMoods && state === 'creation' }">
         <label>Choisir parmi les moods existantes</label>
         <md-autocomplete v-model="mood"
                          :list="alphaSortedMoods"
@@ -140,12 +145,17 @@
       </md-input-container>
 
       <div class="submit">
-        <md-button @click="submit" class="md-raised md-accent" :disabled="errorNumber > 0">
+        <md-button @click="submit" class="md-raised md-accent" :disabled="hasError > 0">
           <span v-if="state === 'creation'">Envoyer la suggestion</span>
           <span v-if="state === 'response'">Répondre</span>
         </md-button>
+
       </div>
     </form>
+
+    <md-button class="md-raised md-accent" @click="resetSuggestion">
+      Reset suggestion
+    </md-button>
 
     <!--
       TO DO :
@@ -159,6 +169,9 @@
 <script>
 function youtubeVideoId (url) {
   var videoId = url.split('v=')[1]
+  if (videoId === undefined) {
+    videoId = ''
+  }
   var ampersandPosition = videoId.indexOf('&')
   if (ampersandPosition !== -1) {
     videoId = videoId.substring(0, ampersandPosition)
@@ -184,6 +197,7 @@ export default {
         message: '',
         status: ''
       },
+      suggestionEmptyData: {},
       id: this.$route.params.id,
       mood: '',
       song: [],
@@ -201,10 +215,14 @@ export default {
         songName: false,
         artist: false,
         selectedMoods: false
+      },
+      show: {
+        noValuesFilled: false
       }
     }
   },
-  beforeMount: function () {
+  mounted: function () {
+    this.suggestionEmptyData = JSON.parse(JSON.stringify(this.suggestion))
   },
   computed: {
     user: function () {
@@ -224,13 +242,116 @@ export default {
         return a.name.localeCompare(b.name)
       })
     },
-    errorNumber: function () {
+    hasRequiredData: function () {
+      var requiredData = []
+
+      requiredData.push(Object.values(this.suggestion.file))
+
+      requiredData.push(this.videoId)
+      requiredData.push(this.suggestion.songName)
+      requiredData.push(this.suggestion.artist)
+      requiredData.push(this.suggestion.selectedMoods)
+
+      var filledRequiredData = requiredData.filter(requiredData => requiredData.length > 0)
+
+      // Checking
+      if (filledRequiredData.length >= 4) {
+        return true
+      } else {
+        return false
+      }
+    },
+    hasError: function () {
       var errorArray = Object.values(this.errors)
-      const reducer = (accumulator, currentValue) => accumulator + currentValue
-      return errorArray.reduce(reducer)
+      const booleanReducer = (accumulator, currentValue) => accumulator + currentValue
+      return errorArray.reduce(booleanReducer)
+    },
+    nbFilledValues: function () {
+      // Used when replying to a suggestion
+
+      // Transform the suggestion data to an array, filter the array to keep the filled values and return the length of it
+      var suggestionArray = Object.values(this.suggestion)
+      var filledValues = suggestionArray.filter(suggestionData => suggestionData.length > 0)
+      return filledValues.length
     }
   },
   methods: {
+    checkErrors () {
+      this.checkError('song')
+      this.checkError('songName')
+      this.checkError('artist')
+      this.checkError('moods')
+    },
+    checkError (type) {
+      this.$nextTick(function () {
+        var data = this.suggestion
+
+        if (this.state === 'creation') {
+          switch (type) {
+            case 'song':
+              if (data.url === '' && data.file.customAttributes === undefined) {
+                this.errors.song = true
+              } else {
+                this.errors.song = false
+              }
+              break
+            case 'songName':
+              if (data.songName === '') {
+                this.errors.songName = true
+              } else {
+                this.errors.songName = false
+              }
+              break
+            case 'artist':
+              if (data.artist === '') {
+                this.errors.artist = true
+              } else {
+                this.errors.artist = false
+              }
+              break
+            case 'moods':
+              console.log(Object.keys(data.selectedMoods))
+              if (Object.keys(data.selectedMoods).length === 0) {
+                this.errors.selectedMoods = true
+              } else {
+                this.errors.selectedMoods = false
+              }
+              break
+          }
+        }
+      })
+    },
+    submit (e) {
+      // Form validation
+      if (this.state === 'creation') {
+        this.checkErrors()
+      }
+
+      if ((this.state === 'creation' && this.hasError === 0 && this.hasRequiredData) || (this.state === 'response' && this.nbFilledValues > 0)) {
+        window.vm.$Progress.start()
+
+        var url = '/suggestion/'
+
+        // Adding suggestion ID to request to tell
+        if (this.state !== 'creation') {
+          this.suggestion.id = this.message.id_suggestion
+          url = '/suggestion/message/' + this.id
+        }
+
+        this.$http.post(
+          url,
+          { suggestion: this.suggestion }
+        ).then(
+          response => {
+            this.$root.$store.dispatch('askSuggestions')
+            this.suggestion = this.suggestionEmptyData
+            this.showForm = false
+          }
+        )
+      } else if (this.state === 'response' && this.nbFilledValues === 0) {
+        this.show.noValuesFilled = true
+      }
+    },
     totalProgress (progress, totalBytes, bytesSent) {
       this.upload.progress = progress
 
@@ -247,7 +368,36 @@ export default {
         this.upload.transition = true
       }, 600)
     },
+    complete (file, status, xhr) {
+      var response = JSON.parse(xhr.response.replace(/\\\//g, '/'))
+
+      file.addAttribute('filename', response.file.filename)
+      file.addAttribute('path', response.file.path)
+      file.addAttribute('originalname', response.file.originalname)
+
+      this.suggestion.file = file
+
+      this.checkError('song')
+    },
+    removeFile (file) {
+      if (this.$refs) {
+        this.$refs.vc.files.pop()
+      }
+
+      this.$http.post(
+        '/suggestion/deleteFile',
+        { filename: file.customAttributes.filename }
+      ).then(
+        response => {
+          this.suggestion.file = ''
+          this.upload.progress = 0
+          this.upload.done = false
+          this.errors.song = true
+        }
+      )
+    },
     moodFilter (list, query) {
+      // Used for mood auto completion
       var arr = []
 
       for (var i = 0; i < list.length; i++) {
@@ -283,115 +433,14 @@ export default {
         '/search/' + param.q,
       ).then(
         response => {
-          console.log(response)
           var songs = response.body.searchResults
 
           this.song = []
           for (var o = 0; o < songs.length; o++) {
             this.song.push({name: songs[o].song + ' par ' + songs[o].artist})
           }
-          console.log(this.song)
         }
       )
-    },
-    checkErrors () {
-      this.checkError('song')
-      this.checkError('songName')
-      this.checkError('artist')
-      this.checkError('moods')
-    },
-    checkError (type) {
-      var data = this.suggestion
-
-      if (this.state === 'creation') {
-        switch (type) {
-          case 'song':
-            if (data.url === '' && data.file.customAttributes === undefined) {
-              this.errors.song = true
-            } else {
-              this.errors.song = false
-            }
-            break
-          case 'songName':
-            if (data.songName === '') {
-              this.errors.songName = true
-            } else {
-              this.errors.songName = false
-            }
-            break
-          case 'artist':
-            if (data.artist === '') {
-              this.errors.artist = true
-            } else {
-              this.errors.artist = false
-            }
-            break
-          case 'moods':
-            if (Object.keys(data.selectedMoods).length === 0) {
-              this.errors.selectedMoods = true
-            } else {
-              this.errors.selectedMoods = false
-            }
-            break
-        }
-      }
-    },
-    submit (e) {
-      // Form validation
-      this.checkErrors()
-
-      if (this.errorNumber) {
-        window.vm.$Progress.start()
-
-        var url = '/suggestion/'
-
-        // Adding suggestion ID to request to tell
-        if (this.state !== 'creation') {
-          this.suggestion.id = this.message.id_suggestion
-          url = '/suggestion/message/' + this.id
-        }
-
-        this.$http.post(
-          url,
-          { suggestion: this.suggestion }
-        ).then(
-          response => {
-            this.$root.$store.dispatch('askSuggestions')
-          }
-        )
-      }
-    },
-    complete (file, status, xhr) {
-      var response = JSON.parse(xhr.response.replace(/\\\//g, '/'))
-
-      file.addAttribute('filename', response.file.filename)
-      file.addAttribute('path', response.file.path)
-      file.addAttribute('originalname', response.file.originalname)
-
-      this.suggestion.file = file
-
-      this.checkError('song')
-    },
-    removeFile (file) {
-      if (this.$refs) {
-        this.$refs.vc.files.pop()
-      }
-
-      this.$http.post(
-        '/suggestion/deleteFile',
-        { filename: file.customAttributes.filename }
-      ).then(
-        response => {
-          this.suggestion.file = ''
-          this.upload.progress = 0
-          this.upload.done = false
-          this.errors.song = true
-        }
-      )
-    },
-    response (messageId) {
-      // Redirecting to the response page
-      this.$router.push('/Suggestions/' + messageId)
     }
   }
 }

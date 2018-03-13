@@ -31,6 +31,11 @@
                <source :src="suggestion.file" type="audio/mpeg"/>
             </audio>
           </md-list>
+          <md-list>
+            <md-button @click="openDeleteSnack(suggestion.id)" class="md-icon-button">
+              <md-icon>delete</md-icon>
+            </md-button>
+          </md-list>
           <md-list v-for="(message, index) in suggestion.messages" :key="message.id">
             <suggestion-message :message="message" v-if="index < suggestion.messages.length - 1"></suggestion-message>
             <suggestion-message :message="message" reply="true" v-else></suggestion-message>
@@ -39,15 +44,18 @@
       </md-list-item>
     </md-list>
 
+    <md-snackbar md-position="bottom center" ref="snackbar" md-duration="5000">
+      <span>Est-tu sûr de vouloir supprimer la suggestion ?</span>
+      <md-button class="md-accent" @click="deleteSuggestion()">Supprimer</md-button>
+    </md-snackbar>
+
+    <suggestion-form state="creation" v-show="showForm"></suggestion-form>
+
     <div class="show-form">
       <md-button class="md-raised md-accent" @click="showForm = !showForm">
         + Faire une nouvelle suggestion
       </md-button>
     </div>
-
-    <transition name="fastfade" mode="out-in">
-      <suggestion-form state="creation" v-show="showForm"></suggestion-form>
-    </transition>
 
     <!--
       TO DO :
@@ -63,8 +71,10 @@
 import SuggestionForm from './suggestions/Form'
 import SuggestionMessage from './suggestions/Message'
 function youtubeVideoId (url) {
-  console.log(url)
   var videoId = url.split('v=')[1]
+  if (videoId === undefined) {
+    videoId = ''
+  }
   var ampersandPosition = videoId.indexOf('&')
   if (ampersandPosition !== -1) {
     videoId = videoId.substring(0, ampersandPosition)
@@ -87,7 +97,10 @@ export default {
         paramName: 'file',
         maxFiles: 1
       },
-      showForm: false
+      showForm: false,
+      deleteSuggestionId: 0,
+      position: 'bottom center',
+      duration: '5000'
     }
   },
   beforeMount: function () {
@@ -123,31 +136,25 @@ export default {
   },
   methods: {
     videoId (url) {
-      console.log(typeof url)
-      console.log(url)
       return youtubeVideoId(url)
     },
-    moodFilter (list, query) {
-      var arr = []
+    openDeleteSnack (id) {
+      this.deleteSuggestionId = id
+      this.$refs.snackbar.open()
+      console.log('Ca devrait ouvrir la snackbar')
+    },
+    deleteSuggestion () {
+      this.$refs.snackbar.close()
 
-      for (var i = 0; i < list.length; i++) {
-        // Checking if query match with the item
-        if (list[i].name.indexOf(query) !== -1) {
-          // Checking if moods hasn't been already selected
-          var selected = false
-          for (var j = 0; j < this.newSuggestion.selectedMoods.length; j++) {
-            if (list[i].name.indexOf(this.newSuggestion.selectedMoods[j].name) !== -1) {
-              selected = true
-            }
-          }
+      var url = '/suggestion/deleteSuggestion/' + this.deleteSuggestionId
 
-          if (selected === false) {
-            arr.push(list[i])
-          }
+      this.$http.post(
+        url
+      ).then(
+        response => {
+          this.$root.$store.dispatch('askSuggestions')
         }
-      }
-
-      return arr
+      )
     }
   }
 }

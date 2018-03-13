@@ -177,8 +177,7 @@ exports.List = function(req, res){
 
 /*
  * Expected parameters from client request :
- * @param integer suggestionId
- * @param text content
+ * @param string filename
  */
 exports.DeleteFile = function(req, res){
   // Restrict on userId anyway to avoid client hacking
@@ -200,3 +199,41 @@ exports.DeleteFile = function(req, res){
     }
   });
 };
+
+/*
+ * Expected parameters from client request :
+ * @param integer suggestionId
+ */
+exports.DeleteSuggestion = function(req, res){
+  var suggestionId = req.params.id;
+
+  knex('suggestions')
+    .where('id', suggestionId)
+    .where('id_user', req.session.userId)
+    .then(function(rows) {
+      // Checking if the suggestion belong to the user
+      if (rows.length) {
+        // Then deleting messages and suggestions
+        knex('suggestions_messages')
+          .where('id_suggestion', suggestionId)
+          .where('id_user', req.session.userId)
+          .del()
+          .then(function(rows) {
+            knex('suggestions')
+              .where('id', suggestionId)
+              .where('id_user', req.session.userId)
+              .del()
+              .then(function(rows) {
+                res.send({
+                  status: 'success'
+                });
+              });
+          });
+        } else {
+          res.send({
+            status: 'error',
+            error: 'No suggestion with this id for thisuser'
+          });
+        }
+      });
+    };
