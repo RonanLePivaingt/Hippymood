@@ -25,7 +25,7 @@
             <a class="md-button md-raised" @click="resetSession()">Reset session</a>
             </p>
             <p>
-            <md-button class="md-raised md-warn" @click="resetDatabase()">Reset database</md-button>
+            <md-button class="md-raised md-warn" @click="resetDatabase()">Reset music database</md-button>
             </p>
             <div>
               <a class="md-button md-raised" @click="scanMusic()"> Scan music </a>

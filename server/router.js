@@ -2,7 +2,7 @@ var multer  = require('multer')
 var upload = multer({ dest: './tmp/' })
 
 var AuthController = require('./controllers/AuthController');
-var AdminController = require('./controllers/AdminController');
+var DatabaseController = require('./controllers/DatabaseController');
 var MusicController = require('./controllers/MusicController');
 var ScanController = require('./controllers/ScanController');
 var SuggestionController = require('./controllers/SuggestionController');
@@ -26,7 +26,7 @@ module.exports = function(app){
     app.post('/suggestion/deleteFile', SuggestionController.DeleteFile);
     app.post('/suggestion/deleteSuggestion/:id', SuggestionController.DeleteSuggestion);
 
-    app.get('/admin/resetDatabase', AdminController.ResetDatabase);
+    app.get('/admin/resetDatabase', DatabaseController.Down);
 
     app.get('/admin/scanMusic', ScanController.ScanMusic);
 };

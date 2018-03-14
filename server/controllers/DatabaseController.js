@@ -1,74 +1,100 @@
 var dbConfig = require('../knex.js');
 var knex = require('knex')(dbConfig);
 
-// Database creation
-return Promise.all([
-  knex.schema.createTableIfNotExists('albums', function(t) {
-    t.increments('id').primary();
-    t.string('name');
-  }),
-  knex.schema.createTableIfNotExists('artists', function(t) {
-    t.increments('id').primary();
-    t.string('name');
-  }),
-  knex.schema.createTableIfNotExists('genres', function(t) {
-    t.increments('id').primary();
-    t.string('name');
-  }),
-  knex.schema.createTableIfNotExists('songs', function(t) {
-    t.increments('id').primary();
-    t.string('name');
-    t.string('path');
-    t.string('youtube');
-    t.timestamps();
-    t.integer('id_albums').unsigned();
-    t.foreign('id_albums').references('albums.id');
-    t.integer('id_artists').unsigned();
-    t.foreign('id_artists').references('artists.id');
-  }),
-  knex.schema.createTableIfNotExists('genres_relations', function(t) {
-    t.primary(['id', 'id_songs']);
-    t.integer('id').unsigned();
-    t.foreign('id').references('genres.id');
-    t.integer('id_songs').unsigned();
-    t.foreign('id_songs').references('songs.id');
-  }),
-  knex.schema.createTableIfNotExists('users', function(t) {
-    t.increments('id').primary();
-    t.string('name');
-  }),
-  knex.schema.createTableIfNotExists('suggestions', function(t) {
-    t.increments('id').primary();
-    t.string('title');
-    t.string('file');
-    t.string('file_originalname');
-    t.string('url');
-    t.string('song_path');
-    t.string('status');
-    t.timestamps(true, knex.fn.now());
-    t.integer('id_user').unsigned();
-    t.foreign('id_user').references('users.id');
-  }),
-  knex.schema.createTableIfNotExists('suggestions_messages', function(t) {
-    t.increments('id').primary();
-    t.string('content');
-    t.string('song_name');
-    t.string('artist');
-    t.string('album');
-    t.json('suggestion_moods');
-    t.boolean('video');
-    t.timestamps(true, knex.fn.now());
-    t.integer('id_user').unsigned();
-    t.foreign('id_user').references('users.id');
-    t.integer('id_suggestion').unsigned();
-    t.foreign('id_suggestion').references('suggestions.id');
-  })
-  /*
-  Storyboard of suggestion exchange :
-  - A user login, is redirected to the list of suggestion made and can ad one (record unfinished suggestion ? => offline with local storage for privacy reasons)
-  (Master user receive a push notification and have a notification displayed)
-  - Master user can write a message to clarify the suggestion and validate some exchange
-  - User see a message next time it does login (remember user in localstorage ? Propose to send a mail notification)
-  - When exchanges are set, the master user manually add the song, possibly give a link to the song and set status as added ;)
-  */
-]);
+/*
+ * Function to create the full database
+ */
+exports.Up = function(req, res){
+  return Promise.all([
+    knex.schema.createTableIfNotExists('albums', function(t) {
+      t.increments('id').primary();
+      t.string('name');
+    }),
+    knex.schema.createTableIfNotExists('artists', function(t) {
+      t.increments('id').primary();
+      t.string('name');
+    }),
+    knex.schema.createTableIfNotExists('genres', function(t) {
+      t.increments('id').primary();
+      t.string('name');
+    }),
+    knex.schema.createTableIfNotExists('songs', function(t) {
+      t.increments('id').primary();
+      t.string('name');
+      t.string('path');
+      t.string('youtube');
+      t.timestamps();
+      t.integer('id_albums').unsigned();
+      t.foreign('id_albums').references('albums.id');
+      t.integer('id_artists').unsigned();
+      t.foreign('id_artists').references('artists.id');
+    }),
+    knex.schema.createTableIfNotExists('genres_relations', function(t) {
+      t.primary(['id', 'id_songs']);
+      t.integer('id').unsigned();
+      t.foreign('id').references('genres.id');
+      t.integer('id_songs').unsigned();
+      t.foreign('id_songs').references('songs.id');
+    }),
+    knex.schema.createTableIfNotExists('users', function(t) {
+      t.increments('id').primary();
+      t.string('name');
+    }),
+    knex.schema.createTableIfNotExists('suggestions', function(t) {
+      t.increments('id').primary();
+      t.string('title');
+      t.string('file');
+      t.string('file_originalname');
+      t.string('url');
+      t.string('song_path');
+      t.string('status');
+      t.timestamps(true, knex.fn.now());
+      t.integer('id_user').unsigned();
+      t.foreign('id_user').references('users.id');
+    }),
+    knex.schema.createTableIfNotExists('suggestions_messages', function(t) {
+      t.increments('id').primary();
+      t.string('content');
+      t.string('song_name');
+      t.string('artist');
+      t.string('album');
+      t.json('suggestion_moods');
+      t.boolean('video');
+      t.timestamps(true, knex.fn.now());
+      t.integer('id_user').unsigned();
+      t.foreign('id_user').references('users.id');
+      t.integer('id_suggestion').unsigned();
+      t.foreign('id_suggestion').references('suggestions.id');
+    })
+    /*
+    Storyboard of suggestion exchange :
+    - A user login, is redirected to the list of suggestion made and can ad one (record unfinished suggestion ? => offline with local storage for privacy reasons)
+    (Master user receive a push notification and have a notification displayed)
+    - Master user can write a message to clarify the suggestion and validate some exchange
+    - User see a message next time it does login (remember user in localstorage ? Propose to send a mail notification)
+    - When exchanges are set, the master user manually add the song, possibly give a link to the song and set status as added ;)
+    */
+  ]);
+}
+
+/*
+ * Function to delete the music database except users and suggestions
+ */
+exports.Down = function(req, res){
+  if (req.session.masterUser === true) {
+    // Could be cleaner with promises
+    knex('genres_relations').del().then(function () {
+      knex('genres').del().then(function () {
+        knex('songs').del().then(function () {
+          knex('artists').del().then(function () {
+            knex('albums').del().then(function () {
+              res.send("Bim bim");
+            });
+          });
+        });
+      });
+    });
+  } else {
+    res.send("Not your business");
+  }
+}
