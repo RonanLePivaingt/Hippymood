@@ -7,44 +7,58 @@ Demo disclaimer :
 - Not responsive yet
 - Only the Youtube based video mode will play music, not direct mp3 playing for legal reasons
 
-# Build setup
+# Usage
 
-## Install dependencies
+## Configuration
+In the config directory, rename the server.config.js.example without the .example extension and set database credentials and others.
+
+## Build Setup
+
+### Install dependencies
 
 ``` bash
 npm install
 ```
 
-## Configuration
-In the config directory, rename the server.config.js.example without the .example extension and set database credentials and others.
-
-Create a music directory full of mp3s at the root of the hippymood directory.
-
-## Development
+### Development
 Hot reloading of the UI when any change occur in src directory
 
 ``` bash
 npm run dev
 ```
 
-## Production
+### Production
 ``` bash
 # Generating compiled JS and CSS
 npm run build
 
 # Serving
-npm run build
+npm run prod
+```
+
+## Docker
+
+Don't forget to match the database credentials from serverConfig.js with docker-compose.yml.
+
+### Development
+``` bash
+docker-compose up
+```
+
+### Production
+``` bash
+ln -s docker-compose.prod.yml docker-compose.override.yml
+docker-compose up
 ```
 
 # Roadmap
-
-Not a version but build a Dockerfile / Docker image to ease development jump in and ease deployment.
 
 ## 0.5 (ongoing version)
 - Migration of Vuejs from v1 to v2
 - Use a query builder to prevent SQL injections (Knex.js)
 - Clean up the architecture of the code
 - Move to an architecture more friendly to Hippymood behavior change without touching to the core (with extensions, vuejs components maybe)
+- Provide usage with Docker
 
 ## 0.whoKnows
 - New responsive UI

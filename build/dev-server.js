@@ -91,7 +91,7 @@ app.use(bodyParser.json());
 var config = require('../config/server.config.js');
 var dbOptions = {
     host: config.db.host,
-    port: 3306,
+    port: config.db.port || 3306,
     user: config.db.user,
     password: config.db.password,
     database: config.db.database,

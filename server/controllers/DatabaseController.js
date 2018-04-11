@@ -5,7 +5,7 @@ var knex = require('knex')(dbConfig);
  * Function to create the full database
  */
 exports.Up = function(req, res){
-  return Promise.all([
+  Promise.all([
     knex.schema.createTableIfNotExists('albums', function(t) {
       t.increments('id').primary();
       t.string('name');
@@ -30,7 +30,6 @@ exports.Up = function(req, res){
       t.foreign('id_artists').references('artists.id');
     }),
     knex.schema.createTableIfNotExists('genres_relations', function(t) {
-      t.primary(['id', 'id_songs']);
       t.integer('id').unsigned();
       t.foreign('id').references('genres.id');
       t.integer('id_songs').unsigned();
@@ -66,15 +65,18 @@ exports.Up = function(req, res){
       t.integer('id_suggestion').unsigned();
       t.foreign('id_suggestion').references('suggestions.id');
     })
-    /*
-    Storyboard of suggestion exchange :
-    - A user login, is redirected to the list of suggestion made and can ad one (record unfinished suggestion ? => offline with local storage for privacy reasons)
-    (Master user receive a push notification and have a notification displayed)
-    - Master user can write a message to clarify the suggestion and validate some exchange
-    - User see a message next time it does login (remember user in localstorage ? Propose to send a mail notification)
-    - When exchanges are set, the master user manually add the song, possibly give a link to the song and set status as added ;)
-    */
-  ]);
+  ])
+  .then(function() {
+    console.log("Databse successfully initialized");
+    // Process successfully exiting
+    process.exit();
+  })
+  .catch(function(error) {
+    console.log("Shit it the fan !");
+    console.log(error);
+    process.exit(1);
+  })
+  ;
 }
 
 /*
@@ -98,3 +100,5 @@ exports.Down = function(req, res){
     res.send("Not your business");
   }
 }
+
+require('make-runnable');
