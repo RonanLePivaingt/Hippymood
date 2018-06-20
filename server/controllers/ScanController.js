@@ -7,7 +7,9 @@ var mm = require('musicmetadata');
 var id3 = require('id3js');
 
 exports.ScanMusic = function(req, res) {
+  /* All verifications are stopped to work in CLI
   if (req.session.masterUser === true) {
+  */
     var async = require("async");
 
     // Initializing music scan queue
@@ -28,7 +30,7 @@ exports.ScanMusic = function(req, res) {
       // Sending data to client and log if any progress is made
       if (percentage !== newPercentage) {
         percentage = newPercentage;
-        req.io.emit('scan', percentage);
+        // req.io.emit('scan', percentage);
         console.log("Music scan progress : " + percentage + "%");
       }
     }
@@ -36,18 +38,20 @@ exports.ScanMusic = function(req, res) {
 
     // Adding event on queue end processing
     queue.drain = function() {
-      req.io.emit('scan', 'Done');
+      // req.io.emit('scan', 'Done');
 
       console.log("All files are indexed");
       // Stoping previous interval
       clearInterval(percentageInterval);
     };
 
+  /* See message at the beginning of function
     // Sending a response back to client
     res.send("Music scan started");
   } else {
     res.send("Not your business");
   }
+  */
 };
 
 // Function to get all files from a directory
@@ -304,3 +308,5 @@ function genreRelation(metadata, callback) {
 
   return true;
 }
+
+require('make-runnable');
