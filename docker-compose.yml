@@ -10,8 +10,8 @@ services:
    MYSQL_PASSWORD: hippymood_password
   ports:
    - "3307:3306"
-     #volumes:
-     #- "./docker/schema.sql:/docker-entrypoint-initdb.d/schema.sql:z"
+  volumes:
+    - "./docker/mariadb-data:/var/lib/mysql:z"
   restart: always
  app:
   container_name: hippymood

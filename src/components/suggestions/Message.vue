@@ -20,6 +20,21 @@
             <span> {{ message.artist }} </span>
           </div>
         </div>
+        <!--
+        <md-chips v-model="message.suggestion_moods" v-show="message.suggestion_moods.length !== 0" class="mood-chips">
+          <template scope="chip" slot="chip">
+            <span v-if="chip.value.name">{{ chip.value.name }}</span>
+            <span v-if="!chip.value.name">{{ chip.value }} (N'existe pas encore)</span>
+          </template>
+        </md-chips>
+        {{ message.suggestion_moods }}
+        -->
+        <md-chips v-model="suggestionMoods" v-show="suggestionMoods.length !== 0" class="mood-chips">
+          <template scope="chip" slot="chip">
+            <span v-if="chip.value.name">{{ chip.value.name }}</span>
+            <span v-if="!chip.value.name">{{ chip.value }} (N'existe pas encore)</span>
+          </template>
+        </md-chips>
         <p v-show="message.content">
           <md-icon>message</md-icon> {{ message.content }}
         </p>

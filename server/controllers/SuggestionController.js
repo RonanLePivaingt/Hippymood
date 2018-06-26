@@ -154,6 +154,7 @@ exports.List = function(req, res){
 
     knex
       .from('suggestions_messages')
+      .join('users', 'suggestions_messages.id_user', '=', 'users.id')
       .whereIn('id_suggestion', suggestionsIds)
       .orderBy('id_suggestion', 'desc')
       .orderBy('created_at', 'asc')

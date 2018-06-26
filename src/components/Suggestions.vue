@@ -10,15 +10,13 @@
 
     <div v-if="suggestions.length === 0">
       <p> Tu n'as pas de suggestion avec la graine <b>{{ user.name }}</b>.</p>
-
-      <p> Fait ta 1ère suggestion avec le formulaire ci-dessous : </p>
     </div>
 
     <md-list v-if="suggestions">
       <md-list-item v-for="(suggestion, suggestionId) in suggestions" :key="suggestion.id">
         <span v-if="suggestion.title">{{ suggestion.title }}</span>
         <span v-if="!suggestion.title">{{ suggestion.file }}</span>
-        <span> par user {{ suggestion.id_user }}</span>
+        <span> par {{ suggestion.messages[0].name }}</span>
 
         <md-list-expand md-list-expand-multiple>
           <md-list>

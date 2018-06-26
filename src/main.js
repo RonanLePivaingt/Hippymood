@@ -63,7 +63,7 @@ const store = new Vuex.Store({
     videoMode: false,
     betaMode: false,
     user: {},
-    suggestions: {}
+    suggestions: []
   },
   mutations: {
     setMoods (state, moods) {
@@ -298,12 +298,10 @@ const store = new Vuex.Store({
       window.vm.$Progress.start()
       Vue.http.get('/suggestions/').then(
         response => {
-          if (response.body.suggestions) {
-            commit('setSuggestions', response.body.suggestions)
+          var suggestions = response.body.suggestions
+          if (Object.keys(suggestions).length > 0) {
+            commit('setSuggestions', suggestions)
             window.vm.$Progress.finish()
-          } else {
-            console.log('Shit it the fan !')
-            window.vm.$Progress.fail()
           }
         }
       )

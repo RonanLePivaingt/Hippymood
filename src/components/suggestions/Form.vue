@@ -2,80 +2,7 @@
   <div>
     <form class="suggestion-form" v-on:submit.prevent="submit">
       <md-tabs md-fixed v-if="state == 'creation'">
-        <md-tab id="add-song" md-label="Ajouter une chanson">
-
-          <md-input-container>
-            <label>Nom de la suggestion</label>
-            <md-input v-model="suggestion.title"></md-input>
-          </md-input-container>
-
-          <p class="source-separator" :class="{ 'md-input-invalid': errors.song }">
-            <md-icon>info_outline</md-icon>
-             Il faut reseigner au moins un fichier de musique ou une vidéo
-          </p>
-
-          <vue-clip
-            ref="vc"
-            :options="upload"
-            :on-total-progress="totalProgress"
-            :on-complete="complete"
-            :class="{ 'md-input-invalid': errors.song }"
-            >
-            <template slot="clip-uploader-action">
-              <div v-show="upload.progress === 0">
-                <div class="dz-message">
-                  <div class="file-upload">
-                    <md-button class="md-fab" @click="restartProgress" :class="{ 'md-primary': upload.done }">
-        <md-icon v-if="!upload.done">cloud_upload</md-icon>
-        <md-icon v-if="upload.done">done</md-icon>
-      </md-button>
-
-      <md-spinner :md-size="74" :md-stroke="2.2" :md-progress="upload.progress" v-if="upload.transition && upload.progress < 115"></md-spinner>
-                  </div>
-                  <p>
-                    Clique ou dépose un fichier MP3 ici
-                  </p>
-                </div>
-              </div>
-            </template>
-
-            <template slot="clip-uploader-body" scope="props">
-              <md-list class="downloaded-files" v-for="file in props.files" :key="file.name">
-                <div class="file-upload">
-                  <md-button class="md-fab md-secondary">
-                    <md-icon v-if="!upload.done">cloud_upload</md-icon>
-                    <md-icon v-if="upload.done">done</md-icon>
-                  </md-button>
-
-                  <md-spinner :md-size="74" :md-stroke="2.2" :md-progress="upload.progress" v-if="upload.transition && upload.progress < 115"></md-spinner>
-                </div>
-                <audio controls="controls">
-                   <source v-if="suggestion.file" :src="'/' + suggestion.file.customAttributes.path" type="audio/mpeg"/>
-                </audio>
-                <md-button class="md-fab md-clean" title="Supprimer le fichier" @click="removeFile(file)">
-                  <md-icon>delete</md-icon>
-                </md-button>
-              </md-list>
-            </template>
-          </vue-clip>
-
-          <md-input-container :class="{ 'md-input-invalid': errors.song === true && state === 'creation' }">
-            <label>URL d'une vidéo youtube</label>
-            <md-input v-model="suggestion.url" @blur="checkError('song')"></md-input>
-          </md-input-container>
-
-          <md-checkbox v-model="suggestion.video" v-show="suggestion.url" type="checkbox">
-
-            Utiliser cette chanson en mode vidéo ?
-          </md-checkbox>
-
-          <youtube
-            v-if="suggestion.url"
-            :video-id="videoId"
-            >
-          </youtube>
-
-        </md-tab>
+        <md-tab id="add-song" md-label="Ajouter une chanson"></md-tab>
 
         <!--
         <md-tab id="move" md-label="Reclasser une chanson">
@@ -92,6 +19,79 @@
         </md-tab>
         -->
       </md-tabs>
+
+
+      <md-input-container>
+        <label>Nom de la suggestion</label>
+        <md-input v-model="suggestion.title"></md-input>
+      </md-input-container>
+
+      <p class="source-separator" :class="{ 'md-input-invalid': errors.song }">
+        <md-icon>info_outline</md-icon>
+         Il faut reseigner au moins un fichier de musique ou une vidéo
+      </p>
+
+      <vue-clip
+        ref="vc"
+        :options="upload"
+        :on-total-progress="totalProgress"
+        :on-complete="complete"
+        :class="{ 'md-input-invalid': errors.song }"
+        >
+        <template slot="clip-uploader-action">
+          <div v-show="upload.progress === 0">
+            <div class="dz-message">
+              <div class="file-upload">
+                <md-button class="md-fab" @click="restartProgress" :class="{ 'md-primary': upload.done }">
+    <md-icon v-if="!upload.done">cloud_upload</md-icon>
+    <md-icon v-if="upload.done">done</md-icon>
+  </md-button>
+
+  <md-spinner :md-size="74" :md-stroke="2.2" :md-progress="upload.progress" v-if="upload.transition && upload.progress < 115"></md-spinner>
+              </div>
+              <p>
+                Clique ou dépose un fichier MP3 ici
+              </p>
+            </div>
+          </div>
+        </template>
+
+        <template slot="clip-uploader-body" scope="props">
+          <md-list class="downloaded-files" v-for="file in props.files" :key="file.name">
+            <div class="file-upload">
+              <md-button class="md-fab md-secondary">
+                <md-icon v-if="!upload.done">cloud_upload</md-icon>
+                <md-icon v-if="upload.done">done</md-icon>
+              </md-button>
+
+              <md-spinner :md-size="74" :md-stroke="2.2" :md-progress="upload.progress" v-if="upload.transition && upload.progress < 115"></md-spinner>
+            </div>
+            <audio controls="controls">
+               <source v-if="suggestion.file" :src="'/' + suggestion.file.customAttributes.path" type="audio/mpeg"/>
+            </audio>
+            <md-button class="md-fab md-clean" title="Supprimer le fichier" @click="removeFile(file)">
+              <md-icon>delete</md-icon>
+            </md-button>
+          </md-list>
+        </template>
+      </vue-clip>
+
+      <md-input-container :class="{ 'md-input-invalid': errors.song === true && state === 'creation' }">
+        <label>URL d'une vidéo youtube</label>
+        <md-input v-model="suggestion.url" @blur="checkError('song')"></md-input>
+      </md-input-container>
+
+      <md-checkbox v-model="suggestion.video" v-show="suggestion.url" type="checkbox">
+
+        Utiliser cette chanson en mode vidéo ?
+      </md-checkbox>
+
+      <youtube
+        v-if="suggestion.url"
+        :video-id="videoId"
+        >
+      </youtube>
+
 
       <p class="source-separator" v-show="show.noValuesFilled" @click="show.noValuesFilled = !show.noValuesFilled">
         <md-icon>info_outline</md-icon>
