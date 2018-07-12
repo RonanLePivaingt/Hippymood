@@ -67,7 +67,7 @@
               <md-spinner :md-size="74" :md-stroke="2.2" :md-progress="upload.progress" v-if="upload.transition && upload.progress < 115"></md-spinner>
             </div>
             <audio controls="controls">
-               <source v-if="suggestion.file" :src="'/' + suggestion.file.customAttributes.path" type="audio/mpeg"/>
+               <source v-if="suggestion.file" :src="suggestion.file.customAttributes.path" type="audio/mpeg"/>
             </audio>
             <md-button class="md-fab md-clean" title="Supprimer le fichier" @click="removeFile(file)">
               <md-icon>delete</md-icon>

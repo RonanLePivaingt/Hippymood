@@ -18,60 +18,56 @@ exports.CreateSuggestion = function (req, res, next) {
   if (req.session.userId && req.body.suggestion) {
     // Create suggestion
     var data = req.body.suggestion;
-    var destinationPath = './tmp/' + req.session.userId + '_' + data.file.name;
 
-    // Moving music file
+    var suggestionData = {
+      title: data.title,
+      url: data.url,
+      id_user: req.session.userId
+    };
+
+    console.log(data);
+
     if (data.file) {
-      fs.rename(data.file.customAttributes.path, destinationPath, function (err) {
-        if (err) throw err;
 
-        insert();
-      });
-    } else {
-      insert();
+      suggestionData.file = data.file.customAttributes.path;
+      suggestionData.file_originalname = data.file.customAttributes.originalname;
     }
 
-    function insert() {
-      var suggestionData = {
-        title: data.title,
-        url: data.url,
-        id_user: req.session.userId
-      };
+    knex
+      .insert(
+        suggestionData,
+        'id'
+      )
+      .into('suggestions')
+      .then(function(id) {
+        // Add first message to proposal
+        knex
+          .insert({
+            content: data.message,
+            video: data.video,
+            song_name: data.songName,
+            artist: data.artist,
+            album: data.album,
+            suggestion_moods: JSON.stringify(data.selectedMoods),
+            id_user: req.session.userId,
+            id_suggestion: id
+          })
+          .into('suggestions_messages')
+          .then(function(id) {
+            res.send("Yes");
+          });
+      })
+    ;
+  } else if (req.files[0]) {
+    // Renaming the default path set by mutter to get audio streaming from browser working
+    var destinationPath = './tmp/' + req.session.userId + '_' + req.files[0].originalname;
+    fs.rename(req.files[0].path, destinationPath, function (err) {
+      if (err) throw err;
 
-      if (data.file) {
-        suggestionData.file = destinationPath;
-        suggestionData.file_originalname = data.file.originalname;
-      }
-
-      knex
-        .insert(
-          suggestionData,
-          'id'
-        )
-        .into('suggestions')
-        .then(function(id) {
-          // Add first message to proposal
-          knex
-            .insert({
-              content: data.message,
-              video: data.video,
-              song_name: data.songName,
-              artist: data.artist,
-              album: data.album,
-              suggestion_moods: JSON.stringify(data.selectedMoods),
-              id_user: req.session.userId,
-              id_suggestion: id
-            })
-            .into('suggestions_messages')
-            .then(function(id) {
-              res.send("Yes");
-            });
-        })
-      ;
-
-    }
-  } else if (req.files) {
-    res.send({file: req.files[0]});
+      // Changing the default upload path
+      req.files[0].path = destinationPath;
+      res.send({file: req.files[0]});
+    });
   }
 };
 
