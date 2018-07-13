@@ -5,6 +5,9 @@
         <i class="material-icons">keyboard_backspace</i> Revenir aux suggestion
       </md-button>
     </div>
+
+    <span class="md-display-2">Suggestion {{ suggestion.title }}</span>
+
     <youtube
       v-if="videoId"
       :video-id="videoId"

@@ -20,27 +20,24 @@
             <span> {{ message.artist }} </span>
           </div>
         </div>
-        <!--
-        <md-chips v-model="message.suggestion_moods" v-show="message.suggestion_moods.length !== 0" class="mood-chips">
+
+        <md-chips md-static v-model="suggestionMoods" v-show="suggestionMoods.length !== 0" class="mood-chips">
           <template scope="chip" slot="chip">
             <span v-if="chip.value.name">{{ chip.value.name }}</span>
             <span v-if="!chip.value.name">{{ chip.value }} (N'existe pas encore)</span>
           </template>
         </md-chips>
-        {{ message.suggestion_moods }}
-        -->
-        <md-chips v-model="suggestionMoods" v-show="suggestionMoods.length !== 0" class="mood-chips">
-          <template scope="chip" slot="chip">
-            <span v-if="chip.value.name">{{ chip.value.name }}</span>
-            <span v-if="!chip.value.name">{{ chip.value }} (N'existe pas encore)</span>
-          </template>
-        </md-chips>
+
         <p v-show="message.content">
           <md-icon>message</md-icon> {{ message.content }}
         </p>
-        <md-button class="response" v-if="reply == 'true'" @click="response(suggestionId)">Répondre</md-button>
+        <div class="actions">
+          <md-button class="md-warn" v-if="reply == 'true'" @click="$emit('open-delete-suggestion', suggestionId)">Supprimer</md-button>
+          <md-button v-if="reply == 'true'" @click="response(suggestionId)">Répondre</md-button>
+        </div>
       </div>
     </div>
+
   </md-list-item>
 </template>
 
@@ -54,7 +51,8 @@ export default {
   },
   data: function () {
     return {
-      suggestionId: this.message.id_suggestion
+      suggestionId: this.message.id_suggestion,
+      deleteSuggestionId: 0
     }
   },
   computed: {
@@ -86,11 +84,14 @@ export default {
 .list-message .md-list-item-container {
   flex-flow: column nowrap !important;
 }
+.list-message .message-row, .list-message .column {
+  width: 100%;
+}
 .list-message .md-list-item-container:not(.admin) {
   width: 100%;
   align-items: start;
 }
-button.response {
+div.actions {
   float: right;
 }
 .avatar {

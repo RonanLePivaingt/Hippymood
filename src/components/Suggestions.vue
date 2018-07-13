@@ -23,20 +23,20 @@
             <youtube
               v-if="suggestion.url"
               :video-id="videoId(suggestion.url)"
+              :height="390"
               >
             </youtube>
             <audio v-if="suggestion.file" controls="controls">
                <source :src="suggestion.file" type="audio/mpeg"/>
             </audio>
           </md-list>
-          <md-list>
-            <md-button @click="openDeleteSnack(suggestion.id)" class="md-icon-button">
-              <md-icon>delete</md-icon>
-            </md-button>
-          </md-list>
           <md-list v-for="(message, index) in suggestion.messages" :key="message.id">
             <suggestion-message :message="message" v-if="index < suggestion.messages.length - 1"></suggestion-message>
-            <suggestion-message :message="message" reply="true" v-else></suggestion-message>
+            <suggestion-message
+              :message="message"
+              reply="true"
+              v-on:open-delete-suggestion="openDeleteSnack($event)"
+              v-else></suggestion-message>
           </md-list>
         </md-list-expand>
       </md-list-item>
@@ -139,7 +139,6 @@ export default {
     openDeleteSnack (id) {
       this.deleteSuggestionId = id
       this.$refs.snackbar.open()
-      console.log('Ca devrait ouvrir la snackbar')
     },
     deleteSuggestion () {
       this.$refs.snackbar.close()

@@ -204,22 +204,27 @@ exports.DeleteFile = function(req, res){
 exports.DeleteSuggestion = function(req, res){
   var suggestionId = req.params.id;
 
-  knex('suggestions')
-    .where('id', suggestionId)
-    .where('id_user', req.session.userId)
-    .then(function(rows) {
+  var checkSuggestion= knex('suggestions')
+    .where('id', suggestionId);
+
+  if (req.session.masterUser !== true)
+    checkSuggestion.where('id_user', req.session.userId)
+
+    checkSuggestion.then(function(rows) {
       // Checking if the suggestion belong to the user
       if (rows.length) {
         // Then deleting messages and suggestions
         knex('suggestions_messages')
           .where('id_suggestion', suggestionId)
-          .where('id_user', req.session.userId)
           .del()
           .then(function(rows) {
-            knex('suggestions')
-              .where('id', suggestionId)
-              .where('id_user', req.session.userId)
-              .del()
+            var deleteSuggestion = knex('suggestions')
+              .where('id', suggestionId);
+
+            if (req.session.masterUser !== true)
+              deleteSuggestion.where('id_user', req.session.userId);
+
+            deleteSuggestion.del()
               .then(function(rows) {
                 res.send({
                   status: 'success'
