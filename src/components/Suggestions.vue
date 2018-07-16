@@ -23,7 +23,6 @@
             <youtube
               v-if="suggestion.url"
               :video-id="videoId(suggestion.url)"
-              :height="390"
               >
             </youtube>
             <audio v-if="suggestion.file" controls="controls">
@@ -47,13 +46,18 @@
       <md-button class="md-accent" @click="deleteSuggestion()">Supprimer</md-button>
     </md-snackbar>
 
-    <suggestion-form state="creation" v-show="showForm"></suggestion-form>
-
     <div class="show-form">
       <md-button class="md-raised md-accent" @click="showForm = !showForm">
-        + Faire une nouvelle suggestion
+        <md-icon v-show="!showForm">keyboard_arrow_down</md-icon>
+        <md-icon v-show="showForm">keyboard_arrow_up</md-icon>
+        Faire une nouvelle suggestion
       </md-button>
     </div>
+
+
+    <transition name="fade">
+      <suggestion-form state="creation" v-show="showForm"></suggestion-form>
+    </transition>
 
     <!--
       TO DO :
@@ -167,5 +171,11 @@ div.show-form {
 }
 div.show-form > button {
   float: right;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0
 }
 </style>

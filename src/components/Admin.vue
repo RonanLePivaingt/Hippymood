@@ -1,22 +1,15 @@
 <template>
   <div id="admin" ref="admin">
+    <div class="back">
+      <md-button class="md-raised md-accent dark-background" href="#/" >
+        <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
+      </md-button>
+    </div>
+
     <div v-if="user.masterUser">
       <span class="md-display-2">Administration</span>
       <md-list>
-        <md-list-item md-expand-multiple>
-          <md-icon>trending_up</md-icon>
-          <span>Répartition des chansons par mood</span>
-
-          <md-list-expand>
-            <chartjs-horizontal-bar
-              :height="chartHeight"
-              :width="chartWidth"
-              :labels="sortedMoods.label"
-              :datasets="sortedMoods.chart">
-            </chartjs-horizontal-bar>
-          </md-list-expand>
-        </md-list-item>
-        <md-list-item>
+        <md-list-item md-active>
           <md-icon>build</md-icon>
           <span>Actions d'administration</span>
 
@@ -36,6 +29,19 @@
                    :md-progress="scanProgress"></md-progress>
               </div>
             </div>
+          </md-list-expand>
+        </md-list-item>
+        <md-list-item md-expand-multiple>
+          <md-icon>trending_up</md-icon>
+          <span>Répartition des chansons par mood</span>
+
+          <md-list-expand>
+            <chartjs-horizontal-bar
+              :height="chartHeight"
+              :width="chartWidth"
+              :labels="sortedMoods.label"
+              :datasets="sortedMoods.chart">
+            </chartjs-horizontal-bar>
           </md-list-expand>
         </md-list-item>
       </md-list>

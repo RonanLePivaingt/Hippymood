@@ -7,8 +7,11 @@
     </div>
 
     <v-touch v-on:quintupletap="activateBetaFeatures">
-      <p> Fait avec ♥ par Ronan Le Pivaingt </p>
     </v-touch>
+
+    <div class="made-with-love">
+      <p class="text-around-heart"> Fait avec <div class="heart"></div>  par Ronan Le Pivaingt </p>
+    </div>
 
     <md-list class="list keyboards-shortcuts">
       <md-list-item>
@@ -289,5 +292,27 @@ div.key.special > span {
 
 div.key.icon > span {
   font-size: 14px;
+}
+
+/* Heart effect (thanks Twitter) */
+.made-with-love {
+  display: flex;
+  align-items: center;
+}
+.heart {
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  background-image:url( '../assets/web_heart_animation.png');
+  background-position: right;
+  background-repeat:no-repeat;
+  background-size:2900%;
+}
+@keyframes heart-burst {
+ from {background-position:left;}
+ to { background-position:right;}
+}
+.made-with-love:hover .heart {
+  animation: heart-burst .8s steps(28) 1;
 }
 </style>

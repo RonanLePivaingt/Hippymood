@@ -2,7 +2,7 @@
   <div id="suggestion-reply">
     <div class="back">
       <md-button class="md-raised md-accent" href="#/suggestions" >
-        <i class="material-icons">keyboard_backspace</i> Revenir aux suggestion
+        <i class="material-icons">keyboard_backspace</i> Revenir aux suggestions
       </md-button>
     </div>
 
@@ -17,7 +17,6 @@
        <source :src="suggestion.file" type="audio/mpeg"/>
     </audio>
 
-    <span class="md-display-1">Messages précédents</span>
     <div v-for="(message, index) in suggestion.messages">
       <md-list>
         <suggestion-message :message="message"></suggestion-message>

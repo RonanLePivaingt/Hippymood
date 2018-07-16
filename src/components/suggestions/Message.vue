@@ -33,7 +33,7 @@
         </p>
         <div class="actions">
           <md-button class="md-warn" v-if="reply == 'true'" @click="$emit('open-delete-suggestion', suggestionId)">Supprimer</md-button>
-          <md-button v-if="reply == 'true'" @click="response(suggestionId)">Répondre</md-button>
+          <md-button class="md-raised" v-if="reply == 'true'" @click="response(suggestionId)">Répondre</md-button>
         </div>
       </div>
     </div>
@@ -91,10 +91,8 @@ export default {
   width: 100%;
   align-items: start;
 }
-div.actions {
+.list-message div.actions {
   float: right;
-}
-.avatar {
 }
 .message-row {
   display: flex;
