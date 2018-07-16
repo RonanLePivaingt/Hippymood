@@ -7,39 +7,37 @@ var cors = require('cors')
 app.use(cors())
 
 var session = require('express-session');
-var MySQLStore = require('express-mysql-session')(session);
 
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-var dbOptions = {
-    host: config.db.host,
-    port: config.db.port || 3306,
-    user: config.db.user,
-    password: config.db.password,
-    database: config.db.database,
-    createDatabaseTable: true,// Whether or not to create the sessions database table, if one does not already exist.
-    schema: {
-        tableName: 'sessions',
-        columnNames: {
-            session_id: 'session_id',
-            expires: 'expires',
-            data: 'data'
-        }
+const KnexSessionStore = require('connect-session-knex')(session);
+const Knex = require('knex');
+
+var config = require('../config/server.config.js');
+const knex = Knex({
+    client: 'mysql',
+    connection: {
+      host: config.db.host,
+      user: config.db.user,
+      password: config.db.password,
+      database: config.db.database,
     }
-};
-var sessionStore = new MySQLStore(dbOptions);
+});
+
+const store = new KnexSessionStore({
+    knex: knex,
+    tablename: 'sessions' // optional. Defaults to 'sessions'
+});
 
 app.use(session({
-    key: 'session_cookie_name',
-    secret: 'session_cookie_secret',
-    store: sessionStore,
-    resave: true,
-    saveUninitialized: true
-    })
-);
-
+    secret: 'keyboard cat',
+    cookie: {
+        maxAge: 7890000000 // Cookie expiration set to 3 month
+    },
+    store: store
+}));
 app.use(express.static('dist'));
 app.use('/music', express.static('music'));
 app.use('/tmp', express.static('tmp'));

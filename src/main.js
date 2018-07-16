@@ -343,7 +343,8 @@ window.vm = new Vue({
         .then(
           function (response) {
             // Redirecting to main page if server response is good
-            if (response.body === 'OK') {
+            console.log(response)
+            if (response.body.success) {
               window.vm.$Progress.finish()
               this.$http.get('/moods').then(response => {
                 if (response.body === 'Must auth') {

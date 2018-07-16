@@ -294,7 +294,9 @@ div.key.icon > span {
   font-size: 14px;
 }
 
-/* Heart effect (thanks Twitter) */
+/* Heart effect
+ * Thanks to Twitter and this nice tutorial : https://medium.com/@chrismabry/how-did-they-do-that-the-twitter-like-animation-2a473b658e43
+ */
 .made-with-love {
   display: flex;
   align-items: center;

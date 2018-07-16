@@ -1,9 +1,11 @@
 <template>
   <div id="admin" ref="admin">
-    <div class="back">
-      <md-button class="md-raised md-accent dark-background" href="#/" >
-        <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
-      </md-button>
+    <div v-if="user.masterUser === true">
+      <div class="back">
+        <md-button class="md-raised md-accent dark-background" href="#/" >
+          <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
+        </md-button>
+      </div>
     </div>
 
     <div v-if="user.masterUser">

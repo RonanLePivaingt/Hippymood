@@ -20,7 +20,7 @@ exports.Unlock = function(req, res){
           }
       }
   };
-  var sessionStore = new MySQLStore(dbOptions);
+  // Auth work var sessionStore = new MySQLStore(dbOptions);
   if (req.body.combination == config.auth.combinationCode) {
     // Associating current session with successful authentification
     req.session.auth = 1;

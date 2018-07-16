@@ -21,12 +21,15 @@
           </div>
         </div>
 
-        <md-chips md-static v-model="suggestionMoods" v-show="suggestionMoods.length !== 0" class="mood-chips">
-          <template scope="chip" slot="chip">
-            <span v-if="chip.value.name">{{ chip.value.name }}</span>
-            <span v-if="!chip.value.name">{{ chip.value }} (N'existe pas encore)</span>
-          </template>
-        </md-chips>
+        <div v-show="suggestionMoods.length !== 0" class="mood">
+          <i class="material-icons meta">folder_special</i>
+          <md-chips md-static v-model="suggestionMoods" v-show="suggestionMoods.length !== 0" class="mood-chips">
+            <template scope="chip" slot="chip">
+              <span v-if="chip.value.name">{{ chip.value.name }}</span>
+              <span v-if="!chip.value.name">{{ chip.value }} (N'existe pas encore)</span>
+            </template>
+          </md-chips>
+        </div>
 
         <p v-show="message.content">
           <md-icon>message</md-icon> {{ message.content }}
@@ -96,5 +99,12 @@ export default {
 }
 .message-row {
   display: flex;
+}
+.message-row .mood {
+  display: flex;
+  align-items: start;
+}
+.message-row .md-chips {
+  padding-top: 0px;
 }
 </style>

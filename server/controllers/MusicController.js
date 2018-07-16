@@ -6,6 +6,11 @@ var knex = require('knex')(dbConfig);
  * Function to return the list of mood
  */
 exports.Moods = function(req, res){
+  // To help with auth problem because moods are cached
+  res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.header("Pragma", "no-cache");
+  res.header("Expires", 0);
+
   if (req.session.auth || config.auth.activate === 0) {
     knex.select('genres.id', 'genres.name')
       .count('songs.id as nbSongs')

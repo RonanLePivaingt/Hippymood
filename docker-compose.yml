@@ -23,7 +23,6 @@ services:
   volumes:
     - ".:/app:z"
     - "/home/ronan/music:/app/music:z"
-  #command: ["./docker/wait-for-mariadb.sh", "mariadb", "/bin/sleep"]
   command: ["./docker/wait-for-mariadb.sh", "mariadb", "npm", "run", "dev"]
   #command: ["./docker/wait-for-mariadb.sh", "mariadb", "npm", "run", "dbInit", "&&", "npm", "run", "dev"]
   #command: ["./docker/wait-for-mariadb.sh", "mariadb", "bash -c \"npm install && npm run dbInit && npm run dev\""]

@@ -1,25 +1,6 @@
 <template>
   <div>
     <form class="suggestion-form" v-on:submit.prevent="submit">
-      <md-tabs md-fixed v-if="state == 'creation'">
-        <md-tab id="add-song" md-label="Ajouter une chanson"></md-tab>
-
-        <!--
-        <md-tab id="move" md-label="Reclasser une chanson">
-          <md-input-container>
-            <label>Choisir une chanson</label>
-            <md-autocomplete
-              v-model="suggestion.selectedMoods.songPath"
-              :list="song"
-              :fetch="fetchSong"
-              :min-chars="2"
-              @selected="songCallback"
-              :debounce="200"></md-autocomplete>
-          </md-input-container>
-        </md-tab>
-        -->
-      </md-tabs>
-
 
       <div v-if="state == 'creation'">
         <md-input-container>
@@ -58,27 +39,30 @@
           </template>
 
           <template slot="clip-uploader-body" scope="props">
-            <md-list class="downloaded-files" v-for="file in props.files" :key="file.name">
-              <div class="file-upload">
-                <md-button class="md-fab md-secondary">
-                  <md-icon v-if="!upload.done">cloud_upload</md-icon>
-                  <md-icon v-if="upload.done">done</md-icon>
-                </md-button>
+            <transition name="fade">
+              <md-list class="downloaded-files" v-for="file in props.files" :key="file.name">
+                <div class="file-upload">
+                  <md-button class="md-fab md-secondary">
+                    <md-icon v-if="!upload.done">cloud_upload</md-icon>
+                    <md-icon v-if="upload.done">done</md-icon>
+                  </md-button>
 
-                <md-spinner :md-size="74" :md-stroke="2.2" :md-progress="upload.progress" v-if="upload.transition && upload.progress < 115"></md-spinner>
-              </div>
-              <audio controls="controls">
-                 <source v-if="suggestion.file" :src="suggestion.file.customAttributes.path" type="audio/mpeg"/>
-              </audio>
-              <md-button class="md-fab md-clean" title="Supprimer le fichier" @click="removeFile(file)">
-                <md-icon>delete</md-icon>
-              </md-button>
-            </md-list>
+                  <md-spinner :md-size="74" :md-stroke="2.2" :md-progress="upload.progress" v-if="upload.transition && upload.progress < 115"></md-spinner>
+                </div>
+                <audio controls="controls">
+                   <source v-if="suggestion.file" :src="suggestion.file.customAttributes.path" type="audio/mpeg"/>
+                </audio>
+                <md-button class="md-fab md-clean" title="Supprimer le fichier" @click="removeFile(file)">
+                  <md-icon>delete</md-icon>
+                </md-button>
+              </md-list>
+            </transition>
           </template>
         </vue-clip>
 
         <md-input-container :class="{ 'md-input-invalid': errors.song === true && state === 'creation' }">
-          <label>URL d'une vidéo youtube</label>
+          <md-icon>music_video</md-icon>
+          <label>URL d'une vidéo Youtube</label>
           <md-input v-model="suggestion.url" @blur="checkError('song')"></md-input>
         </md-input-container>
       </div>
@@ -88,12 +72,13 @@
         Utiliser cette chanson en mode vidéo ?
       </md-checkbox>
 
-      <youtube
-        v-if="suggestion.url"
-        :video-id="videoId"
-        >
-      </youtube>
-
+      <transition name="fade">
+        <youtube
+          v-show="suggestion.url"
+          :video-id="videoId"
+          >
+        </youtube>
+      </transition>
 
       <p class="source-separator" v-show="show.noValuesFilled" @click="show.noValuesFilled = !show.noValuesFilled">
         <md-icon>info_outline</md-icon>
@@ -118,14 +103,8 @@
         <md-input v-model="suggestion.album"></md-input>
       </md-input-container>
 
-      <md-chips v-model="suggestion.selectedMoods" v-show="suggestion.selectedMoods.length !== 0" class="mood-chips" md-input-placeholder="Tu peux aussi taper le nom d'une nouvelle mood (Il faut au moins 5 chansons pour créer une nouvelle mood)">
-        <template scope="chip" slot="chip">
-          <span v-if="chip.value.name">{{ chip.value.name }}</span>
-          <span v-if="!chip.value.name">{{ chip.value }} (N'existe pas encore)</span>
-        </template>
-      </md-chips>
-
       <md-input-container :class="{ 'md-input-invalid': errors.selectedMoods && state === 'creation' }">
+        <md-icon>folder_special</md-icon>
         <label>Choisir parmi les moods existantes</label>
         <md-autocomplete v-model="mood"
                          :list="alphaSortedMoods"
@@ -139,6 +118,13 @@
                          :required="errors.selectedMoods === true">
         </md-autocomplete>
       </md-input-container>
+
+      <md-chips v-model="suggestion.selectedMoods" v-show="suggestion.selectedMoods.length !== 0" class="mood-chips" md-input-placeholder="Tu peux aussi taper le nom d'une nouvelle mood (Il faut au moins 5 chansons pour créer une nouvelle mood)">
+        <template scope="chip" slot="chip">
+          <span v-if="chip.value.name">{{ chip.value.name }}</span>
+          <span v-if="!chip.value.name">{{ chip.value }} (N'existe pas encore)</span>
+        </template>
+      </md-chips>
 
       <md-input-container>
         <md-icon>speaker_notes</md-icon>
@@ -206,7 +192,8 @@ export default {
         progress: 0,
         done: false,
         transition: true,
-        progressInterval: 0
+        progressInterval: 0,
+        acceptedFiles: ['audio/*']
       },
       errors: {
         song: false,

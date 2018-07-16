@@ -1,5 +1,11 @@
 <template>
   <div id="login">
+    <div class="back">
+      <md-button class="md-raised md-accent dark-background" href="#/" >
+        <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
+      </md-button>
+    </div>
+
     <span class="md-display-2">Identification</span>
     <p> Pour déposer une suggestion et suivre son déroulement, il va falloir que je puisse savoir qui tu es la prochaine fois que tu viendras ici. </p>
     <p> Hippymood fonctionne avec un simple nom de compte sans demander un mot de passe. </p>

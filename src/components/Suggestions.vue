@@ -46,17 +46,22 @@
       <md-button class="md-accent" @click="deleteSuggestion()">Supprimer</md-button>
     </md-snackbar>
 
-    <div class="show-form">
-      <md-button class="md-raised md-accent" @click="showForm = !showForm">
-        <md-icon v-show="!showForm">keyboard_arrow_down</md-icon>
-        <md-icon v-show="showForm">keyboard_arrow_up</md-icon>
-        Faire une nouvelle suggestion
-      </md-button>
-    </div>
 
 
+      <div class="show-form">
+        <md-button class="md-raised md-accent" @click="showForm = !showForm">
+          <md-icon v-show="!showForm">keyboard_arrow_down</md-icon>
+          <md-icon v-show="showForm">keyboard_arrow_up</md-icon>
+          Faire une nouvelle suggestion
+        </md-button>
+      </div>
     <transition name="fade">
-      <suggestion-form state="creation" v-show="showForm"></suggestion-form>
+      <div v-show="showForm">
+        <md-toolbar>
+          <h2 class="md-title" style="flex: 1">Ajouter une chanson </h2>
+        </md-toolbar>
+        <suggestion-form state="creation"></suggestion-form>
+      </div>
     </transition>
 
     <!--

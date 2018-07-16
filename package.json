@@ -15,8 +15,8 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "connect-session-knex": "^1.4.0",
     "cors": "^2.8.4",
-    "express-mysql-session": "^1.2.0",
     "express-session": "^1.15.1",
     "hchs-vue-charts": "^1.2.8",
     "id3js": "^1.1.3",
