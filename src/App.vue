@@ -214,6 +214,12 @@
 
 <style src="../node_modules/vue-material/dist/vue-material.css"></style>
 <style>
+div.back {
+  text-align: left;
+}
+div.back i.material-icons {
+  color: rgba(255, 255, 255, 0.8);
+}
 /* Disabling icon selection */
 i.material-icons {
   -webkit-user-select: none;  /* Chrome all / Safari all */

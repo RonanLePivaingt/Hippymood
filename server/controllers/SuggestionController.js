@@ -22,13 +22,13 @@ exports.CreateSuggestion = function (req, res, next) {
     var suggestionData = {
       title: data.title,
       url: data.url,
+      status: 'waiting',
       id_user: req.session.userId
     };
 
     console.log(data);
 
     if (data.file) {
-
       suggestionData.file = data.file.customAttributes.path;
       suggestionData.file_originalname = data.file.customAttributes.originalname;
     }
@@ -91,8 +91,20 @@ exports.CreateMessage = function(req, res){
   var suggestionId = req.params.id;
   var data = req.body.suggestion;
 
-  // This should make a proper check on suggestion user ownership except for the master user
+  var checkedData = {
+    content: data.message,
+    song_name: data.songName,
+    artist: data.artist,
+    album: data.album,
+    suggestion_moods: JSON.stringify(data.selectedMoods),
+    id_user: req.session.userId,
+    id_suggestion: suggestionId
+  };
 
+  /*
+  if (req.session.masterUser === true)
+    checkedData.status = data.status;
+ù*/
   knex
     .select('id')
     .from('suggestions')
@@ -101,18 +113,17 @@ exports.CreateMessage = function(req, res){
     .then(function(ids) {
       if (ids) {
         knex
-          .insert({
-            content: data.message,
-            song_name: data.songName,
-            artist: data.artist,
-            album: data.album,
-            suggestion_moods: JSON.stringify(data.selectedMoods),
-            id_user: req.session.userId,
-            id_suggestion: suggestionId
-          })
+          .insert(checkedData)
           .into('suggestions_messages')
           .then(function(id) {
-            res.send("Yes");
+            knex('suggestions')
+              .where('id', '=', suggestionId)
+              .update({
+                status: data.status
+              })
+              .then(function() {
+                res.send("Yes");
+              });
           });
       }
     });

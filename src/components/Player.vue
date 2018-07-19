@@ -304,6 +304,9 @@ span.md-tooltip {
   align-self: flex-end;
   text-shadow: 1px 0.1px 1px rgba(12,12,12,0.3);
 }
+#player-menu i.material-icons, .player-header .md-title i.material-icons.meta {
+  color: rgba(255, 255, 255, 0.87);
+}
 div.video .player-infos {
   color: white;
 }

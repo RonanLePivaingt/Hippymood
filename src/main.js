@@ -63,7 +63,8 @@ const store = new Vuex.Store({
     videoMode: false,
     betaMode: false,
     user: {},
-    suggestions: []
+    suggestions: [],
+    loadingSuggestions: true
   },
   mutations: {
     setMoods (state, moods) {
@@ -128,7 +129,10 @@ const store = new Vuex.Store({
       localStorage.setItem('user', JSON.stringify(userData))
     },
     setSuggestions (state, suggestions) {
-      state.suggestions = suggestions
+      if (Object.keys(suggestions).length > 0) {
+        state.suggestions = suggestions
+      }
+      state.loadingSuggestions = false
     }
   },
   actions: {
@@ -299,10 +303,8 @@ const store = new Vuex.Store({
       Vue.http.get('/suggestions/').then(
         response => {
           var suggestions = response.body.suggestions
-          if (Object.keys(suggestions).length > 0) {
-            commit('setSuggestions', suggestions)
-            window.vm.$Progress.finish()
-          }
+          commit('setSuggestions', suggestions)
+          window.vm.$Progress.finish()
         }
       )
     }

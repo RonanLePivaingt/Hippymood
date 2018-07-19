@@ -10,7 +10,7 @@
 
         <p class="source-separator" :class="{ 'md-input-invalid': errors.song }">
           <md-icon>info_outline</md-icon>
-           Il faut reseigner au moins un fichier de musique ou une vidéo
+          Il faut reseigner au moins un fichier de musique ou une vidéo
         </p>
 
         <vue-clip
@@ -25,11 +25,11 @@
               <div class="dz-message">
                 <div class="file-upload">
                   <md-button class="md-fab" @click="restartProgress" :class="{ 'md-primary': upload.done }">
-      <md-icon v-if="!upload.done">cloud_upload</md-icon>
-      <md-icon v-if="upload.done">done</md-icon>
-    </md-button>
+                    <md-icon v-if="!upload.done">cloud_upload</md-icon>
+                    <md-icon v-if="upload.done">done</md-icon>
+                  </md-button>
 
-    <md-spinner :md-size="74" :md-stroke="2.2" :md-progress="upload.progress" v-if="upload.transition && upload.progress < 115"></md-spinner>
+                  <md-spinner :md-size="74" :md-stroke="2.2" :md-progress="upload.progress" v-if="upload.transition && upload.progress < 115"></md-spinner>
                 </div>
                 <p>
                   Clique ou dépose un fichier MP3 ici
@@ -49,12 +49,20 @@
 
                   <md-spinner :md-size="74" :md-stroke="2.2" :md-progress="upload.progress" v-if="upload.transition && upload.progress < 115"></md-spinner>
                 </div>
-                <audio controls="controls">
-                   <source v-if="suggestion.file" :src="suggestion.file.customAttributes.path" type="audio/mpeg"/>
-                </audio>
-                <md-button class="md-fab md-clean" title="Supprimer le fichier" @click="removeFile(file)">
-                  <md-icon>delete</md-icon>
-                </md-button>
+                <transition name="fade">
+                  <audio v-show="upload.done" controls="controls">
+                     <source v-if="suggestion.file" :src="suggestion.file.customAttributes.path" type="audio/mpeg"/>
+                  </audio>
+                </transition>
+                <transition name="fade">
+                  <md-button v-show="upload.done"  class="md-fab md-clean" title="Supprimer le fichier" @click="removeFile(file)">
+                    <md-icon>delete</md-icon>
+                  </md-button>
+                </transition>
+                <div class="source-separator file-uploading" v-show="!upload.done && upload.progress > 0">
+                  <p><md-icon>sentiment_dissatisfied</md-icon> L'envoi de fichier peut être long selon la connexion internet</p>
+                  <p><md-icon>mood</md-icon> Tu peux continuer de remplir ta suggestion pendant ce temps-là</p>
+                </div>
               </md-list>
             </transition>
           </template>
@@ -119,7 +127,15 @@
         </md-autocomplete>
       </md-input-container>
 
+      <!-- The possibility to add a new mood is desactivated because it's buggy
       <md-chips v-model="suggestion.selectedMoods" v-show="suggestion.selectedMoods.length !== 0" class="mood-chips" md-input-placeholder="Tu peux aussi taper le nom d'une nouvelle mood (Il faut au moins 5 chansons pour créer une nouvelle mood)">
+        <template scope="chip" slot="chip">
+          <span v-if="chip.value.name">{{ chip.value.name }}</span>
+          <span v-if="!chip.value.name">{{ chip.value }} (N'existe pas encore)</span>
+        </template>
+      </md-chips>
+      -->
+      <md-chips v-model="suggestion.selectedMoods" v-show="suggestion.selectedMoods.length !== 0" class="mood-chips">
         <template scope="chip" slot="chip">
           <span v-if="chip.value.name">{{ chip.value.name }}</span>
           <span v-if="!chip.value.name">{{ chip.value }} (N'existe pas encore)</span>
@@ -132,8 +148,19 @@
         <md-textarea v-model="suggestion.message"></md-textarea>
       </md-input-container>
 
+      <md-input-container v-if="user.masterUser">
+        <label for="status">Statut</label>
+        <md-select name="status" id="status" v-model="suggestion.status">
+          <md-option value="waiting">En attente</md-option>
+          <md-option value="discussion">En discussion</md-option>
+          <md-option value="being-added">En cours d'ajout</md-option>
+          <md-option value="accepted">Accepté</md-option>
+          <md-option value="refused">Recalé</md-option>
+        </md-select>
+      </md-input-container>
+
       <div class="submit">
-        <md-button @click="submit" class="md-raised md-accent" :disabled="hasError > 0">
+        <md-button @click="submit" class="md-raised md-primary" :disabled="hasError > 0">
           <span v-if="state === 'creation'">Envoyer la suggestion</span>
           <span v-if="state === 'response'">Répondre</span>
         </md-button>
@@ -193,7 +220,7 @@ export default {
         done: false,
         transition: true,
         progressInterval: 0,
-        acceptedFiles: ['audio/*']
+        acceptedFiles: 'audio/*'
       },
       errors: {
         song: false,
@@ -328,9 +355,17 @@ export default {
           { suggestion: this.suggestion }
         ).then(
           response => {
+            // Refreshing suggestions
             this.$root.$store.dispatch('askSuggestions')
+
+            // Cleaning up the form (it doesn't work yet)
+            if (this.$refs.vc.files.length > 0) {
+              this.$refs.vc.removeFile(this.$refs.vc.files[0])
+            }
             this.suggestion = this.suggestionEmptyData
-            this.showForm = false
+
+            // Asking parent to hide the form
+            this.$emit('close-me')
           }
         )
       } else if (this.state === 'response' && this.nbFilledValues === 0) {
@@ -387,11 +422,11 @@ export default {
 
       for (var i = 0; i < list.length; i++) {
         // Checking if query match with the item
-        if (list[i].name.indexOf(query) !== -1) {
+        if (list[i].name.toLowerCase().indexOf(query.toLowerCase()) !== -1) {
           // Checking if moods hasn't been already selected
           var selected = false
           for (var j = 0; j < this.suggestion.selectedMoods.length; j++) {
-            if (list[i].name.indexOf(this.suggestion.selectedMoods[j].name) !== -1) {
+            if (list[i].name.toLowerCase().indexOf(this.suggestion.selectedMoods[j].name.toLowerCase()) !== -1) {
               selected = true
             }
           }
@@ -475,7 +510,9 @@ iframe {
   height: 56px;
   position: relative;
 }
-
+.downloaded-files .file-upload {
+  margin: auto;
+}
 .file-upload  .md-fab {
   margin: 0;
 }
@@ -485,6 +522,15 @@ iframe {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.source-separator.file-uploading {
+  display: flex;
+}
+.source-separator.file-uploading > * {
+  margin-top: 0;
+}
+.source-separator > p {
+  margin-left: 0.5rem;
 }
 .dz-message {
   display: flex;

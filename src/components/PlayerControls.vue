@@ -157,6 +157,9 @@ export default {
 #app:not(.video) #playerControls button:not(.md-delete) {
   transform: scale(1.5);
 }
+#playerControls button.md-accent i.material-icons {
+  color: rgba(255, 255, 255, .87);
+}
 #playerControls button:not(.md-accent) i {
   color: rgba(0, 0, 0, 0.54);
 }

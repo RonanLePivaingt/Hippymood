@@ -2,7 +2,7 @@
   <div id="admin" ref="admin">
     <div v-if="user.masterUser === true">
       <div class="back">
-        <md-button class="md-raised md-accent dark-background" href="#/" >
+        <md-button class="md-raised md-primary dark-background" href="#/" >
           <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
         </md-button>
       </div>
@@ -55,7 +55,7 @@
         </p>
         Hey {{ user.name }}, tu n'es pas le compte administrateur et tu n'as rien à faire ici.
         <div class="back">
-          <md-button class="md-raised md-accent" href="#/" >
+          <md-button class="md-raised md-primary" href="#/" >
             <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
           </md-button>
         </div>

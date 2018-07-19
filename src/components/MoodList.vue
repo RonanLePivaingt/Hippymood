@@ -31,7 +31,7 @@
     computed: {
       isActive () {
         // Return the CSS classes to apply to the current mood button
-        return parseInt(this.$store.state.current.moodId) === parseInt(this.mood.id) ? 'md-raised md-primary md-theme-default' : ''
+        return parseInt(this.$store.state.current.moodId) === parseInt(this.mood.id) ? 'md-raised md-accent md-theme-default' : ''
       },
       isNext () {
         // Return boolean

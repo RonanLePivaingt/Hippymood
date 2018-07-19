@@ -1,66 +1,95 @@
 <template>
   <div id="suggestions">
     <div class="back">
-      <md-button class="md-raised md-accent dark-background" href="#/" >
+      <md-button class="md-raised md-primary dark-background" href="#/" >
         <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
       </md-button>
     </div>
 
     <span class="md-display-2">Suggestions</span>
 
-    <div v-if="suggestions.length === 0">
-      <p> Tu n'as pas de suggestion avec la graine <b>{{ user.name }}</b>.</p>
+    <div class="holiday-message">
+      <md-icon>info_outline</md-icon>
+      <p>
+        Je prends quelques vacances au milieu de nulle part (mais au Danemark cette fois ;) alors mes réponses ne seront pas immédiates du tout. </br>
+        Merci d'avance pour les chansons !
+      </p>
     </div>
 
-    <md-list v-if="suggestions">
-      <md-list-item v-for="(suggestion, suggestionId) in suggestions" :key="suggestion.id">
-        <span v-if="suggestion.title">{{ suggestion.title }}</span>
-        <span v-if="!suggestion.title">{{ suggestion.file }}</span>
-        <span> par {{ suggestion.messages[0].name }}</span>
 
-        <md-list-expand md-list-expand-multiple>
-          <md-list>
-            <youtube
-              v-if="suggestion.url"
-              :video-id="videoId(suggestion.url)"
-              >
-            </youtube>
-            <audio v-if="suggestion.file" controls="controls">
-               <source :src="suggestion.file" type="audio/mpeg"/>
-            </audio>
-          </md-list>
-          <md-list v-for="(message, index) in suggestion.messages" :key="message.id">
-            <suggestion-message :message="message" v-if="index < suggestion.messages.length - 1"></suggestion-message>
-            <suggestion-message
-              :message="message"
-              reply="true"
-              v-on:open-delete-suggestion="openDeleteSnack($event)"
-              v-else></suggestion-message>
-          </md-list>
-        </md-list-expand>
-      </md-list-item>
-    </md-list>
+    <transition name="fade">
+      <div class="loading" v-show="!error && loading">
+        <md-spinner :md-size="150" md-indeterminate></md-spinner>
+      </div>
+    </transition>
+
+    <transition name="fade">
+      <div v-if="suggestions.length === 0 && loading == false">
+        <p> Tu n'as pas de suggestion avec la graine <b>{{ user.name }}</b>.</p>
+      </div>
+    </transition>
+
+    <transition name="fade">
+      <md-list v-if="suggestions && loading == false">
+        <md-list-item v-for="(suggestion, suggestionId) in suggestions" :key="suggestion.id">
+          <div class="suggestion-resume">
+            <div>
+              <span v-if="suggestion.title">{{ suggestion.title }}</span>
+              <span v-if="!suggestion.title">{{ suggestion.file }}</span>
+
+              <span v-if="user.masterUser"> par {{ suggestion.messages[0].name }}</span>
+            </div>
+
+            <md-chip v-if="suggestion.status === 'waiting'">En attente</md-chip>
+            <md-chip v-else-if="suggestion.status === 'discussion'" class="md-primary discussion" >En discussion</md-chip>
+            <md-chip v-else-if="suggestion.status === 'being-added'" class="md-accent accepted">En cours d'ajout</md-chip>
+            <md-chip v-else-if="suggestion.status === 'accepted'" class="md-accent accepted" >Ajouté</md-chip>
+            <md-chip v-else-if="suggestion.status === 'refused'" class="md-accent declined">Recalé</md-chip>
+          </div>
+
+          <md-list-expand md-list-expand-multiple>
+            <md-list>
+              <youtube
+                v-if="suggestion.url"
+                :video-id="videoId(suggestion.url)"
+                >
+              </youtube>
+              <audio v-if="suggestion.file" controls="controls">
+                 <source :src="suggestion.file" type="audio/mpeg"/>
+              </audio>
+            </md-list>
+            <md-list v-for="(message, index) in suggestion.messages" :key="message.id">
+              <suggestion-message :message="message" v-if="index < suggestion.messages.length - 1"></suggestion-message>
+              <suggestion-message
+                :message="message"
+                reply="true"
+                v-on:open-delete-suggestion="openDeleteSnack($event)"
+                v-else></suggestion-message>
+            </md-list>
+          </md-list-expand>
+        </md-list-item>
+      </md-list>
+    </transition>
 
     <md-snackbar md-position="bottom center" ref="snackbar" md-duration="5000">
       <span>Est-tu sûr de vouloir supprimer la suggestion ?</span>
       <md-button class="md-accent" @click="deleteSuggestion()">Supprimer</md-button>
     </md-snackbar>
 
+    <div class="show-form">
+      <md-button class="md-raised md-accent" @click="showForm = !showForm">
+        <md-icon v-show="!showForm">keyboard_arrow_down</md-icon>
+        <md-icon v-show="showForm">keyboard_arrow_up</md-icon>
+        Faire une nouvelle suggestion
+      </md-button>
+    </div>
 
-
-      <div class="show-form">
-        <md-button class="md-raised md-accent" @click="showForm = !showForm">
-          <md-icon v-show="!showForm">keyboard_arrow_down</md-icon>
-          <md-icon v-show="showForm">keyboard_arrow_up</md-icon>
-          Faire une nouvelle suggestion
-        </md-button>
-      </div>
     <transition name="fade">
       <div v-show="showForm">
         <md-toolbar>
           <h2 class="md-title" style="flex: 1">Ajouter une chanson </h2>
         </md-toolbar>
-        <suggestion-form state="creation"></suggestion-form>
+        <suggestion-form state="creation" v-on:close-me="showForm = false"></suggestion-form>
       </div>
     </transition>
 
@@ -123,6 +152,9 @@ export default {
     user: function () {
       return this.$store.state.user
     },
+    loading: function () {
+      return this.$store.state.loadingSuggestions
+    },
     suggestions: function () {
       return this.$store.state.suggestions
     },
@@ -182,5 +214,26 @@ div.show-form > button {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
   opacity: 0
+}
+.md-primary.discussion {
+  background-color: #2196f3 !important;
+}
+.md-accent.accepted {
+  color: rgba(0, 0, 0, 0.7) !important;
+  background-color: #62c643e6 !important;
+}
+.md-accent.declined {
+  background-color: #cf3131 !important;
+}
+.suggestion-resume {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.holiday-message {
+  display: flex;
+}
+.holiday-message i {
+  margin-right: 1rem;
 }
 </style>
