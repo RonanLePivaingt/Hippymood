@@ -8,15 +8,6 @@
 
     <span class="md-display-2">Suggestions</span>
 
-    <div class="holiday-message">
-      <md-icon>info_outline</md-icon>
-      <p>
-        Je prends quelques vacances au milieu de nulle part (mais au Danemark cette fois ;) alors mes réponses ne seront pas immédiates du tout. </br>
-        Merci d'avance pour les chansons !
-      </p>
-    </div>
-
-
     <transition name="fade">
       <div class="loading" v-show="!error && loading">
         <md-spinner :md-size="150" md-indeterminate></md-spinner>
