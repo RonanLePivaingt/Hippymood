@@ -26,37 +26,49 @@ const knex = Knex({
     }
 });
 
-const store = new KnexSessionStore({
-    knex: knex,
-    tablename: 'sessions' // optional. Defaults to 'sessions'
+var DatabaseController = require('../server/controllers/DatabaseController');
+
+DatabaseController.Up().then(function() {
+  startApp();
+}).catch(function(err) {
+  console.log(err);
 });
 
-app.use(session({
-    secret: 'keyboard cat',
-    cookie: {
-        maxAge: 7890000000 // Cookie expiration set to 3 month
-    },
-    store: store
-}));
-app.use(express.static('dist'));
-app.use('/music', express.static('music'));
-app.use('/tmp', express.static('tmp'));
 
-var io = require('socket.io');
-var http = require('http');
-var server = http.createServer(app);
-io = io(server);
-app.use(function(req, res, next) {
-  req.io = io;
-  next();
-});
+function startApp() {
+  const store = new KnexSessionStore({
+      knex: knex,
+      tablename: 'sessions' // optional. Defaults to 'sessions'
+  });
 
-io.on('connection', function(socket) {
-  console.log('socket.io connection made');
-});
+  app.use(session({
+      secret: 'keyboard cat',
+      cookie: {
+          maxAge: 7890000000 // Cookie expiration set to 3 month
+      },
+      store: store
+  }));
 
-require('../server/router')(app);
+  app.use(express.static('dist'));
+  app.use('/music', express.static('music'));
+  app.use('/tmp', express.static('tmp'));
 
-server.listen(config.port, function () {
-  console.log('Example app listening on port ' + config.port);
-});
+  var io = require('socket.io');
+  var http = require('http');
+  var server = http.createServer(app);
+  io = io(server);
+  app.use(function(req, res, next) {
+    req.io = io;
+    next();
+  });
+
+  io.on('connection', function(socket) {
+    console.log('socket.io connection made');
+  });
+
+  require('../server/router')(app);
+
+  server.listen(config.port, function () {
+    console.log('Example app listening on port ' + config.port);
+  });
+}

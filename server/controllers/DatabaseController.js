@@ -4,8 +4,8 @@ var knex = require('knex')(dbConfig);
 /*
  * Function to create the full database
  */
-exports.Up = function(req, res){
-  Promise.all([
+module.exports.Up = function(){
+  return Promise.all([
     knex.schema.createTableIfNotExists('albums', function(t) {
       t.increments('id').primary();
       t.string('name');
@@ -65,18 +65,7 @@ exports.Up = function(req, res){
       t.integer('id_suggestion').unsigned();
       t.foreign('id_suggestion').references('suggestions.id');
     })
-  ])
-  .then(function() {
-    console.log("Databse successfully initialized");
-    // Process successfully exiting
-    process.exit();
-  })
-  .catch(function(error) {
-    console.log("Shit it the fan !");
-    console.log(error);
-    process.exit(1);
-  })
-  ;
+  ]);
 }
 
 /*

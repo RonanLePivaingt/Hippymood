@@ -96,41 +96,51 @@ const knex = Knex({
     }
 });
 
-const store = new KnexSessionStore({
-    knex: knex,
-    tablename: 'sessions' // optional. Defaults to 'sessions'
+var DatabaseController = require('../server/controllers/DatabaseController');
+DatabaseController.Up().then(function() {
+  startApp();
+}).catch(function(err) {
+  console.log(err);
 });
 
-app.use(session({
-    secret: 'keyboard cat',
-    cookie: {
-        maxAge: 7890000000 // Cookie expiration set to 3 month
-    },
-    store: store
-}));
-
-var bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-app.use('/music', express.static('music'));
-app.use('/tmp', express.static('tmp'));
-
-var io = require('socket.io');
 var http = require('http');
 var server = http.createServer(app);
-io = io(server);
-app.use(function(req, res, next) {
-  req.io = io;
-  next();
-});
 
-io.on('connection', function(socket) {
-  console.log('socket.io connection made');
-});
+function startApp() {
+  const store = new KnexSessionStore({
+      knex: knex,
+      tablename: 'sessions' // optional. Defaults to 'sessions'
+  });
 
-// send app to router
-require('../server/router')(app);
+  app.use(session({
+      secret: 'keyboard cat',
+      cookie: {
+          maxAge: 7890000000 // Cookie expiration set to 3 month
+      },
+      store: store
+  }));
+
+  var bodyParser = require("body-parser");
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json());
+
+  app.use('/music', express.static('music'));
+  app.use('/tmp', express.static('tmp'));
+
+  var io = require('socket.io');
+  io = io(server);
+  app.use(function(req, res, next) {
+    req.io = io;
+    next();
+  });
+
+  io.on('connection', function(socket) {
+    console.log('socket.io connection made');
+  });
+
+  // send app to router
+  require('../server/router')(app);
+}
 
 // Server code of the previous Hippymood version without vue-cli and the webpack template - End
 
