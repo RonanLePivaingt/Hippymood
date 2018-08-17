@@ -96,11 +96,18 @@ const knex = Knex({
     }
 });
 
-var DatabaseController = require('../server/controllers/DatabaseController');
-DatabaseController.Up().then(function() {
-  startApp();
-}).catch(function(err) {
-  console.log(err);
+// Check if the database structure should be initialized before starting the app
+knex.schema.hasTable('songs').then(function(exists) {
+  if (exists) {
+    startApp();
+  } else {
+    var DatabaseController = require('../server/controllers/DatabaseController');
+    DatabaseController.Up().then(function() {
+      startApp();
+    }).catch(function(err) {
+      console.log(err);
+    });
+  }
 });
 
 var http = require('http');

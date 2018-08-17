@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="whats-new">
     <div class="back">
       <md-button class="md-raised md-primary" href="#/" >
         <i class="material-icons">keyboard_backspace</i> Revenir au lecteur

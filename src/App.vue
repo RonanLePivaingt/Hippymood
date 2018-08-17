@@ -365,8 +365,11 @@ i.material-icons{
 }
 .fastfade-enter-active, .fastfade-leave-active {
   transition: opacity .25s
-}
-.fastfade-enter, .fastfade-leave-to /* .fastfade-leave-active below version 2.1.8 */ {
+} .fastfade-enter, .fastfade-leave-to /* .fastfade-leave-active below version 2.1.8 */ {
   opacity: 0
+}
+/* Light icons */
+#whats-new .more .material-icons {
+  color: rgba(255, 255, 255, 0.8);
 }
 </style>
