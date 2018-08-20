@@ -1,27 +1,22 @@
-version: "3"
+version: "2"
 services:
- mariadb:
-  container_name: mariadb
-  image: mariadb
-  environment:
-   MYSQL_DATABASE: hippymood
-   MYSQL_USER: hippymood_user
-   MYSQL_PASSWORD: hippymood_password
-  ports:
-   - "3307:3306"
-  volumes:
-    - "./docker/mariadb-data:/var/lib/mysql:z"
-  restart: always
- app:
-  container_name: hippymood
-  build: .
-  links:
-   - mariadb
-  ports:
-   - "8080:8080"
-  volumes:
-    - ".:/app:z"
-    - "/home/ronan/music:/app/music:z"
-  command: ["./docker/wait-for-mariadb.sh", "mariadb", "npm", "run", "dev"]
-  #command: ["./docker/wait-for-mariadb.sh", "mariadb", "npm", "run", "dbInit", "&&", "npm", "run", "dev"]
-  #command: ["./docker/wait-for-mariadb.sh", "mariadb", "bash -c \"npm install && npm run dbInit && npm run dev\""]
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: hippymood
+      MYSQL_USER: hippymood_user
+      MYSQL_PASSWORD: hippymood_password
+    # Making database data persistent
+    volumes:
+      - "./docker/mariadb-data:/var/lib/mysql:z"
+    restart: always
+  app:
+    build: .
+    links:
+      - mariadb
+    ports:
+      - "8080:80"
+    volumes:
+      - ".:/app:z"
+      - "/path/to/your/music/library:/app/music:z"
+    command: ["./docker/wait-for-mariadb.sh", "mariadb", "npm", "run", "dev"]

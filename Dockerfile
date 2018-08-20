@@ -12,3 +12,5 @@ RUN npm install chalk mysql https://github.com/multi-cell/vue-trianglify#dev
 
 RUN npm run build
 CMD [ "npm", "run", "prod" ]
+
+EXPOSE 80
