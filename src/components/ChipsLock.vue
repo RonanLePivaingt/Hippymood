@@ -1,26 +1,27 @@
 <template>
   <div id="chipslock">
-    <v-popover
-      trigger="manual"
-      :open="isOpen"
-      offset="16"
-      :auto-hide="false"
-      placement="right"
-      delay="1000"
-      >
-      <v-touch
+    <v-touch
         v-on:swipeup="padUp"
         v-on:swipedown="padDown"
         v-on:swipeleft="padLeft"
         v-on:swiperight="padRight"
         >
+      <!--
+      <img
+        id="datChips"
+        src="/static/img/chipsN&B.jpg"
+        />
+        -->
+      <div v-intro="intro" v-intro-position="'right'" v-intro-autostart="true" v-intro-autostart.config="introJsOptions" v-intro-step="1">
         <img
           id="datChips"
           src="../assets/Lock_ThanksMicahWilliams.png"
           />
-      </v-touch>
+      </div>
+    </v-touch>
 
-      <p class="teaser">Bienvenue sur la démo !</p>
+    <p class="teaser">Bienvenue sur la démo !</p>
+
       <transition name="fade">
         <figure
           id="nespad"
@@ -80,21 +81,32 @@
         </figure>
       </transition>
 
+      <!--
+    <v-popover
+      trigger="manual"
+      :open="isOpen"
+      offset="16"
+      :auto-hide="false"
+      placement="right"
+      delay="1000"
+      >
       <template slot="popover">
         <div class="tooltip-chipslock">
           <p> Pssst, l'accès est protégé par un code. </p>
           <p> Pour y accéder avec un clavier, utilise les flèches pour faire cette combinaison : </br>
-          haut haut bas bas gauche droite gauche droite, puis B A.
-        </p>
-        <p> Avec un écran tactile, fait la combinaison en "glissant" sur l'image (swipe).
-        </br> Ensuite, les touches B et A apparaîtront pour que tu continues.
-      </p>
-      <p>
-        Tu peux aussi cliquer <a @click="demoUnlock">ici</a> pour déverrouiller Hippymood, </br> après tout c'est une démo ;)
-    </p>
-  </div>
-</template>
+          haut haut bas bas gauche droite gauche droite, puis B A.  </p>
+
+          <p> Avec un écran tactile, fait la combinaison en "glissant" sur l'image (swipe).
+            </br> Ensuite, les touches B et A apparaîtront pour que tu continues.
+          </p>
+
+          <p>
+            Tu peux aussi cliquer <a @click="demoUnlock">ici</a> pour déverrouiller Hippymood, </br> après tout c'est une démo ;)
+          </p>
+        </div>
+      </template>
     </v-popover>
+      -->
   </div>
 </template>
 
@@ -106,6 +118,7 @@ import Keypress from '../js/keypress-2.1.4.min.js'
 var listener = new Keypress.Listener()
 export default {
   name: 'chipslock',
+  props: ['introJsOptions'],
   data: function () {
     return {
       touchDevice: false,
@@ -113,12 +126,7 @@ export default {
       NESGamepad: false,
       isVisible: true,
       isOpen: true,
-      msg: 'pomme',
-      tooltip1: {
-        content: 'Hello Tool',
-        placement: 'right',
-        offset: '30px'
-      }
+      intro: "<p>Pssst, l'accès est protégé par un code. </p> <p>Pour y accéder avec un clavier, utilise les flèches pour faire cette combinaison : haut haut bas bas gauche droite gauche droite, puis B A. </p><p> Avec un écran tactile, fait la combinaison en \"glissant\" sur l'image (swipe).  Ensuite, les touches B et A apparaîtront pour que tu continues. </p> <p> Tu peux aussi cliquer <a @click='demoUnlock'>ici</a> ici pour déverrouiller Hippymood, après tout c'est une démo ;)</p>"
     }
   },
   mounted: function () {
@@ -152,6 +160,9 @@ export default {
       evt => this.displayNESGamepad(),
       false
     )
+  },
+  beforeDestroy: function () {
+    // this.$intro().exit() // Qui
   },
   methods: {
     demoUnlock () {
@@ -205,7 +216,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 @font-face {
   font-family: 'Squada One';
@@ -236,4 +246,4 @@ p.teaser {
   max-width: 25rem;
 }
 </style>
-<style type="text/css" src="../css/NESButtons.css" scoped></style>
+<style type="text/css" src="../css/NESButtons.css" slot-scope></style>

@@ -1,14 +1,17 @@
 <template>
   <div id="about">
     <div class="back">
-      <md-button class="md-raised md-accent" href="#/" >
+      <md-button class="md-raised md-primary" href="#/" >
         <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
       </md-button>
     </div>
 
     <v-touch v-on:quintupletap="activateBetaFeatures">
-      <p> Fait avec ♥ par Ronan Le Pivaingt </p>
     </v-touch>
+
+    <div class="made-with-love">
+      <p class="text-around-heart"> Fait avec <div class="heart"></div>  par Ronan Le Pivaingt </p>
+    </div>
 
     <md-list class="list keyboards-shortcuts">
       <md-list-item>
@@ -195,7 +198,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 #about {
   margin: 0 auto 2rem auto;
@@ -290,5 +292,29 @@ div.key.special > span {
 
 div.key.icon > span {
   font-size: 14px;
+}
+
+/* Heart effect
+ * Thanks to Twitter and this nice tutorial : https://medium.com/@chrismabry/how-did-they-do-that-the-twitter-like-animation-2a473b658e43
+ */
+.made-with-love {
+  display: flex;
+  align-items: center;
+}
+.heart {
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  background-image:url( '../assets/web_heart_animation.png');
+  background-position: right;
+  background-repeat:no-repeat;
+  background-size:2900%;
+}
+@keyframes heart-burst {
+ from {background-position:left;}
+ to { background-position:right;}
+}
+.made-with-love:hover .heart {
+  animation: heart-burst .8s steps(28) 1;
 }
 </style>

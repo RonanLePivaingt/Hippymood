@@ -1,43 +1,66 @@
 <template>
   <div id="admin" ref="admin">
-    <span class="md-display-2">Administration</span>
-    <md-list>
-      <md-list-item md-expand-multiple>
-        <md-icon>trending_up</md-icon>
-        <span>Répartition des chansons par mood</span>
+    <div v-if="user.masterUser === true">
+      <div class="back">
+        <md-button class="md-raised md-primary dark-background" href="#/" >
+          <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
+        </md-button>
+      </div>
+    </div>
 
-        <md-list-expand>
-          <chartjs-horizontal-bar
-            :height="chartHeight"
-            :width="chartWidth"
-            :labels="sortedMoods.label"
-            :datasets="sortedMoods.chart">
-          </chartjs-horizontal-bar>
-        </md-list-expand>
-      </md-list-item>
-      <md-list-item>
-        <md-icon>build</md-icon>
-        <span>Actions d'administration</span>
+    <div v-if="user.masterUser">
+      <span class="md-display-2">Administration</span>
+      <md-list>
+        <md-list-item md-active>
+          <md-icon>build</md-icon>
+          <span>Actions d'administration</span>
 
-        <md-list-expand>
-          <p>
-          <a class="md-button md-raised" @click="resetSession()">Reset session</a>
-          </p>
-          <p>
-          <md-button class="md-raised md-warn" @click="resetDatabase()">Reset database</md-button>
-          </p>
-          <div>
-            <a class="md-button md-raised" @click="scanMusic()"> Scan music </a>
-            <div v-show="scanProgress > -1">
-              {{ scanProgress }} %
-              <md-progress 
-                 class="md-accent"
-                 :md-progress="scanProgress"></md-progress>
+          <md-list-expand>
+            <p>
+            <a class="md-button md-raised" @click="resetSession()">Reset session</a>
+            </p>
+            <p>
+            <md-button class="md-raised md-warn" @click="resetDatabase()">Reset music database</md-button>
+            </p>
+            <div>
+              <a class="md-button md-raised" @click="scanMusic()"> Scan music </a>
+              <div v-show="scanProgress > -1">
+                {{ scanProgress }} %
+                <md-progress
+                   class="md-accent"
+                   :md-progress="scanProgress"></md-progress>
+              </div>
             </div>
-          </div>
-        </md-list-expand>
-      </md-list-item>
-    </md-list>
+          </md-list-expand>
+        </md-list-item>
+        <md-list-item md-expand-multiple>
+          <md-icon>trending_up</md-icon>
+          <span>Répartition des chansons par mood</span>
+
+          <md-list-expand>
+            <chartjs-horizontal-bar
+              :height="chartHeight"
+              :width="chartWidth"
+              :labels="sortedMoods.label"
+              :datasets="sortedMoods.chart">
+            </chartjs-horizontal-bar>
+          </md-list-expand>
+        </md-list-item>
+      </md-list>
+    </div>
+    <div v-if="user.masterUser === false">
+      <div class="error">
+        <p>
+          (>_<)
+        </p>
+        Hey {{ user.name }}, tu n'es pas le compte administrateur et tu n'as rien à faire ici.
+        <div class="back">
+          <md-button class="md-raised md-primary" href="#/" >
+            <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
+          </md-button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -56,18 +79,39 @@ var gradient = [
 ]
 export default {
   name: 'admin',
-  data: {
-    chartWidth: 400,
-    scanProgress: -1,
-    gradient: gradient
+  data: function () {
+    return {
+      scanProgress: -1,
+      gradient: gradient
+    }
+  },
+  beforeMount: function () {
+    if (this.$store.state.user.id === undefined) {
+      // Redirecting non-identified users to login page
+      this.$router.push('/Login')
+    }
   },
   computed: {
+    user: function () {
+      return this.$store.state.user
+    },
     chartHeight: function () {
       if (this.$store.state.moods) {
         // Determined by the number of moods
-        return 20 + (this.$store.state.moods.length * 15)
+        return 20 + (this.$store.state.moods.length * 20)
       } else {
         return 0
+      }
+    },
+    chartWidth: function () {
+      // This is a hack but I can't get it done reactively on mount in the data object
+      if (this.$store.state.moods) {
+        // Determined by the number of moods
+        if (this.$refs.admin) {
+          return this.$refs.admin.offsetWidth
+        }
+      } else {
+        return 600
       }
     },
     sortedMoods: function () {
@@ -129,27 +173,47 @@ export default {
   },
   methods: {
     resetSession () {
+      window.vm.$Progress.start()
+
       this.$http.get('/admin/resetSession').then(response => {
+        window.vm.$Progress.finish()
+
         console.log(response)
       }, response => {
+        window.vm.$Progress.fail()
+
         console.log('Shit it the fan !')
       })
     },
     resetDatabase () {
+      window.vm.$Progress.start()
+
       this.$http.get('/admin/resetDatabase').then(response => {
+        window.vm.$Progress.finish()
+
         console.log(response)
       }, response => {
+        window.vm.$Progress.fail()
+
         console.log('Shit it the fan !')
       })
     },
     scanMusic () {
+      window.vm.$Progress.start()
+
       this.$socket.scan = (data) => {
+        console.log('Socket response :')
         console.log(data)
       }
 
       this.$http.get('/admin/scanMusic').then(response => {
+        this.scanProgress = 0
+        window.vm.$Progress.finish()
+
         console.log(response)
       }, response => {
+        window.vm.$Progress.fail()
+
         console.log('Shit it the fan !')
       })
     }
@@ -165,5 +229,12 @@ export default {
 }
 .md-display-2 {
   color: rgba(0, 0, 0, 0.6);
+}
+.error {
+  color: rgba(0,0,0,0.5);
+  font-size: 1rem;
+}
+.error > p {
+  font-size: 8rem;
 }
 </style>

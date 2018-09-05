@@ -7,7 +7,7 @@ import VueMaterial from 'vue-material'
 import router from '@/router'
 import App from '@/App'
 
-import Config from '@/../build/serverConfig.js'
+import Config from '@/../config/server.config.js'
 
 import VueYouTubeEmbed from 'vue-youtube-embed'
 Vue.use(VueYouTubeEmbed)
@@ -36,8 +36,16 @@ Vue.use(VueProgressBar, {
   thickness: '3px'
 })
 
-import VTooltip from 'v-tooltip'
-Vue.use(VTooltip)
+import VueIntro from 'vue-introjs'
+Vue.use(VueIntro, {
+  waitTimeout: 1000,
+  nextLabel: 'Suivant'
+})
+import 'intro.js/introjs.css'
+import 'intro.js/themes/introjs-modern.css'
+
+import VueClip from 'vue-clip'
+Vue.use(VueClip)
 
 Vue.config.productionTip = false
 
@@ -62,7 +70,10 @@ const store = new Vuex.Store({
     authCombinationCode: Config.auth.combinationCode,
     videoMode: false,
     betaMode: false,
-    demoMode: Config.demoMode
+    demoMode: Config.demoMode,
+    user: {},
+    suggestions: [],
+    loadingSuggestions: true
   },
   mutations: {
     setMoods (state, moods) {
@@ -120,10 +131,28 @@ const store = new Vuex.Store({
     },
     setWhatsNew (state, whatsNew) {
       state.whatsNew = state.whatsNew.concat(whatsNew)
+    },
+    setUser (state, userData) {
+      state.user = userData
+
+      localStorage.setItem('user', JSON.stringify(userData))
+    },
+    setSuggestions (state, suggestions) {
+      if (Object.keys(suggestions).length > 0) {
+        state.suggestions = suggestions
+      }
+      state.loadingSuggestions = false
     }
   },
   actions: {
     askPlayMood: function ({ commit }, moodId) {
+      // Conditionnaly displaying message to use video mode for the demo
+      if (store.state.demoMode && !store.state.videoMode) {
+        setTimeout(function () {
+          window.vm.$intro().setOptions(introJsOptions).goToStepNumber(4).start()
+        }, 1000)
+      }
+
       var videoMode = store.state.videoMode
       window.vm.$Progress.start()
       Vue.http.post('/mood/', {moodId: moodId, videoMode: videoMode}).then(response => {
@@ -249,7 +278,6 @@ const store = new Vuex.Store({
 
       Vue.http.get(url).then(
         response => {
-          console.log(response)
           if (response.body.newSongs !== undefined) {
             commit('setWhatsNew', response.body.newSongs)
           } else {
@@ -257,16 +285,67 @@ const store = new Vuex.Store({
           }
         }
       )
+    },
+    askSetUser: function ({ commit }, seed) {
+      window.vm.$Progress.start()
+
+      Vue.http.post(
+        '/login/',
+        {seed: seed}
+      ).then(
+        response => {
+          if (!isNaN(parseInt(response.body.id))) {
+            window.vm.$Progress.finish()
+            commit(
+              'setUser',
+              {
+                id: response.body.id,
+                name: response.body.name || '',
+                status: response.body.status || '',
+                masterUser: response.body.masterUser
+              }
+            )
+            if (window.vm.$route.name === 'Login') {
+              window.vm.$router.go(-1)
+            }
+          } else {
+            window.vm.$Progress.fail()
+          }
+        }
+      )
+    },
+    askSuggestions: function ({ commit }) {
+      window.vm.$Progress.start()
+      Vue.http.get('/suggestions/').then(
+        response => {
+          var suggestions = response.body.suggestions
+          commit('setSuggestions', suggestions)
+          window.vm.$Progress.finish()
+        }
+      )
     }
   }
 })
+
+var introJsOptions = {
+  prevLabel: '< Précédent',
+  nextLabel: 'Suivant >',
+  skipLabel: 'Passer',
+  doneLabel: "C'est parti!",
+  hidePrev: true,
+  hideNext: true
+}
 
 /* eslint-disable no-new */
 window.vm = new Vue({
   el: '#app',
   store,
   router,
-  template: '<App/>',
+  http: {
+    emulateJSON: true,
+    emulateHTTP: true
+  },
+  template: '<App :introJsOptions="introJsOptions" />',
   components: { App },
   created: function () {
     this.$http.get('/moods').then(response => {
@@ -281,6 +360,11 @@ window.vm = new Vue({
       console.log('Shit it the fan !')
     })
   },
+  data () {
+    return {
+      introJsOptions: introJsOptions
+    }
+  },
   methods: {
     extUnlock: function () {
       window.vm.$Progress.start()
@@ -291,8 +375,8 @@ window.vm = new Vue({
         .then(
           function (response) {
             // Redirecting to main page if server response is good
-            window.vm.$Progress.finish()
-            if (response.body === 'OK') {
+            console.log(response)
+            if (response.body.success) {
               window.vm.$Progress.finish()
               this.$http.get('/moods').then(response => {
                 if (response.body === 'Must auth') {
@@ -301,6 +385,11 @@ window.vm = new Vue({
                   console.log('Unlocking')
                   this.$store.commit('setMoods', response.body)
                   this.$store.commit('setUnlocked', 1)
+                  /* Activating  */
+                  console.log(this.introJsOptions)
+                  setTimeout(function () {
+                    window.vm.$intro().setOptions(introJsOptions).goToStepNumber(2).start()
+                  }, 1000)
                 }
               }, response => {
                 console.log('Shit it the fan !')
@@ -375,3 +464,10 @@ window.vm = new Vue({
     }
   }
 })
+
+// Loading user information if saved
+var savedUser = localStorage.getItem('user')
+if (savedUser) {
+  var user = JSON.parse(savedUser)
+  window.vm.$store.dispatch('askSetUser', user.name)
+}

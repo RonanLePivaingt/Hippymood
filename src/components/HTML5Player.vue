@@ -1,7 +1,7 @@
 <template>
-  <audio 
-    id="playerHTML5" 
-    autoplay="autoplay" 
+  <audio
+    id="playerHTML5"
+    autoplay="autoplay"
     :src="current.path"
     v-on:ended="next()"
     ></audio>
@@ -19,8 +19,7 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style slot-scope>
 #playerHTML5 {
   display: none;
 }

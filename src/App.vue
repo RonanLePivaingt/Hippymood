@@ -23,24 +23,36 @@
           C'est comme une boite de chocolat, tant que t'as pas essayé tu ne sais pas!
           Des fois tu reviens, des fois pas...
         </p>
-        <div class="actions">
-          <md-switch
-              v-model="videoMode"
-              v-on:change="toggleVideoMode"
-              class="md-primary video-switch"
-              >Mode vidéo</md-switch>
 
-            <md-button href="#/search" class="md-icon-button md-raised">
-              <md-icon>search</md-icon>
-            </md-button>
+        <div v-intro-autostart="true" v-intro="intro1" v-if="unlocked == 1 && intro == 1" v-intro-position="'right'" v-intro-autostart.config="introJsOptions" v-intro-step="2">
+          <div class="actions">
+            <md-switch
+                v-model="videoMode"
+                v-on:change="toggleVideoMode"
+                class="md-primary video-switch"
+                >Mode vidéo</md-switch>
 
-            <md-button
-              id="intro-whats-new"
-              class="md-button md-raised"
-              href="#/whatsNew"
-              >
-              <md-icon>fiber_new</md-icon> Quoi de neuf ?
-            </md-button>
+              <md-button href="#/search" class="md-icon-button md-raised">
+                <md-icon>search</md-icon>
+              </md-button>
+
+              <md-button
+                id="intro-whats-new"
+                class="md-button md-raised"
+                href="#/whatsNew"
+                >
+                <md-icon>fiber_new</md-icon> Quoi de neuf ?
+              </md-button>
+          </div>
+
+          <div class="actions">
+              <md-button
+                class="md-button md-raised"
+                href="#/Suggestions"
+                >
+                <md-icon class="idea-icon">wb_incandescent</md-icon> Faire une suggestion
+              </md-button>
+          </div>
         </div>
       </div>
 
@@ -48,10 +60,11 @@
         <chips-lock
           v-if="unlocked === 0"
           ref="chipslock"
+          :introJsOptions="introJsOptions"
           ></chips-lock>
 
         <transition name="fastfade" mode="out-in">
-          <router-view v-if="unlocked === 1"></router-view>
+          <router-view v-if="unlocked === 1" :key="$route.fullPath"></router-view>
         </transition>
 
         <html5-player
@@ -64,28 +77,30 @@
           ></video-player>
       </div>
 
-        <div class="mood-list">
-          <v-popover
-             trigger="manual"
-             :open="!intro && !videoMode"
-             offset="350"
-             :auto-hide="false"
-             placement="right"
-             delay="1000"
-             >
-             <div id="no-sound-tooltip"></div>
-             <template slot="popover">
-               <div class="tooltip-volume">
-                 <md-icon>volume_off</md-icon>
-                 <p> La lecture directe de musique est désactivée pour des raisons légales.</p>
-                 <p>
-                   Clique sur <a @click="toggleVideoMode">activer le mode vidéo</a> pour écouter de la musique avec la démo.
-                 </p>
-               </div>
-             </template>
-          </v-popover>
-          <mood-list  v-for="mood in moods" :mood="mood" :key="mood.id"></mood-list>
-        </div>
+      <div v-intro="intro2" v-intro-position="'right'" v-intro-step="3" class="mood-list" v-if="unlocked == 1">
+        <!--
+        <v-popover
+           trigger="manual"
+           :open="!intro && !videoMode"
+           offset="350"
+           :auto-hide="false"
+           placement="right"
+           delay="1000"
+           >
+           <div id="no-sound-tooltip"></div>
+           <template slot="popover">
+             <div class="tooltip-volume">
+               <md-icon>volume_off</md-icon>
+               <p> La lecture directe de musique est désactivée pour des raisons légales.</p>
+               <p>
+                 Clique sur <a @click="toggleVideoMode">activer le mode vidéo</a> pour écouter de la musique avec la démo.
+               </p>
+             </div>
+           </template>
+        </v-popover>
+        -->
+        <mood-list  v-for="mood in moods" :mood="mood" :key="mood.id"></mood-list>
+      </div>
 
       <md-snackbar md-position="bottom center" ref="snackbar" md-duration="10000">
         <span>Les vidéos sont en test avec le bouton à gauche de la recherche. Enjoy ;)</span>
@@ -97,7 +112,7 @@
 
 <script>
   import Keypress from './js/keypress-2.1.4.min.js'
-  var listener = new Keypress.Listener()
+  window.listener = new Keypress.Listener()
   var myCombos
   import ChipsLock from './components/ChipsLock'
   import MoodList from './components/MoodList'
@@ -115,9 +130,12 @@
       Html5Player,
       VideoPlayer
     },
+    props: ['introJsOptions'],
     data () {
       return {
-        leaveIntro: false
+        leaveIntro: false,
+        intro1: '<p>Voici les fonctionnalités principales autour de la lecture de musique.</p> <p>Tu peux activer dès maintenant le mode vidéo puisque le streaming de mp3 est désactivé dans la démo pour des raisons légales.</p>',
+        intro2: "<p>Clique sur une mood pour l'écouter.</p> <p> Lorsque tu voudras écouter une autre mood : <ul><li> clique une première fois dessus pour faire la transition à la fin de la chanson en cours</li> <li>clique une seconde fois dessus si tu souhaites l'écouter directement.</li></ul></p>"
       }
     },
     computed: {
@@ -158,7 +176,7 @@
         this.$store.commit('toggleVideoMode')
       },
       setTogglePlayPauseKeyboardShortcut () {
-        listener.register_many([
+        window.listener.register_many([
           {
             'keys': 'meta space',
             'on_keydown': function () {
@@ -170,15 +188,17 @@
         ])
       },
       removeTogglePlayPauseKeyboardShortcut () {
-        listener.unregister_combo('meta space')
+        window.listener.unregister_combo('meta space')
       }
     },
     mounted: function keyboardShortcuts () {
       // Removing intro before Vue loading
+      // start the guide
+      // window.setTimeout(this.$intro().start(), 500)
       window.setTimeout(removeFirstIntro, 500)
 
       var myScope = document
-      myCombos = listener.register_many([
+      myCombos = window.listener.register_many([
         {
           'keys': 'meta left',
           'on_keydown': function () {
@@ -227,13 +247,6 @@
             window.vm.extActivateBetaFeatures()
           },
           'this': myScope
-        },
-        {
-          'keys': 'meta v',
-          'on_keydown': function () {
-            window.vm.extToggleVideoMode()
-          },
-          'this': myScope
         }
       ])
     },
@@ -243,7 +256,7 @@
     },
     destroyed: function () {
       // Removing listeners when the component is removed
-      listener.unregister_many(myCombos)
+      window.listener.unregister_many(myCombos)
     },
     watch: {
       '$route' (to, from) {
@@ -260,6 +273,12 @@
 
 <style src="../node_modules/vue-material/dist/vue-material.css"></style>
 <style>
+div.back {
+  text-align: left;
+}
+div.back i.material-icons {
+  color: rgba(255, 255, 255, 0.8);
+}
 /* Disabling icon selection */
 i.material-icons {
   -webkit-user-select: none;  /* Chrome all / Safari all */
@@ -405,8 +424,7 @@ i.material-icons{
 }
 .fastfade-enter-active, .fastfade-leave-active {
   transition: opacity .25s
-}
-.fastfade-enter, .fastfade-leave-to /* .fastfade-leave-active below version 2.1.8 */ {
+} .fastfade-enter, .fastfade-leave-to /* .fastfade-leave-active below version 2.1.8 */ {
   opacity: 0
 }
 .tooltip .popover .popover-inner {
@@ -544,5 +562,13 @@ div.v-popover  {
   font-size: 4rem;
   width: 100%;
   margin: 0.5rem;
+}
+/* Light icons */
+#whats-new .more .material-icons {
+  color: rgba(255, 255, 255, 0.8);
+}
+/* Side effect of vuematerial with introjs */
+.introjs-bullets ul:not(.md-list) > li + li {
+  margin-top: 0px;
 }
 </style>

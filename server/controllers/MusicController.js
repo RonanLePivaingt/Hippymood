@@ -1,4 +1,4 @@
-var config = require('../../build/serverConfig');
+var config = require('../../config/server.config');
 var dbConfig = require('../knex.js');
 var knex = require('knex')(dbConfig);
 
@@ -6,13 +6,18 @@ var knex = require('knex')(dbConfig);
  * Function to return the list of mood
  */
 exports.Moods = function(req, res){
+  // To help with auth problem because moods are cached
+  res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.header("Pragma", "no-cache");
+  res.header("Expires", 0);
+
   if (req.session.auth || config.auth.activate === 0) {
     knex.select('genres.id', 'genres.name')
       .count('songs.id as nbSongs')
       .count('songs.youtube as nbVideo')
       .from('genres')
-      .join('genreAssociation', 'genres.id', '=', 'genreAssociation.id')
-      .join('songs', 'songs.id', '=', 'genreAssociation.id_songs')
+      .join('genres_relations', 'genres.id', '=', 'genres_relations.id')
+      .join('songs', 'songs.id', '=', 'genres_relations.id_songs')
       .groupBy('genres.id')
       .then(function(rows) {
         res.send(
@@ -50,10 +55,10 @@ exports.Mood = function(req, res){
 
     var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'songs.path', 'albums.name AS album', 'songs.youtube', 'songs.created_at')
       .from('songs')
-      .join('genreAssociation', 'songs.id', '=', 'genreAssociation.id_songs')
+      .join('genres_relations', 'songs.id', '=', 'genres_relations.id_songs')
       .join('artists', 'artists.id', '=', 'songs.id_artists')
       .join('albums', 'albums.id', '=', 'songs.id_albums')
-      .where('genreAssociation.id', moodId)
+      .where('genres_relations.id', moodId)
       .whereNotIn('songs.id', songsIdAlreadyPlayed);
 
     if (videoMode) {
@@ -139,8 +144,8 @@ exports.Search = function(req, res){
 
   knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'songs.path', 'albums.name AS album', 'genres.name as mood', 'genres.id as moodId')
     .from('songs')
-    .join('genreAssociation', 'songs.id', '=', 'genreAssociation.id_songs')
-    .join('genres', 'genres.id', '=', 'genreAssociation.id')
+    .join('genres_relations', 'songs.id', '=', 'genres_relations.id_songs')
+    .join('genres', 'genres.id', '=', 'genres_relations.id')
     .join('artists', 'artists.id', '=', 'songs.id_artists')
     .join('albums', 'albums.id', '=', 'songs.id_albums')
     .where('songs.name', 'like', keywords)
@@ -165,8 +170,8 @@ exports.newSongs = function(req, res){
 
   var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'genres.id AS moodId', 'genres.name AS mood', 'songs.path', 'albums.name AS album', 'songs.youtube', 'songs.created_at')
     .from('songs')
-    .join('genreAssociation', 'songs.id', '=', 'genreAssociation.id_songs')
-    .join('genres', 'genreAssociation.id', '=', 'genres.id')
+    .join('genres_relations', 'songs.id', '=', 'genres_relations.id_songs')
+    .join('genres', 'genres_relations.id', '=', 'genres.id')
     .join('artists', 'artists.id', '=', 'songs.id_artists')
     .join('albums', 'albums.id', '=', 'songs.id_albums')
     .limit(10)
@@ -212,7 +217,7 @@ exports.searchSongPlayed = function(req, res){
 exports.ResetMood = function(req, res){
   var moodId = req.params.id;
 
-  knex('genreAssociation')
+  knex('genres_relations')
     .where('id', moodId)
     .then(function(rows) {
       rows.forEach(function(entry, index) {

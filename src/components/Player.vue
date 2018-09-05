@@ -4,50 +4,47 @@
     v-bind:class="{ video: videoMode }"
     v-show="intro === 0"
     >
-    <md-card id="playerCard">
-      <md-menu id="player-menu" md-direction="bottom left" md-size="4">
-        <md-button class="md-icon-button" md-menu-trigger>
-          <md-icon class="bright-background">more_vert</md-icon>
-        </md-button>
+    <md-card id="playerCard" v-intro="intro1" v-intro-position="'right'" v-intro-autostart="true" v-intro-step="4" v-if="intro == 0">
+      <div>
+        <md-menu id="player-menu" md-direction="bottom left" md-size="4" @close="menuClose">
+          <md-button class="md-icon-button" md-menu-trigger>
+            <md-icon class="bright-background">menu</md-icon>
+          </md-button>
 
-        <md-menu-content>
-          <md-menu-item href="#/download">
-            <span>Télécharger</span>
-            <md-icon>file_download</md-icon>
-          </md-menu-item>
+          <md-menu-content>
+            <md-menu-item href="#/download">
+              <span>Télécharger</span>
+              <md-icon>file_download</md-icon>
+            </md-menu-item>
 
-          <md-menu-item @click="changeVideoMode">
-            <span>Mode vidéo</span>
-            <md-switch v-model="videoMode" @change="changeVideoMode"></md-switch>
-          </md-menu-item>
+            <md-menu-item @click="changeVideoMode">
+              <span>Mode vidéo</span>
+              <md-switch v-model="videoMode" @change="changeVideoMode"></md-switch>
+            </md-menu-item>
 
-          <md-menu-item href="#/whatsNew">
-            <span>Quoi de neuf ?</span>
-            <md-icon>fiber_new</md-icon>
-          </md-menu-item>
+            <md-menu-item href="#/whatsNew">
+              <span>Quoi de neuf ?</span>
+              <md-icon>fiber_new</md-icon>
+            </md-menu-item>
 
-          <md-menu-item href="#/about">
-            <span>À propos</span>
-            <md-icon>info_outline</md-icon>
-          </md-menu-item>
-        </md-menu-content>
-      </md-menu>
+            <md-menu-item href="#/suggestions">
+              <span>Suggestions</span>
+              <md-icon class="idea-icon">wb_incandescent</md-icon>
+            </md-menu-item>
 
-          <v-popover
-             trigger="manual"
-             :open="!intro"
-             offset="580"
-             :auto-hide="3000"
-             placement="right"
-             delay="5000"
-             >
-             <div id="function-tooltip"></div>
-             <template slot="popover">
-               <div class="tooltip-volume">
-                 <p>Clique en haut à droite du lecteur pour découvrir plus de fonctionnalités</p>
-               </div>
-             </template>
-          </v-popover>
+            <md-menu-item href="#/admin" v-if="user.masterUser">
+              <span>Administration</span>
+              <md-icon>build</md-icon>
+            </md-menu-item>
+
+            <md-menu-item href="#/about">
+              <span>À propos</span>
+              <md-icon>info_outline</md-icon>
+            </md-menu-item>
+          </md-menu-content>
+        </md-menu>
+      </div>
+
       <md-card-header class="player-header">
         <md-button class="md-icon-button searchButton" @click="search">
           <md-icon id="player-search" class="bright-background">search</md-icon>
@@ -92,11 +89,17 @@
     }
     return videoId
   }
+  var myCombos
   import PlayerControls from './PlayerControls'
   export default {
     name: 'player',
     components: {
       PlayerControls
+    },
+    data () {
+      return {
+        intro1: '<p>Le streaming de mp3 est désactivé dans la démo pour des raisons légales.</p> <p> Clique sur le menu puis sur Mode Vidéo pour activer la lecture de musique avec Youtube.</p>'
+      }
     },
     methods: {
       play () {
@@ -113,9 +116,16 @@
       },
       search () {
         this.$router.push('search')
+      },
+      menuClose () {
+        console.log('Menu is closing')
+        this.$intro().exit() // start the guide
       }
     },
     computed: {
+      user: function () {
+        return this.$store.state.user
+      },
       intro: function () {
         return this.$store.state.intro
       },
@@ -161,12 +171,39 @@
           return false
         }
       }
+    },
+    mounted: function keyboardShortcuts () {
+      var myScope = document
+      myCombos = window.listener.register_many([
+        {
+          'keys': 'meta space',
+          'on_keydown': function () {
+            window.vm.extTogglePlayPause()
+          },
+          'this': myScope,
+          'prevent_default': true
+        },
+        {
+          'keys': 'meta v',
+          'on_keydown': function () {
+            window.vm.extToggleVideoMode()
+          },
+          'this': myScope
+        }
+      ])
+    },
+    destroyed: function () {
+      // Removing listeners when the component is removed
+      window.listener.unregister_many(myCombos)
     }
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
+/* Displaying the menu in front of introJs helper layer */
+.md-menu-content.md-active {
+  z-index: 10000000;
+}
 span.md-tooltip {
   transform: translateX(-5rem) scale(1.5) !important;
 }
@@ -282,6 +319,9 @@ span.md-tooltip {
   align-self: flex-end;
   text-shadow: 1px 0.1px 1px rgba(12,12,12,0.3);
 }
+#player-menu i.material-icons, .player-header .md-title i.material-icons.meta {
+  color: rgba(255, 255, 255, 0.87);
+}
 div.video .player-infos {
   color: white;
 }
@@ -331,5 +371,8 @@ button.md-button.searchButton {
 }
 .function-tooltip {
   width: 15rem;
+}
+i.idea-icon {
+  transform: rotate(180deg);
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div id="download">
     <div class="back">
-      <md-button class="md-raised md-accent dark-background" href="#/" >
+      <md-button class="md-raised md-primary dark-background" href="#/" >
         <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
       </md-button>
     </div>
@@ -59,8 +59,7 @@
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style slot-scope>
 #download {
   margin: 0 auto;
   width: 40em;

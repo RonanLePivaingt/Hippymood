@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div id="whats-new">
     <div class="back">
-      <md-button class="md-raised md-accent" href="#/" >
+      <md-button class="md-raised md-primary" href="#/" >
         <i class="material-icons">keyboard_backspace</i> Revenir au lecteur
       </md-button>
     </div>
@@ -95,8 +95,7 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style slot-scope>
 .loading, .error, .more {
   text-align: center;
 }

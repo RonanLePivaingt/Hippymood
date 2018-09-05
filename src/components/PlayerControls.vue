@@ -142,7 +142,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
 #app.video div.md-card.md-theme-default {
   overflow: hidden;
@@ -157,6 +156,9 @@ export default {
 #app:not(.video) #playerControls i:not(.md-icon-delete),
 #app:not(.video) #playerControls button:not(.md-delete) {
   transform: scale(1.5);
+}
+#playerControls button.md-accent i.material-icons {
+  color: rgba(255, 255, 255, .87);
 }
 #playerControls button:not(.md-accent) i {
   color: rgba(0, 0, 0, 0.54);

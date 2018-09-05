@@ -2,7 +2,7 @@
 var config = {};
 
 // Application port for dev environment
-config.port = 8080
+config.port = 80
 
 // Database credentials
 config.db = {};
@@ -23,6 +23,11 @@ config.songList = {};
 config.songList.timeSinceVisitReset = 28800000; // 8 hour
 
 config.demoMode = 1;
+
+// Admin
+config.admin = {};
+config.admin.masterUser = ''; /* Name of the user name considered as admin, keep it secret or not */
+
 config.videoScan = true;
 
 module.exports = config;

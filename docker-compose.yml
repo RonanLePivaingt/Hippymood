@@ -1,0 +1,22 @@
+version: "2"
+services:
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: hippymood
+      MYSQL_USER: hippymood_user
+      MYSQL_PASSWORD: hippymood_password
+    # Making database data persistent
+    volumes:
+      - "./docker/mariadb-data:/var/lib/mysql:z"
+    restart: always
+  app:
+    build: .
+    links:
+      - mariadb
+    ports:
+      - "8080:80"
+    volumes:
+      - "./config/server.config.js:/app/config/server.config.js:z"
+      - "/path/to/your/music/library:/app/music:z"
+    command: ["./docker/wait-for-mariadb.sh", "mariadb", "npm", "run", "prod"]
