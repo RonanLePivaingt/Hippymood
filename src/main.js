@@ -375,7 +375,6 @@ window.vm = new Vue({
         .then(
           function (response) {
             // Redirecting to main page if server response is good
-            console.log(response)
             if (response.body.success) {
               window.vm.$Progress.finish()
               this.$http.get('/moods').then(response => {
@@ -385,11 +384,12 @@ window.vm = new Vue({
                   console.log('Unlocking')
                   this.$store.commit('setMoods', response.body)
                   this.$store.commit('setUnlocked', 1)
-                  /* Activating  */
-                  console.log(this.introJsOptions)
-                  setTimeout(function () {
-                    window.vm.$intro().setOptions(introJsOptions).goToStepNumber(2).start()
-                  }, 1000)
+                  if (Config.demoMode === 1) {
+                    // Going to the demo next step
+                    setTimeout(function () {
+                      window.vm.$intro().setOptions(introJsOptions).goToStepNumber(2).start()
+                    }, 1000)
+                  }
                 }
               }, response => {
                 console.log('Shit it the fan !')

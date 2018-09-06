@@ -20,8 +20,9 @@ exports.Unlock = function(req, res){
           }
       }
   };
-  // Auth work var sessionStore = new MySQLStore(dbOptions);
-  if (req.body.combination == config.auth.combinationCode) {
+
+  // Check the combination sent by client or grant access directly if in demo mode
+  if (req.body.combination == config.auth.combinationCode || config.demoMode === 1) {
     // Associating current session with successful authentification
     req.session.auth = 1;
 

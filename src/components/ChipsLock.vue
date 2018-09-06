@@ -126,7 +126,7 @@ export default {
       NESGamepad: false,
       isVisible: true,
       isOpen: true,
-      intro: "<p>Pssst, l'accès est protégé par un code. </p> <p>Pour y accéder avec un clavier, utilise les flèches pour faire cette combinaison : haut haut bas bas gauche droite gauche droite, puis B A. </p><p> Avec un écran tactile, fait la combinaison en \"glissant\" sur l'image (swipe).  Ensuite, les touches B et A apparaîtront pour que tu continues. </p> <p> Tu peux aussi cliquer <a @click='demoUnlock'>ici</a> ici pour déverrouiller Hippymood, après tout c'est une démo ;)</p>"
+      intro: "<p>Pssst, l'accès est protégé par un code. </p> <p>Pour y accéder avec un clavier, utilise les flèches pour faire cette combinaison : haut haut bas bas gauche droite gauche droite, puis B A. </p><p> Avec un écran tactile, fait la combinaison en \"glissant\" sur l'image (swipe).  Ensuite, les touches B et A apparaîtront pour que tu continues. </p> <p> Tu peux aussi cliquer <a onclick='window.vm.extUnlock();'>ici</a> ici pour déverrouiller Hippymood, après tout c'est une démo ;)</p>"
     }
   },
   mounted: function () {
@@ -162,7 +162,8 @@ export default {
     )
   },
   beforeDestroy: function () {
-    // this.$intro().exit() // Qui
+    // Close the introjs focus to make sure a smooth transition is done when the skip unlocking link is used
+    this.$intro().exit()
   },
   methods: {
     demoUnlock () {
