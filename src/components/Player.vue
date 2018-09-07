@@ -4,7 +4,7 @@
     v-bind:class="{ video: videoMode }"
     v-show="intro === 0"
     >
-    <md-card id="playerCard" v-intro="intro1" v-intro-position="'right'" v-intro-autostart="true" v-intro-step="4" v-if="intro == 0">
+    <md-card id="playerCard" v-intro="intro1" v-intro-position="'right'" v-intro-step="4" v-if="intro == 0">
       <div>
         <md-menu id="player-menu" md-direction="bottom left" md-size="4" @close="menuClose">
           <md-button class="md-icon-button" md-menu-trigger>

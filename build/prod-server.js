@@ -15,14 +15,14 @@ app.use(bodyParser.json());
 const KnexSessionStore = require('connect-session-knex')(session);
 const Knex = require('knex');
 
-var config = require('../config/server.config.js');
+var serverConfig = require('../config/server.config.js');
 const knex = Knex({
     client: 'mysql',
     connection: {
-      host: config.db.host,
-      user: config.db.user,
-      password: config.db.password,
-      database: config.db.database,
+      host: serverConfig.db.host,
+      user: serverConfig.db.user,
+      password: serverConfig.db.password,
+      database: serverConfig.db.database,
     }
 });
 
@@ -55,7 +55,11 @@ function startApp() {
   }));
 
   app.use(express.static('dist'));
-  app.use('/music', express.static('music'));
+
+  // Disabling mp3 serve in demo mode
+  if (serverConfig.demoMode !== 1)
+    app.use('/music', express.static('music'));
+
   app.use('/tmp', express.static('tmp'));
 
   var io = require('socket.io');

@@ -6,13 +6,12 @@
         v-on:swipeleft="padLeft"
         v-on:swiperight="padRight"
         >
-      <!--
       <img
         id="datChips"
         src="/static/img/chipsN&B.jpg"
+        v-if="!demoMode"
         />
-        -->
-      <div v-intro="intro" v-intro-position="'right'" v-intro-autostart="true" v-intro-autostart.config="introJsOptions" v-intro-step="1">
+      <div  v-if="demoMode" v-intro="intro" v-intro-step="1" v-intro-position="'right'" v-intro-autostart="true" v-intro-autostart.config="introJsOptions">
         <img
           id="datChips"
           src="../assets/Lock_ThanksMicahWilliams.png"
@@ -20,7 +19,8 @@
       </div>
     </v-touch>
 
-    <p class="teaser">Bienvenue sur la démo !</p>
+    <p class="teaser" v-if="!demoMode">Feel The Chips</p>
+    <p class="teaser" v-if="demoMode">Bienvenue sur la démo !</p>
 
       <transition name="fade">
         <figure
@@ -80,33 +80,6 @@
           </section>
         </figure>
       </transition>
-
-      <!--
-    <v-popover
-      trigger="manual"
-      :open="isOpen"
-      offset="16"
-      :auto-hide="false"
-      placement="right"
-      delay="1000"
-      >
-      <template slot="popover">
-        <div class="tooltip-chipslock">
-          <p> Pssst, l'accès est protégé par un code. </p>
-          <p> Pour y accéder avec un clavier, utilise les flèches pour faire cette combinaison : </br>
-          haut haut bas bas gauche droite gauche droite, puis B A.  </p>
-
-          <p> Avec un écran tactile, fait la combinaison en "glissant" sur l'image (swipe).
-            </br> Ensuite, les touches B et A apparaîtront pour que tu continues.
-          </p>
-
-          <p>
-            Tu peux aussi cliquer <a @click="demoUnlock">ici</a> pour déverrouiller Hippymood, </br> après tout c'est une démo ;)
-          </p>
-        </div>
-      </template>
-    </v-popover>
-      -->
   </div>
 </template>
 
@@ -126,7 +99,12 @@ export default {
       NESGamepad: false,
       isVisible: true,
       isOpen: true,
-      intro: "<p>Pssst, l'accès est protégé par un code. </p> <p>Pour y accéder avec un clavier, utilise les flèches pour faire cette combinaison : haut haut bas bas gauche droite gauche droite, puis B A. </p><p> Avec un écran tactile, fait la combinaison en \"glissant\" sur l'image (swipe).  Ensuite, les touches B et A apparaîtront pour que tu continues. </p> <p> Tu peux aussi cliquer <a onclick='window.vm.extUnlock();'>ici</a> ici pour déverrouiller Hippymood, après tout c'est une démo ;)</p>"
+      intro: "<p>Pssst, l'accès est protégé par un code. </p> <p>Pour y accéder avec un clavier, utilise les flèches pour faire cette combinaison : haut haut bas bas gauche droite gauche droite, puis B A. </p><p> Avec un écran tactile, fait la combinaison en \"glissant\" sur l'image (swipe).  Ensuite, les touches B et A apparaîtront pour que tu continues. </p> <p> Tu peux aussi cliquer <a onclick='window.vm.extUnlock();' href='#' class='unlock-link'>ici</a> pour déverrouiller Hippymood, après tout c'est une démo ;)</p>"
+    }
+  },
+  computed: {
+    demoMode: function () {
+      return this.$store.state.demoMode
     }
   },
   mounted: function () {
@@ -245,6 +223,9 @@ p.teaser {
 }
 .tooltip-chipslock {
   max-width: 25rem;
+}
+.unlock-link {
+  font-weight: bold;
 }
 </style>
 <style type="text/css" src="../css/NESButtons.css" slot-scope></style>

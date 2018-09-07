@@ -36,6 +36,7 @@ Vue.use(VueProgressBar, {
   thickness: '3px'
 })
 
+/* Plugins to introduce the app in the demo */
 import VueIntro from 'vue-introjs'
 Vue.use(VueIntro, {
   waitTimeout: 1000,
@@ -43,7 +44,10 @@ Vue.use(VueIntro, {
 })
 import 'intro.js/introjs.css'
 import 'intro.js/themes/introjs-modern.css'
+import VTooltip from 'v-tooltip'
+Vue.use(VTooltip)
 
+/* Plugin to upload songs for the suggestions */
 import VueClip from 'vue-clip'
 Vue.use(VueClip)
 
@@ -147,11 +151,13 @@ const store = new Vuex.Store({
   actions: {
     askPlayMood: function ({ commit }, moodId) {
       // Conditionnaly displaying message to use video mode for the demo
+      /* Well finally no, but we never know
       if (store.state.demoMode && !store.state.videoMode) {
         setTimeout(function () {
           window.vm.$intro().setOptions(introJsOptions).goToStepNumber(4).start()
         }, 1000)
       }
+      */
 
       var videoMode = store.state.videoMode
       window.vm.$Progress.start()
@@ -352,9 +358,15 @@ window.vm = new Vue({
       if (response.body === 'Must auth') {
         this.$store.commit('setUnlocked', 0)
       } else {
-        console.log('Unlocking')
         this.$store.commit('setMoods', response.body)
         this.$store.commit('setUnlocked', 1)
+
+        // Going to the demo next step
+        if (Config.demoMode === 1) {
+          setTimeout(function () {
+            window.vm.$intro().setOptions(introJsOptions).goToStepNumber(2).start()
+          }, 1000)
+        }
       }
     }, response => {
       console.log('Shit it the fan !')
@@ -381,11 +393,11 @@ window.vm = new Vue({
                 if (response.body === 'Must auth') {
                   this.$store.commit('setUnlocked', 0)
                 } else {
-                  console.log('Unlocking')
                   this.$store.commit('setMoods', response.body)
                   this.$store.commit('setUnlocked', 1)
+
+                  // Going to the demo next step
                   if (Config.demoMode === 1) {
-                    // Going to the demo next step
                     setTimeout(function () {
                       window.vm.$intro().setOptions(introJsOptions).goToStepNumber(2).start()
                     }, 1000)
@@ -393,6 +405,7 @@ window.vm = new Vue({
                 }
               }, response => {
                 console.log('Shit it the fan !')
+                console.log(response)
                 window.vm.$Progress.fail()
               })
             } else {
