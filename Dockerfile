@@ -12,7 +12,7 @@ COPY . .
 COPY config/server.config.js.example config/server.config.js
 
 RUN npm install
-RUN npm install chalk mysql https://github.com/multi-cell/vue-trianglify#dev
+RUN npm install https://github.com/multi-cell/vue-trianglify#dev
 
 RUN npm run build
 CMD [ "npm", "run", "prod" ]

@@ -1,6 +1,6 @@
 {
   "name": "hippymood",
-  "version": "1.0.0",
+  "version": "0.5.0",
   "description": " Web app to play your music smoothly by genre/mood. ",
   "author": "Ronan Le Pivaingt <r.lepivaingt@gmail.com>",
   "private": true,

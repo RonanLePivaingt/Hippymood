@@ -19,6 +19,5 @@ services:
       - "8080:80"
     volumes:
       - ".:/app:z"
-      #- "/path/to/your/music/library:/app/music:z"
-      - "/home/ronan/music:/app/music:z"
+      - "/path/to/your/music/library:/app/music:z"
     command: ["./docker/wait-for-mariadb.sh", "mariadb", "npm", "run", "dev"]
