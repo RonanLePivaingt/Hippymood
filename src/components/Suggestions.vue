@@ -26,7 +26,7 @@
           <div class="suggestion-resume">
             <div>
               <span v-if="suggestion.title">{{ suggestion.title }}</span>
-              <span v-if="!suggestion.title">{{ suggestion.file }}</span>
+              <span v-if="!suggestion.title">{{ suggestion.messages[0].song_name }} de {{ suggestion.messages[0].artist }} </span>
 
               <span v-if="user.masterUser"> par {{ suggestion.messages[0].name }}</span>
             </div>
@@ -97,17 +97,7 @@
 <script>
 import SuggestionForm from './suggestions/Form'
 import SuggestionMessage from './suggestions/Message'
-function youtubeVideoId (url) {
-  var videoId = url.split('v=')[1]
-  if (videoId === undefined) {
-    videoId = ''
-  }
-  var ampersandPosition = videoId.indexOf('&')
-  if (ampersandPosition !== -1) {
-    videoId = videoId.substring(0, ampersandPosition)
-  }
-  return videoId
-}
+import YoutubeUrl from 'youtube-url'
 // On mount search suggestions
 export default {
   name: 'suggestions',
@@ -166,7 +156,7 @@ export default {
   },
   methods: {
     videoId (url) {
-      return youtubeVideoId(url)
+      return YoutubeUrl.extractId(url)
     },
     openDeleteSnack (id) {
       this.deleteSuggestionId = id

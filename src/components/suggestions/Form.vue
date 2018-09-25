@@ -178,17 +178,7 @@
 </template>
 
 <script>
-function youtubeVideoId (url) {
-  var videoId = url.split('v=')[1]
-  if (videoId === undefined) {
-    videoId = ''
-  }
-  var ampersandPosition = videoId.indexOf('&')
-  if (ampersandPosition !== -1) {
-    videoId = videoId.substring(0, ampersandPosition)
-  }
-  return videoId
-}
+import YoutubeUrl from 'youtube-url'
 // On mount search suggestions
 export default {
   name: 'suggestion-form',
@@ -241,7 +231,7 @@ export default {
       return this.$store.state.user
     },
     videoId: function () {
-      return youtubeVideoId(this.suggestion.url)
+      return YoutubeUrl.extractId(this.suggestion.url)
     },
     moods: function () {
       return this.$store.state.moods

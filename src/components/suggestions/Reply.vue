@@ -42,14 +42,8 @@
 <script>
 import SuggestionForm from './Form'
 import SuggestionMessage from './Message'
-function youtubeVideoId (url) {
-  var videoId = url.split('v=')[1]
-  var ampersandPosition = videoId.indexOf('&')
-  if (ampersandPosition !== -1) {
-    videoId = videoId.substring(0, ampersandPosition)
-  }
-  return videoId
-}
+import YoutubeUrl from 'youtube-url'
+
 // On mount search suggestions
 export default {
   name: 'suggestion-reply',
@@ -67,18 +61,11 @@ export default {
     user: function () {
       return this.$store.state.user
     },
-    suggestionId: function () {
-      return this.$store.state.messages[this.messageId][0].id_suggestion
-    },
     suggestion: function () {
       return this.$store.state.suggestions[this.suggestionId]
     },
     videoId: function () {
-      if (this.suggestion.url) {
-        return youtubeVideoId(this.suggestion.url)
-      } else {
-        return ''
-      }
+      return YoutubeUrl.extractId(this.suggestion.url)
     }
   }
 }
