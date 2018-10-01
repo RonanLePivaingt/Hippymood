@@ -11,3 +11,4 @@ config/server.config.js
 tmp
 toutdoux.md
 docker/mariadb-data
+.*.sw*
