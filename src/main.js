@@ -1,61 +1,37 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import Vuex from 'vuex'
-import VueResource from 'vue-resource'
+import App from './App.vue'
 import VueMaterial from 'vue-material'
-import router from '@/router'
-import App from '@/App'
-
-import Config from '@/../config/server.config.js'
-
-import VueYouTubeEmbed from 'vue-youtube-embed'
-Vue.use(VueYouTubeEmbed)
-
-import VueSocketio from 'vue-socket.io'
-Vue.use(VueSocketio, '/')
-
-import 'chart.js'
-import 'hchs-vue-charts'
-Vue.use(window.VueCharts)
-
-var VueTouch = require('vue-touch')
-// Declaring a quintuple tap for the beta unlocking features in the about view
-VueTouch.registerCustomEvent('quintupletap', {
-  type: 'tap',
-  taps: 5
-})
-Vue.use(VueTouch, {name: 'v-touch'})
-
-// Youtube like progress bar
+import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css'
+import Vuex from 'vuex'
+import VueRouter from 'vue-router'
+// Vuex needs Promise and here is a polyfill for IE...
+import 'es6-promise/auto'
+import Axios from 'axios'
+import VueAxios from 'vue-axios'
 import VueProgressBar from 'vue-progressbar'
+// Components used by vue router
+import Player from './components/Player'
+import MoodList from './components/MoodList'
+import Search from './components/Search'
+import WhatsNew from './components/WhatsNew'
 
-Vue.use(VueProgressBar, {
-  color: 'rgb(0, 188, 212)',
-  failedColor: 'red',
-  thickness: '3px'
-})
-
-/* Plugins to introduce the app in the demo */
-import VueIntro from 'vue-introjs'
-Vue.use(VueIntro, {
-  waitTimeout: 1000,
-  nextLabel: 'Suivant'
-})
-import 'intro.js/introjs.css'
-import 'intro.js/themes/introjs-modern.css'
-import VTooltip from 'v-tooltip'
-Vue.use(VTooltip)
-
-/* Plugin to upload songs for the suggestions */
-import VueClip from 'vue-clip'
-Vue.use(VueClip)
+import Config from '@/../config.js'
 
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
-Vue.use(VueResource)
+Vue.use(VueRouter)
+Vue.use(VueAxios, Axios)
 Vue.use(VueMaterial)
+Vue.use(VueProgressBar, {
+  color: 'rgb(0, 188, 212)',
+  failedColor: 'red',
+  height: '4px'
+})
+
+const BACKEND_API_URL = 'http://192.168.1.11:8087'
+// const BACKEND_API_URL = 'http://localhost:8087'
 
 const store = new Vuex.Store({
   state: {
@@ -77,7 +53,8 @@ const store = new Vuex.Store({
     demoMode: Config.demoMode,
     user: {},
     suggestions: [],
-    loadingSuggestions: true
+    loadingSuggestions: true,
+    backendApiUrl: BACKEND_API_URL
   },
   mutations: {
     setMoods (state, moods) {
@@ -149,28 +126,26 @@ const store = new Vuex.Store({
     }
   },
   actions: {
+    askPause: function ({ commit }) {
+      commit('setPaused')
+    },
+    askPlay: function ({ commit }) {
+      commit('setPlaying')
+    },
     askPlayMood: function ({ commit }, moodId) {
-      // Conditionnaly displaying message to use video mode for the demo
-      /* Well finally no, but we never know
-      if (store.state.demoMode && !store.state.videoMode) {
-        setTimeout(function () {
-          window.vm.$intro().setOptions(introJsOptions).goToStepNumber(4).start()
-        }, 1000)
-      }
-      */
-
       var videoMode = store.state.videoMode
       window.vm.$Progress.start()
-      Vue.http.post('/mood/', {moodId: moodId, videoMode: videoMode}).then(response => {
-        if (response.body.songs) {
-          commit('setCurrent', response.body.songs[0])
+      Vue.axios.post(BACKEND_API_URL + '/mood/', { moodId: moodId, videoMode: videoMode }).then((response) => {
+        if (response.data.songs) {
+          commit('setCurrent', response.data.songs[0])
           commit('setPlaying')
           window.vm.$Progress.finish()
         }
-        if (response.body.nbSongsLeft !== undefined) {
-          commit('setCurrentSongsLeft', response.body.nbSongsLeft)
+        if (response.data.nbSongsLeft !== undefined) {
+          commit('setCurrentSongsLeft', response.data.nbSongsLeft)
         }
       }, response => {
+        // eslint-disable-next-line
         console.log('Shit it the fan !')
         window.vm.$Progress.fail()
         commit('setPaused')
@@ -219,7 +194,7 @@ const store = new Vuex.Store({
           window.vm.$Progress.start()
           moodId = store.state.current.moodId
           videoMode = store.state.videoMode
-          Vue.http.post('/mood/', {moodId: moodId, videoMode: videoMode}).then(response => {
+          Vue.http.post('/mood/', { moodId: moodId, videoMode: videoMode }).then(response => {
             if (response.body.songs) {
               commit('setCurrent', response.body.songs[0])
               commit('setPlaying')
@@ -237,7 +212,7 @@ const store = new Vuex.Store({
           videoMode = store.state.next.videoMode
           store.state.next = {}
           window.vm.$Progress.start()
-          Vue.http.post('/mood/', {moodId: moodId, videoMode: videoMode}).then(response => {
+          Vue.http.post('/mood/', { moodId: moodId, videoMode: videoMode }).then(response => {
             if (response.body.songs) {
               commit('setCurrent', response.body.songs[0])
               if (response.body.nbSongsLeft !== undefined) {
@@ -247,6 +222,7 @@ const store = new Vuex.Store({
               window.vm.$Progress.finish()
             }
           }, response => {
+            // eslint-disable-next-line
             console.log('Shit it the fan !')
             window.vm.$Progress.fail()
             commit('setPaused')
@@ -273,6 +249,7 @@ const store = new Vuex.Store({
         var songIndex = store.state.previous.length - store.state.previousIndex
         commit('setCurrent', store.state.previous[songIndex])
       } else {
+        // eslint-disable-next-line
         console.log('Cant go back further :/')
       }
     },
@@ -287,6 +264,7 @@ const store = new Vuex.Store({
           if (response.body.newSongs !== undefined) {
             commit('setWhatsNew', response.body.newSongs)
           } else {
+            // eslint-disable-next-line
             console.log('Shit it the fan !')
           }
         }
@@ -297,7 +275,7 @@ const store = new Vuex.Store({
 
       Vue.http.post(
         '/login/',
-        {seed: seed}
+        { seed: seed }
       ).then(
         response => {
           if (!isNaN(parseInt(response.body.id))) {
@@ -333,154 +311,25 @@ const store = new Vuex.Store({
   }
 })
 
-var introJsOptions = {
-  prevLabel: '< Précédent',
-  nextLabel: 'Suivant >',
-  skipLabel: 'Passer',
-  doneLabel: "C'est parti!",
-  hidePrev: true,
-  hideNext: true
-}
+const routes = [
+  { path: '/', component: Player },
+  { path: '/Moods', component: MoodList },
+  { path: '/search', component: Search },
+  { path: '/WhatsNew', component: WhatsNew }
+]
 
-/* eslint-disable no-new */
-window.vm = new Vue({
-  el: '#app',
-  store,
-  router,
-  http: {
-    emulateJSON: true,
-    emulateHTTP: true
-  },
-  template: '<App :introJsOptions="introJsOptions" />',
-  components: { App },
-  created: function () {
-    this.$http.get('/moods').then(response => {
-      if (response.body === 'Must auth') {
-        this.$store.commit('setUnlocked', 0)
-      } else {
-        this.$store.commit('setMoods', response.body)
-        this.$store.commit('setUnlocked', 1)
-
-        // Going to the demo next step
-        if (Config.demoMode === 1) {
-          setTimeout(function () {
-            window.vm.$intro().setOptions(introJsOptions).goToStepNumber(2).start()
-          }, 1000)
-        }
-      }
-    }, response => {
-      console.log('Shit it the fan !')
-    })
-  },
-  data () {
-    return {
-      introJsOptions: introJsOptions
-    }
-  },
-  methods: {
-    extUnlock: function () {
-      window.vm.$Progress.start()
-      this.$http.post(
-        '/',
-        {combination: window.combination}
-      )
-        .then(
-          function (response) {
-            // Redirecting to main page if server response is good
-            if (response.body.success) {
-              window.vm.$Progress.finish()
-              this.$http.get('/moods').then(response => {
-                if (response.body === 'Must auth') {
-                  this.$store.commit('setUnlocked', 0)
-                } else {
-                  this.$store.commit('setMoods', response.body)
-                  this.$store.commit('setUnlocked', 1)
-
-                  // Going to the demo next step
-                  if (Config.demoMode === 1) {
-                    setTimeout(function () {
-                      window.vm.$intro().setOptions(introJsOptions).goToStepNumber(2).start()
-                    }, 1000)
-                  }
-                }
-              }, response => {
-                console.log('Shit it the fan !')
-                console.log(response)
-                window.vm.$Progress.fail()
-              })
-            } else {
-              window.vm.$Progress.fail()
-            }
-          }
-        )
-    },
-    extPlay: function () {
-      var playerHTML5 = document.getElementById('playerHTML5')
-      if (playerHTML5) {
-        playerHTML5.play()
-      }
-      this.$store.commit('setPlaying')
-    },
-    extPause: function () {
-      var playerHTML5 = document.getElementById('playerHTML5')
-      if (playerHTML5) {
-        playerHTML5.pause()
-      }
-      this.$store.commit('setPaused')
-    },
-    extTogglePlayPause: function () {
-      var playerHTML5 = document.getElementById('playerHTML5')
-      if (this.$store.state.playerState === 'playing') {
-        if (playerHTML5) {
-          playerHTML5.pause()
-        }
-        this.$store.commit('setPaused')
-      } else {
-        if (playerHTML5) {
-          playerHTML5.play()
-        }
-        this.$store.commit('setPlaying')
-      }
-    },
-    extPlayNextSong: function () {
-      this.$store.dispatch('askFindAndPlayNextSong')
-    },
-    extPlayPreviousSong: function () {
-      this.$store.dispatch('askPreviousSong')
-    },
-    extDisplayPlayer: function () {
-      this.$router.push('/')
-    },
-    extDisplaySearch: function () {
-      this.$router.push('/search')
-    },
-    extDisplayDownload: function () {
-      this.$router.push('/download')
-    },
-    extDisplayAbout: function () {
-      this.$router.push('/about')
-    },
-    extActivateBetaFeatures: function () {
-      /* Video go open
-      if (this.$store.state.betaMode === false) {
-        this.$children[0].$refs.snackbar.open()
-      } else if (this.$store.state.videoMode === true) {
-        // Desactivating video mode as well
-        this.$store.commit('toggleVideoMode')
-      }
-
-      this.$store.commit('toggleBetaMode')
-      */
-    },
-    extToggleVideoMode: function () {
-      this.$store.commit('toggleVideoMode')
-    }
-  }
+const router = new VueRouter({
+  routes // short for `routes: routes`
 })
 
-// Loading user information if saved
-var savedUser = localStorage.getItem('user')
-if (savedUser) {
-  var user = JSON.parse(savedUser)
-  window.vm.$store.dispatch('askSetUser', user.name)
-}
+// Vue instance
+window.vm = new Vue({
+  render: h => h(App),
+  store,
+  router,
+  created: function () {
+    Vue.axios.get(BACKEND_API_URL + '/moods').then((response) => {
+      this.$store.commit('setMoods', response.data)
+    })
+  }
+}).$mount('#app')

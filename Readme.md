@@ -39,7 +39,11 @@ npm install
 Hot reloading of the UI when any change occur in src directory
 
 ``` bash
-npm run dev
+# Front end
+npm run serve
+
+# Back-end
+node server/server.js
 ```
 
 #### Production
@@ -47,21 +51,16 @@ npm run dev
 # Generating compiled JS and CSS
 npm run build
 
-# Serving
+# Serving front-end
 npm run prod
+
+# Back-end
+node server/server.js
 ```
 
 ## Roadmap
 
-### 0.5
-- Migration of Vuejs from v1 to v2
-- Use a query builder to prevent SQL injections (Knex.js)
-- Clean up the architecture of the code
-- Provide usage with Docker
-- Support user suggestion
-- ~~Move to an architecture more friendly to Hippymood behavior change without touching to the core (with extensions, vuejs components maybe)~~
-
-### 0.whoKnows
+### 0.5.1
 - New responsive UI
 
 ### 0.whoKnows
