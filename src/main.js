@@ -11,9 +11,13 @@ import Axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueProgressBar from 'vue-progressbar'
 // Components used by vue router
-import Player from './components/Player'
+import Admin from './components/Admin'
+import About from './components/About'
+import Download from './components/Download'
 import MoodList from './components/MoodList'
+import Player from './components/Player'
 import Search from './components/Search'
+import Suggestions from './components/Suggestions'
 import WhatsNew from './components/WhatsNew'
 
 import Config from '@/../config.js'
@@ -30,7 +34,7 @@ Vue.use(VueProgressBar, {
   height: '4px'
 })
 
-const BACKEND_API_URL = 'http://192.168.1.11:8087'
+const BACKEND_API_URL = 'http://192.168.1.15:8087'
 // const BACKEND_API_URL = 'http://localhost:8087'
 
 const store = new Vuex.Store({
@@ -313,8 +317,12 @@ const store = new Vuex.Store({
 
 const routes = [
   { path: '/', component: Player },
+  { path: '/About', component: About },
+  { path: '/Admin', component: Admin },
+  { path: '/Download', component: Download },
   { path: '/Moods', component: MoodList },
-  { path: '/search', component: Search },
+  { path: '/Search', component: Search },
+  { path: '/Suggestions', component: Suggestions },
   { path: '/WhatsNew', component: WhatsNew }
 ]
 

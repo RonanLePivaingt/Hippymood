@@ -6,7 +6,7 @@
       @click.native="play"
       :id="mood.id"
       class="md-raised"
-      v-bind:class="[mood.id != currentMood ? currentMoodClass : 'md-accent']"
+      v-bind:class="[mood.id == currentMood ? 'md-accent' : '']"
       >
       {{ mood.name }}
     </md-button>

@@ -19,29 +19,39 @@
         </md-app-toolbar>
 
         <md-app-drawer class="md-right" :md-active.sync="showNavigation">
-          <md-toolbar class="md-transparent" md-elevation="0">
-            Hippymood
+          <md-toolbar class="md-transparent" md-elevation="1">
+            Menu
           </md-toolbar>
 
           <md-list>
-            <md-list-item>
-              <md-icon>move_to_inbox</md-icon>
-              <span class="md-list-item-text">Inbox</span>
+            <md-list-item to="/search">
+              <md-icon>search</md-icon>
+              <span class="md-list-item-text">Rechercher</span>
             </md-list-item>
 
-            <md-list-item>
-              <md-icon>send</md-icon>
-              <span class="md-list-item-text">Sent Mail</span>
+            <md-list-item to="/download">
+              <md-icon>file_download</md-icon>
+              <span class="md-list-item-text">Télécharger</span>
             </md-list-item>
 
-            <md-list-item>
-              <md-icon>delete</md-icon>
-              <span class="md-list-item-text">Trash</span>
+            <md-list-item to="/whatsNew">
+              <md-icon>fiber_new</md-icon>
+              <span class="md-list-item-text">Quoi de neuf ?</span>
             </md-list-item>
 
-            <md-list-item>
-              <md-icon>error</md-icon>
-              <span class="md-list-item-text">Spam</span>
+            <md-list-item to="/Suggestions">
+              <md-icon>wb_incandescent</md-icon>
+              <span class="md-list-item-text">Suggestions</span>
+            </md-list-item>
+
+            <md-list-item to="/admin">
+              <md-icon>build</md-icon>
+              <span class="md-list-item-text">Administration</span>
+            </md-list-item>
+
+            <md-list-item to="/about">
+              <md-icon>info_outline</md-icon>
+              <span class="md-list-item-text">À propos</span>
             </md-list-item>
           </md-list>
         </md-app-drawer>
@@ -58,7 +68,7 @@
         <md-bottom-bar md-sync-route>
           <md-bottom-bar-item to="/" md-label="Player" md-icon="play_arrow"></md-bottom-bar-item>
           <md-bottom-bar-item to="/Moods" md-label="Moods" md-icon="album"></md-bottom-bar-item>
-          <md-bottom-bar-item md-label="Moar" md-icon="menu" @click="showNavigation = !showNavigation"></md-bottom-bar-item>
+          <md-bottom-bar-item md-label="Menu" md-icon="menu" @click="showNavigation = !showNavigation"></md-bottom-bar-item>
         </md-bottom-bar>
       </div>
     </div>
