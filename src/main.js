@@ -10,6 +10,7 @@ import 'es6-promise/auto'
 import Axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueProgressBar from 'vue-progressbar'
+import VueYouTubeEmbed from 'vue-youtube-embed'
 // Components used by vue router
 import Admin from './components/Admin'
 import About from './components/About'
@@ -33,6 +34,7 @@ Vue.use(VueProgressBar, {
   failedColor: 'red',
   height: '4px'
 })
+Vue.use(VueYouTubeEmbed)
 
 const BACKEND_API_URL = 'http://192.168.1.15:8087'
 // const BACKEND_API_URL = 'http://localhost:8087'

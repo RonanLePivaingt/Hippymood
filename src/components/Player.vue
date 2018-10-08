@@ -1,8 +1,6 @@
 <template>
-  <div
-    v-if="current.song"
-    >
-    <md-card class="player-card md-primary">
+  <div v-if="current.song">
+    <md-card v-if="!videoMode" class="player-card md-primary">
       <md-card-header>
         <div class="md-title"><md-icon>audiotrack</md-icon>{{ current.song }}</div>
         <div
@@ -26,16 +24,17 @@
 </template>
 
 <script>
+import VideoPlayer from './VideoPlayer'
 
 export default {
   name: 'player',
+  components: {
+    VideoPlayer
+  },
   computed: {
-    moods () {
-      return this.$store.state.moods
-    },
-    current () {
-      return this.$store.state.current
-    }
+    moods () { return this.$store.state.moods },
+    current () { return this.$store.state.current },
+    videoMode () { return this.$store.state.videoMode }
   },
   methods: {
     play () {

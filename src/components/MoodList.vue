@@ -29,9 +29,7 @@ export default {
         return false
       }
     },
-    moods () {
-      return this.$store.state.moods
-    }
+    moods () { return this.$store.state.moods }
   }
 }
 </script>

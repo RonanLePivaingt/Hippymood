@@ -24,6 +24,11 @@
           </md-toolbar>
 
           <md-list>
+            <md-list-item to="/" @click="toggleVideoMode">
+              <md-switch v-model="videoMode" @click="toggleVideoMode"></md-switch>
+              <span class="md-list-item-text">Mode vidéo</span>
+            </md-list-item>
+
             <md-list-item to="/search">
               <md-icon>search</md-icon>
               <span class="md-list-item-text">Rechercher</span>
@@ -58,7 +63,8 @@
 
         <md-app-content>
           <router-view></router-view>
-          <audio-player></audio-player>
+          <audio-player v-if="!videoMode"></audio-player>
+          <video-player v-if="videoMode"></video-player>
 
           <mood-list v-if="windowWidth > 600"></mood-list>
         </md-app-content>
@@ -77,32 +83,40 @@
 
 <script>
 import AudioPlayer from './components/AudioPlayer'
+import VideoPlayer from './components/VideoPlayer'
 import MoodList from './components/MoodList'
 
 export default {
   name: 'app',
   components: {
     MoodList,
-    AudioPlayer
+    AudioPlayer,
+    VideoPlayer
   },
   data: () => ({
     showNavigation: false,
     windowWidth: 0
   }),
   computed: {
-    moods: function () {
-      return this.$store.state.moods
-    },
-    current: function () {
-      return this.$store.state.current
-    }
+    moods: function () { return this.$store.state.moods },
+    current: function () { return this.$store.state.current },
+    videoMode: function () { return this.$store.state.videoMode }
   },
   methods: {
     getWindowWidth (event) {
       this.windowWidth = window.innerWidth
+    },
+    toggleVideoMode (event) {
+      this.$store.commit('toggleVideoMode')
+      if (this.videoMode === true) {
+        this.$material.theming.theme = 'default-dark'
+      } else {
+        this.$material.theming.theme = 'default-variant'
+      }
     }
   },
   mounted: function () {
+    this.$material.theming.theme = 'default-variant'
     // Getting inital size + checking changes
     this.getWindowWidth()
     window.addEventListener('resize', this.getWindowWidth)
@@ -116,9 +130,15 @@ export default {
 <style lang="scss">
 @import "~vue-material/dist/theme/engine"; // Import the theme engine
 
-@include md-register-theme("default", (
+@include md-register-theme("default-variant", (
+  primary: md-get-palette-color(blue, 500), // The primary color of your application
+  accent: md-get-palette-color(amber, 400) // The accent or secondary color
+));
+
+@include md-register-theme("default-dark", (
   primary: md-get-palette-color(indigo, A200), // The primary color of your application
-  accent: md-get-palette-color(brown, 500) // The accent or secondary color
+  accent: md-get-palette-color(amber, 400), // The accent or secondary color
+  theme: dark
 ));
 
 @import "~vue-material/dist/theme/all"; // Apply the theme
@@ -129,7 +149,7 @@ export default {
   justify-content: space-between;
   height: 100vh;
 }
-/* Header */
+// Header
 .invisible {
   visibility: hidden;
 }
@@ -150,7 +170,7 @@ export default {
   text-align: center;
 }
 @media screen and (min-width: 600px) {
-  /* Hiding the bottom navigation menu on big screens */
+  // Hiding the bottom navigation menu on big screens
   .smartphone-navigation {
     display: none;
   }
