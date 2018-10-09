@@ -36,7 +36,7 @@ Vue.use(VueProgressBar, {
 })
 Vue.use(VueYouTubeEmbed)
 
-const BACKEND_API_URL = 'http://192.168.1.15:8087'
+const BACKEND_API_URL = 'http://192.168.1.11:8087'
 // const BACKEND_API_URL = 'http://localhost:8087'
 
 const store = new Vuex.Store({

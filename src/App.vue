@@ -64,7 +64,7 @@
         <md-app-content>
           <router-view></router-view>
           <audio-player v-if="!videoMode"></audio-player>
-          <video-player v-if="videoMode"></video-player>
+          <video-player v-if="videoMode" :class="videoClass"></video-player>
 
           <mood-list v-if="windowWidth > 600"></mood-list>
         </md-app-content>
@@ -95,12 +95,17 @@ export default {
   },
   data: () => ({
     showNavigation: false,
-    windowWidth: 0
+    windowWidth: 0,
+    videoClass: ''
   }),
   computed: {
     moods: function () { return this.$store.state.moods },
     current: function () { return this.$store.state.current },
     videoMode: function () { return this.$store.state.videoMode }
+  },
+  watch: {
+    // call again the method if the route changes
+    '$route': 'setVideoClass'
   },
   methods: {
     getWindowWidth (event) {
@@ -113,6 +118,17 @@ export default {
       } else {
         this.$material.theming.theme = 'default-variant'
       }
+    },
+    setVideoClass () {
+      // Video mode
+      if (this.$route.path === '/') {
+        this.videoClass = ''
+      } else {
+        this.videoClass = 'sticky'
+      }
+
+      // Extra : closing menu after route change
+      this.showNavigation = false
     }
   },
   mounted: function () {

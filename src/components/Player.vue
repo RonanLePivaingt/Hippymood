@@ -50,7 +50,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 @media screen and (min-width: 600px) {
   .player-card {
     width: 30rem;

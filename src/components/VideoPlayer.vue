@@ -2,6 +2,7 @@
   <div class="video-container">
     <youtube
       :video-id="youtubeId"
+      ref="youtube-player"
       ></youtube>
   </div>
 </template>
@@ -15,6 +16,12 @@ export default {
   computed: {
     current () { return this.$store.state.current },
     youtubeId () {
+      this.$nextTick(function () {
+        // eslint-disable-next-line
+        console.log(this.$refs['youtube-player'].player.playVideo())
+        // console.log(this.$el.textContent) // => 'updated'
+        this.$root.player.startVideo()
+      })
       if (this.$store.state.current.youtube) {
         return this.$youtube.getIdFromURL(this.$store.state.current.youtube)
       } else {
@@ -26,6 +33,7 @@ export default {
 </script>
 
 <style lang="scss">
+// Default display
 .video-container {
   position: relative;
   padding-bottom: 56.25%;
@@ -63,5 +71,18 @@ export default {
   .video-container embed {
     height: 100% !important;
   }
+}
+// Sticky display
+.video-container {
+  position: sticky;
+  bottom: -75px;
+  z-index: 100;
+}
+.video-container.sticky iframe,
+.video-container.sticky object,
+.video-container.sticky embed {
+  left: 5%;
+  width: 90%;
+  height: 20vh !important;
 }
 </style>
