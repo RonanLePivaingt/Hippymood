@@ -1,14 +1,8 @@
 // Loading configuration file with database credentials
-var config = require('../config');
+var config = require('config');
 var dbConfig = {
   client: 'mysql',
-  connection: {
-    host: config.db.host,
-    port: config.db.port,
-    user: config.db.user,
-    password: config.db.password,
-    database: config.db.database
-  }
+  connection: config.get('db')
 };
 
 module.exports = dbConfig;

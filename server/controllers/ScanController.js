@@ -1,4 +1,4 @@
-var config = require('../../config');
+var config = require('config');
 var dbConfig = require('../knex.js');
 var knex = require('knex')(dbConfig);
 var fs = require('fs');
@@ -80,7 +80,7 @@ function scan (fileInfo, callback) {
   if (fileInfo === undefined)
     return false;
 
-  if (config.videoScan)
+  if (config.get('videoScan'))
     var checkVideo = true;
   else
     var checkVideo = false;

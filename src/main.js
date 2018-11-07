@@ -1,3 +1,4 @@
+/* global CONFIG */
 import Vue from 'vue'
 import App from './App.vue'
 import VueMaterial from 'vue-material'
@@ -11,17 +12,17 @@ import Axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueProgressBar from 'vue-progressbar'
 import VueYouTubeEmbed from 'vue-youtube-embed'
+import VueTouch from 'vue-touch'
 // Components used by vue router
 import Admin from './components/Admin'
 import About from './components/About'
 import Download from './components/Download'
+import Login from './components/Login'
 import MoodList from './components/MoodList'
 import Player from './components/Player'
 import Search from './components/Search'
 import Suggestions from './components/Suggestions'
 import WhatsNew from './components/WhatsNew'
-
-import Config from '@/../config.js'
 
 Vue.config.productionTip = false
 
@@ -32,12 +33,13 @@ Vue.use(VueMaterial)
 Vue.use(VueProgressBar, {
   color: 'rgb(0, 188, 212)',
   failedColor: 'red',
-  height: '4px'
+  height: '12px'
 })
 Vue.use(VueYouTubeEmbed)
+Vue.use(VueTouch, { name: 'v-touch' })
 
-const BACKEND_API_URL = 'http://192.168.1.11:8087'
-// const BACKEND_API_URL = 'http://localhost:8087'
+// const BACKEND_API_URL = 'http://192.168.122.1:8087'
+const BACKEND_API_URL = 'http://localhost:8087'
 
 const store = new Vuex.Store({
   state: {
@@ -52,11 +54,11 @@ const store = new Vuex.Store({
     intro: 1,
     unlocked: -1,
     playerState: 'intro',
-    authCombination: Config.auth.combination,
-    authCombinationCode: Config.auth.combinationCode,
+    authCombination: CONFIG.auth.combination,
+    authCombinationCode: CONFIG.auth.combinationCode,
     videoMode: false,
     betaMode: false,
-    demoMode: Config.demoMode,
+    demoMode: CONFIG.demoMode,
     user: {},
     suggestions: [],
     loadingSuggestions: true,
@@ -141,7 +143,7 @@ const store = new Vuex.Store({
     askPlayMood: function ({ commit }, moodId) {
       var videoMode = store.state.videoMode
       window.vm.$Progress.start()
-      Vue.axios.post(BACKEND_API_URL + '/mood/', { moodId: moodId, videoMode: videoMode }).then((response) => {
+      Vue.axios.post('/api/mood/', { moodId: moodId, videoMode: videoMode }).then((response) => {
         if (response.data.songs) {
           commit('setCurrent', response.data.songs[0])
           commit('setPlaying')
@@ -279,30 +281,34 @@ const store = new Vuex.Store({
     askSetUser: function ({ commit }, seed) {
       window.vm.$Progress.start()
 
-      Vue.http.post(
-        '/login/',
+      Vue.axios.post(
+        '/api/login/',
         { seed: seed }
       ).then(
         response => {
-          if (!isNaN(parseInt(response.body.id))) {
+          if (!isNaN(parseInt(response.data.id))) {
             window.vm.$Progress.finish()
             commit(
               'setUser',
               {
-                id: response.body.id,
-                name: response.body.name || '',
-                status: response.body.status || '',
-                masterUser: response.body.masterUser
+                id: response.data.id,
+                name: response.data.name || '',
+                status: response.data.status || '',
+                masterUser: response.data.masterUser
               }
             )
-            if (window.vm.$route.name === 'Login') {
+            if (window.vm.$route.path === '/Login') {
               window.vm.$router.go(-1)
             }
           } else {
             window.vm.$Progress.fail()
           }
-        }
-      )
+        }, response => {
+          // eslint-disable-next-line
+          console.log('Shit it the fan !')
+          window.vm.$Progress.fail()
+          // commit('setPaused')
+        })
     },
     askSuggestions: function ({ commit }) {
       window.vm.$Progress.start()
@@ -322,6 +328,7 @@ const routes = [
   { path: '/About', component: About },
   { path: '/Admin', component: Admin },
   { path: '/Download', component: Download },
+  { path: '/Login', component: Login },
   { path: '/Moods', component: MoodList },
   { path: '/Search', component: Search },
   { path: '/Suggestions', component: Suggestions },
@@ -337,9 +344,61 @@ window.vm = new Vue({
   render: h => h(App),
   store,
   router,
-  created: function () {
-    Vue.axios.get(BACKEND_API_URL + '/moods').then((response) => {
-      this.$store.commit('setMoods', response.data)
+  created () {
+    Vue.axios.get('/api/moods').then((response) => {
+      if (response.data.locked !== true) {
+        this.$store.commit('setMoods', response.data)
+        this.$store.commit('setUnlocked', 1)
+      }
     })
+  },
+  methods: {
+    extUnlock () {
+      window.vm.$Progress.start()
+      Vue.axios.post(
+        '/api',
+        { combination: window.combination }
+      ).then((response) => {
+        // eslint-disable-next-line
+        console.log('blabla')
+        // eslint-disable-next-line
+        console.log(response.data)
+        // Redirecting to main page if server response is good
+        if (response.data.success) {
+          window.vm.$Progress.finish()
+          Vue.axios.get('/api/moods').then(response => {
+            if (response.locked !== true) {
+              this.$store.commit('setUnlocked', 0)
+            } else {
+              this.$store.commit('setMoods', response.data)
+              this.$store.commit('setUnlocked', 1)
+
+              // Going to the demo next step
+              if (CONFIG.demoMode === 1) {
+                setTimeout(function () {
+                  // window.vm.$intro().setOptions(introJsOptions).goToStepNumber(2).start()
+                }, 1000)
+              }
+            }
+          }, response => {
+            // eslint-disable-next-line
+            console.log('Shit it the fan !')
+            window.vm.$Progress.fail()
+          })
+        } else {
+        // eslint-disable-next-line
+        console.log('blablabla')
+          window.vm.$Progress.fail()
+        }
+      }
+      )
+    }
   }
 }).$mount('#app')
+
+// Loading user information if saved
+var savedUser = localStorage.getItem('user')
+if (savedUser) {
+  var user = JSON.parse(savedUser)
+  window.vm.$store.dispatch('askSetUser', user.name)
+}

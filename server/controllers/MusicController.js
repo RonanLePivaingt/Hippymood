@@ -1,4 +1,4 @@
-var config = require('../../config');
+var config = require('config');
 var dbConfig = require('../knex.js');
 var knex = require('knex')(dbConfig);
 
@@ -11,7 +11,7 @@ exports.Moods = function(req, res){
   res.header("Pragma", "no-cache");
   res.header("Expires", 0);
 
-  if (req.session.auth || config.auth.activate === 0) {
+  if (req.session.auth || config.get('auth.activate') === 0) {
     knex.select('genres.id', 'genres.name')
       .count('songs.id as nbSongs')
       .count('songs.youtube as nbVideo')
@@ -28,7 +28,9 @@ exports.Moods = function(req, res){
         console.error(error);
       });
   } else {
-    res.send("Must auth");
+    res.send({
+      locked: true
+    });
   }
 }
 
@@ -36,7 +38,7 @@ exports.Moods = function(req, res){
  * Function to get song infos by submitting a genre
  */
 exports.Mood = function(req, res){
-  if (req.session.auth || config.auth.activate === 0) {
+  if (req.session.auth || config.get('auth.activate') === 0) {
     // Disabling cache for myurl.com/genre/id URLs to prevent some browser to play the same song again and again and again...
     res.header("Cache-Control", "no-cache, no-store, must-revalidate");
     res.header("Pragma", "no-cache");
@@ -103,7 +105,7 @@ exports.Mood = function(req, res){
 
           // Resetting the list of played songs if the delay configured in config is passed
           if (req.session.lastVisit != undefined) {
-            if(Date.now() - req.session.lastVisit > config.songList.timeSinceVisitReset) {
+            if(Date.now() - req.session.lastVisit > config.get('songList.timeSinceVisitReset')) {
               req.session.playedSongs = undefined;
             }
           }

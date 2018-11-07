@@ -26,6 +26,6 @@ music
 # Mariadb data
 docker/mariadb-data
 
-config.js
+config/default.json5
 tmp
 toutdoux.md

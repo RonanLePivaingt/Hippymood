@@ -1,0 +1,31 @@
+{
+  backendPort: 8087,
+  db: {
+    host: "mariadb",
+    user: "hippymood_user",
+    password: "hippymood_password",
+    database: "hippymood"
+  },
+  auth: {
+    // 1 to activate authentification, 0 to disable
+    activate: 1,
+    combination: 'up up down down left right left right b a',
+    combinationCode: '38384040373937396665'
+  },
+  songList: {
+    // Time in milliseconds since last visit before reseting the list of played songs (3600000 milliseconds is 1 hour)
+    timeSinceVisitReset: 28800000
+  },
+  admin: {
+    // Name of the user name considered as admin, keep it secret or not
+    masterUser: 'Yéyé'
+  },
+  // 1 to enable, 0 to disable
+  demoMode: 0,
+  suggestions: {
+    // The name shown to user in suggestions
+    adminName: 'Admin'
+  },
+  videoScan: true
+}
+

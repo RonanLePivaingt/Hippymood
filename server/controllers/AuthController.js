@@ -1,28 +1,11 @@
-var config = require('../../config');
+var config = require('config');
 var dbConfig = require('../knex.js');
 var knex = require('knex')(dbConfig);
 
 // Server side authentification validation
 exports.Unlock = function(req, res){
-  var dbOptions = {
-      host: config.db.host,
-      port: config.db.port || 3306,
-      user: config.db.user,
-      password: config.db.password,
-      database: config.db.database,
-      createDatabaseTable: true,// Whether or not to create the sessions database table, if one does not already exist.
-      schema: {
-          tableName: 'sessions',
-          columnNames: {
-              session_id: 'session_id',
-              expires: 'expires',
-              data: 'data'
-          }
-      }
-  };
-
   // Check the combination sent by client or grant access directly if in demo mode
-  if (req.body.combination == config.auth.combinationCode || config.demoMode === 1) {
+  if (req.body.combination == config.get('auth.combinationCode') || config.get('demoMode') === 1) {
     // Associating current session with successful authentification
     req.session.auth = 1;
 
@@ -78,7 +61,7 @@ exports.Login = function(req, res){
       req.session.userId = result.id;
 
       // Telling to client if it's the master user
-      if (result.name === config.admin.masterUser) {
+      if (result.name === config.get('admin.masterUser')) {
         req.session.masterUser = true;
         result.masterUser = true;
       } else {
