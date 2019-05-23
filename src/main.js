@@ -280,7 +280,8 @@ const store = new Vuex.Store({
       commit('setUnlocked', status)
     },
     askWhatsNew: function ({ dispatch, commit }) {
-      var url = '/newSongs/' + store.state.whatsNew.length.toString()
+      let page = store.state.whatsNew.length.toString() / 10
+      var url = '/newSongs/' + page
 
       Vue.http.get(url).then(
         response => {

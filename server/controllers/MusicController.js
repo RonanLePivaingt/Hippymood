@@ -166,6 +166,10 @@ exports.Search = function(req, res){
  * Function to get song infos by submitting a genre
  */
 exports.newSongs = function(req, res){
+  res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+  res.header("Pragma", "no-cache");
+  res.header("Expires", 0);
+
   var page = req.params.page;
 
   var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'genres.id AS moodId', 'genres.name AS mood', 'songs.path', 'albums.name AS album', 'songs.youtube', 'songs.created_at')
