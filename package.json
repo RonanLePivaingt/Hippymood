@@ -9,12 +9,15 @@
     "prod": "node build/prod-server.js",
     "build": "node build/build.js",
     "dbInit": "node server/controllers/DatabaseController.js Up",
+    "dbReset": "node server/controllers/DatabaseController.js Down",
+    "scanMusic": "node server/controllers/ScanController.js ScanMusic",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "clinic": "^4.0.3",
     "connect-session-knex": "^1.4.0",
     "cors": "^2.8.4",
     "express-session": "^1.15.1",

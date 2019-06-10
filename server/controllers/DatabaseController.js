@@ -72,22 +72,25 @@ module.exports.Up = function(){
  * Function to delete the music database except users and suggestions
  */
 exports.Down = function(req, res){
-  if (req.session.masterUser === true) {
+  // if (req.session.masterUser === true) {
     // Could be cleaner with promises
     knex('genres_relations').del().then(function () {
       knex('genres').del().then(function () {
         knex('songs').del().then(function () {
           knex('artists').del().then(function () {
             knex('albums').del().then(function () {
-              res.send("Bim bim");
+              // res.send("Bim bim");
+              process.exit(0);
             });
           });
         });
       });
     });
+  /*
   } else {
     res.send("Not your business");
   }
+  */
 }
 
 require('make-runnable');

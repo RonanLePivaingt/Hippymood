@@ -7,7 +7,14 @@ var mm = require('musicmetadata');
 var id3 = require('id3js');
 
 exports.ScanMusic = function(req, res) {
-  if (req.session.masterUser === true) {
+  var authorized = false;
+
+  if (req === 'cli') authorized = true;
+  if (req.session) {
+    if (req.session.masterUser === true) authorized = true;
+  }
+
+  if (authorized) {
     var async = require("async");
 
     // Initializing music scan queue
@@ -28,7 +35,7 @@ exports.ScanMusic = function(req, res) {
       // Sending data to client and log if any progress is made
       if (percentage !== newPercentage) {
         percentage = newPercentage;
-        req.io.emit('scan', percentage);
+        if (req !== 'cli') req.io.emit('scan', percentage);
         console.log("Music scan progress : " + percentage + "%");
       }
     }
@@ -36,17 +43,19 @@ exports.ScanMusic = function(req, res) {
 
     // Adding event on queue end processing
     queue.drain = function() {
-      req.io.emit('scan', 'Done');
+      if (req !== 'cli') req.io.emit('scan', 'Done');
 
       console.log("All files are indexed");
       // Stoping previous interval
       clearInterval(percentageInterval);
+
+      return true;
     };
 
     // Sending a response back to client
-    res.send("Music scan started");
+    if (req !== 'cli') res.send("Music scan started");
   } else {
-    res.send("Not your business");
+    if (req !== 'cli') res.send("Not your business");
   }
 };
 
@@ -304,3 +313,5 @@ function genreRelation(metadata, callback) {
 
   return true;
 }
+
+require('make-runnable');
