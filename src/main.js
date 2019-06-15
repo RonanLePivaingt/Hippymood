@@ -27,6 +27,10 @@ VueTouch.registerCustomEvent('quintupletap', {
 })
 Vue.use(VueTouch, {name: 'v-touch'})
 
+// Import Roboto and material icons for offline dev
+import 'material-design-icons/iconfont/material-icons.css'
+import 'typeface-roboto/index.css'
+
 // Youtube like progress bar
 import VueProgressBar from 'vue-progressbar'
 
