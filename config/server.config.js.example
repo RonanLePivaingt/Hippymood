@@ -23,6 +23,7 @@ config.songList = {};
 config.songList.timeSinceVisitReset = 28800000; // 8 hour
 
 // Admin
+config.admin = {};
 config.admin.masterUser = ''; /* Name of the user name considered as admin, keep it secret or not */
 
 config.videoScan = true;
