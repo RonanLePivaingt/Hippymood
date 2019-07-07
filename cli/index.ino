@@ -1,9 +1,25 @@
 String command;
 int ledPin = 13;    // LED connected to digital pin 13
+
 // Motor variables
 #define ENA 5
 #define DIRA 4
 #define DIRB 3
+
+// Speed stuff
+int LDR = A0;            // LDR input at A0 pin
+int LDRReading = 0;
+int threshold_val = 450;
+int dark = 1;
+unsigned long time;
+unsigned long goodOldTimes = 0;
+int interval = 0;
+
+int speed = 255;
+int speedTreshold = 200;
+int step = 10;
+// int interval = 0;
+
 
 void askCommand() {
     Serial.println("Please type a command to execute");
@@ -32,7 +48,7 @@ void blink(int time, int loops) {
 }
 
 void startMotor(bool reverse = false) {
-    digitalWrite(ENA, 128);
+    digitalWrite(ENA, speed);
     if (!reverse) {
         digitalWrite(DIRA,HIGH);
         digitalWrite(DIRB,LOW);
@@ -43,7 +59,13 @@ void startMotor(bool reverse = false) {
     }
 }
 void stopMotor() {
-    digitalWrite(ENA, 128);
+    // digitalWrite(ENA, 128);
+    digitalWrite(DIRA,LOW);
+    digitalWrite(DIRB,LOW);
+}
+
+void speedRegulation() {
+    // digitalWrite(ENA, 128);
     digitalWrite(DIRA,LOW);
     digitalWrite(DIRB,LOW);
 }
@@ -84,4 +106,35 @@ void loop() {
 
         askCommand();
     }
+
+    // startMotor();
+    time = millis();
+    LDRReading = analogRead(LDR);    // Reading LDR
+    if (LDRReading > threshold_val && dark == 0)  // Varies with white and black. Set at value between the two
+    {
+        dark = 1;
+        interval = time - goodOldTimes;
+        goodOldTimes = time;
+    } else if (LDRReading < threshold_val) {
+        dark = 0;
+    }
+
+    if (interval < speedTreshold) {
+        speed = speed - step;
+        if (speed < 0) {
+            speed = 0;
+        }
+    } else {
+        speed = speed + step;
+        if (speed > 255) {
+            speed = 255;
+        }
+    }
+
+    /*
+    Serial.println(interval);
+    Serial.println(speed);
+    */
+
+    delay(50);
 }
