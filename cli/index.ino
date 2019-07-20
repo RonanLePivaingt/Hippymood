@@ -1,4 +1,4 @@
-String command;
+int command;
 int ledPin = 13;    // LED connected to digital pin 13
 
 // Motor variables
@@ -13,12 +13,11 @@ int threshold_val = 450;
 int dark = 1;
 unsigned long time;
 unsigned long goodOldTimes = 0;
-int interval = 0;
 
 int speed = 255;
-int speedTreshold = 200;
-int step = 10;
-// int interval = 0;
+int speedTreshold = 250;
+int step = 2;
+int interval = 0;
 
 
 void askCommand() {
@@ -48,6 +47,8 @@ void blink(int time, int loops) {
 }
 
 void startMotor(bool reverse = false) {
+    // Starting motor at maximum speed
+    speed = 255;
     digitalWrite(ENA, speed);
     if (!reverse) {
         digitalWrite(DIRA,HIGH);
@@ -59,58 +60,15 @@ void startMotor(bool reverse = false) {
     }
 }
 void stopMotor() {
-    // digitalWrite(ENA, 128);
     digitalWrite(DIRA,LOW);
     digitalWrite(DIRB,LOW);
 }
 
 void speedRegulation() {
-    // digitalWrite(ENA, 128);
-    digitalWrite(DIRA,LOW);
-    digitalWrite(DIRB,LOW);
-}
-
-void loop() {
-    /* Full speed */
-    // digitalWrite(ENABLE,HIGH); // enable on
-    if(Serial.available()){
-        command = Serial.readStringUntil("\n");
-
-        if(command.equals("init")){
-            Serial.println("Init in process");
-        }
-        else if(command.equals("motorStart")){
-            Serial.println("Starting motor");
-            startMotor();
-        }
-        else if(command.equals("motorReverse")){
-            Serial.println("Starting motor in reverse");
-            startMotor(true);
-        }
-        else if(command.equals("motorStop")){
-            Serial.println("Stopping motor");
-            stopMotor();
-        }
-        else if(command.equals("fastBlink")){
-            Serial.println("fastBlink in process");
-            blink(200, 10);
-        }
-        else if(command.equals("slowBlink")){
-            Serial.println("fastBlink in process");
-            blink(1000, 2);
-        }
-        else{
-            Serial.println("Invalid command");
-            Serial.println(command);
-        }
-
-        askCommand();
-    }
-
-    // startMotor();
     time = millis();
     LDRReading = analogRead(LDR);    // Reading LDR
-    if (LDRReading > threshold_val && dark == 0)  // Varies with white and black. Set at value between the two
+
+    if (LDRReading > threshold_val && dark == 0)
     {
         dark = 1;
         interval = time - goodOldTimes;
@@ -131,10 +89,35 @@ void loop() {
         }
     }
 
-    /*
-    Serial.println(interval);
-    Serial.println(speed);
-    */
+    // Apply the calculated speed
+    digitalWrite(ENA, speed);
+}
+
+void loop() {
+    if(Serial.available() > 0){
+        // command = Serial.readStringUntil("\n");
+        command = Serial.read();
+
+        if(command == 'i'){
+            Serial.println("Init in process");
+        }
+        else if(command == 's'){
+            Serial.println("Starting motor");
+            startMotor();
+        }
+        else if(command == 'm'){
+            Serial.println("Stopping motor");
+            stopMotor();
+        }
+        else{
+            Serial.println("Invalid command");
+            Serial.println(command);
+        }
+
+        askCommand();
+    }
+
+    speedRegulation();
 
     delay(50);
 }
