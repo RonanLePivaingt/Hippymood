@@ -6,19 +6,26 @@ int ledPin = 13;    // LED connected to digital pin 13
 #define DIRA 4
 #define DIRB 3
 
-// Speed stuff
+// Speed
 int LDR = A0;            // LDR input at A0 pin
 int LDRReading = 0;
 int threshold_val = 450;
+int min_threshold_val = 1023;
+int max_threshold_val = 0;
 int dark = 1;
 unsigned long time;
 unsigned long goodOldTimes = 0;
 
 int speed = 255;
-int speedTreshold = 250;
-int step = 2;
-int interval = 0;
+int speedTreshold = 200;
+int step = 1;
+int interval = 5000;
 
+// Sound volume
+int soundPotentiometer = A1;
+int volume = 100;
+int previousVolume = 999;
+int diff = 0;
 
 void askCommand() {
     Serial.println("Please type a command to execute");
@@ -68,6 +75,15 @@ void speedRegulation() {
     time = millis();
     LDRReading = analogRead(LDR);    // Reading LDR
 
+    // Determining the light threshold
+    if (LDRReading > max_threshold_val) {
+        max_threshold_val = LDRReading;
+    }
+    if (LDRReading < min_threshold_val) {
+        min_threshold_val = LDRReading;
+    }
+    threshold_val = (min_threshold_val + max_threshold_val) / 2;
+
     if (LDRReading > threshold_val && dark == 0)
     {
         dark = 1;
@@ -78,19 +94,38 @@ void speedRegulation() {
     }
 
     if (interval < speedTreshold) {
-        speed = speed - step;
+        speed = speed - step * 10;
         if (speed < 0) {
             speed = 0;
         }
-    } else {
+    } else if (interval > speedTreshold + 300) {
         speed = speed + step;
-        if (speed > 255) {
+        if (speed > 255 && interval > 2500) {
             speed = 255;
+        } else if (speed > 150 && interval < 2500) {
+            speed = 150;
         }
     }
 
     // Apply the calculated speed
     digitalWrite(ENA, speed);
+}
+
+void soundVolume() {
+    volume = ((float)analogRead(soundPotentiometer) / (float)1023) * 100;
+
+    if (volume != previousVolume) {
+        if (volume > previousVolume) {
+            diff = volume - previousVolume;
+        } else {
+            diff = previousVolume - volume;
+        }
+    
+        if (diff > 5) {
+            previousVolume = volume;
+            Serial.println(volume);
+        }
+    }
 }
 
 void loop() {
@@ -118,6 +153,7 @@ void loop() {
     }
 
     speedRegulation();
+    soundVolume();
 
     delay(50);
 }

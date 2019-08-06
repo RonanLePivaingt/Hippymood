@@ -28,20 +28,29 @@ exports.nextSong = new Promise((resolve, reject) => {
 
 
 /*
- * Watching mpd status to update Arduino's behavior
+ * Volume
  */
-mpc.on('changed-player', () => { 
-    mpc.status.status().then(status => { 
-        if (status.state == 'play') { 
-            // Start motor
-            // arduino.execute('motorStart');
-            arduino.execute('s');
-            console.log("MPD - Play");
-        } else if (status.state == 'pause') { 
-            // Stop motor
-            console.log("MPD - Pausing");
-            // arduino.execute('motorStop');
-            arduino.execute('m');
-        }
-    });
+arduino.myEmitter.on('volume', (volume) => {
+    console.log("Setting the volume to : " + volume);
+    mpc.playbackOptions.setVolume(volume);
 });
+
+ /*
+  * Watching mpd status to update Arduino's behavior
+  */
+mpc.on('changed-player', () => { 
+	mpc.status.status().then(status => { 
+		if (status.state == 'play') { 
+			// Start motor
+			// arduino.execute('motorStart');
+			arduino.execute('s');
+			console.log("MPD - Play");
+		} else if (status.state == 'pause') { 
+			// Stop motor
+			console.log("MPD - Pausing");
+			// arduino.execute('motorStop');
+			arduino.execute('m');
+		}
+	});
+});
+

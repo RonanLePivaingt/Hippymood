@@ -9,17 +9,30 @@ serialPort.pipe(parser);
 var lastCommand;
 var connectionInitialized = false;
 
+const EventEmitter = require('events');
+const myEmitter = new EventEmitter();
+myEmitter.emit('volume', 100);
+
 parser.on('data', function (data) {
     if (data.indexOf('Please type a command to execute') !== -1 && !connectionInitialized) {
         connectionInitialized = true;
         console.log('Arduino connection initalized');
     }
-    console.log('Arduino ' + data);
+    else if (!isNaN(data)) {
+        let volume = parseInt(data);
+
+        if (volume >= 0 && volume <= 100) {
+            myEmitter.emit('volume', volume);
+        }
+    } else {
+        console.log('Arduino ' + data);
+    }
 });
 
 serialPort.write('firstCommandDirtyFix');
 
-exports.execute = function(command) {
+// exports.execute = function(command) {
+function execute(command) {
     console.log('Command : ' + command + ', last command : ' + lastCommand);
     if (command !== lastCommand || !connectionInitialized) {
         serialPort.write(command, function(err) {
@@ -30,6 +43,11 @@ exports.execute = function(command) {
         serialPort.drain();
     }
     if (connectionInitialized) lastCommand = command;
+};
+
+module.exports = {
+    myEmitter,
+    execute
 };
 
 /* Not useful yet
