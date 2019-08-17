@@ -14,9 +14,20 @@ services:
     build: .
     links:
       - mariadb
+    labels:
+      - traefik.enable=true
+      - traefik.frontend.rule=Host:hippymood.localhost
+      - traefik.port=8082
+      - traefik.docker.network=dev-network
     ports:
       - "8086:80"
     volumes:
       - "./config/server.config.js:/app/config/server.config.js:z"
       - "/path/to/your/music/library:/app/music:z"
-    command: ["./docker/wait-for-mariadb.sh", "mariadb", "npm", "run", "prod"]
+    command: ["./docker/wait-for-mariadb.sh", "dev"]
+    entrypoint: /app/docker/docker-entrypoint.sh dev
+    #command: ["./docker/wait-for-mariadb.sh", "mariadb", "npm", "run", "dev"]
+networks:
+  default:
+    external:
+      name: dev-network
