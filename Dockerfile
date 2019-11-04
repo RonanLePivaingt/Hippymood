@@ -1,4 +1,4 @@
-FROM node:8-stretch
+FROM node:12-stretch
 
 RUN mkdir /app
 WORKDIR /app
