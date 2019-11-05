@@ -1,20 +1,31 @@
-version: "2"
+version: "3.7"
 
 services:
   mariadb:
-    image: mariadb
+    image: mariadb:10
     environment:
       MYSQL_DATABASE: hippymood
       MYSQL_USER: hippymood_user
       MYSQL_PASSWORD: hippymood_password
-    # Making database data persistent
-    volumes:
-      - "./docker/mariadb-data:/var/lib/mysql:z"
-  app:
-    build: .
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+
+  backend:
+    image: node:12-stretch
+    command: npm run start
+    environment:
+      NODE_CONFIG_DIR: '../config'
     links:
       - mariadb
-    ports:
-      - "8086:80"
-    command: ["./docker/wait-for-mariadb.sh", "dev"]
-    entrypoint: /app/docker/docker-entrypoint.sh dev
+    depends_on:
+      - mariadb
+
+  frontend:
+    image: node:12-stretch
+    command: npm run serve
+    environment:
+      NODE_CONFIG_DIR: '../config'
+    links:
+      - backend
+    depends_on:
+      - backend
+    pid: "host"

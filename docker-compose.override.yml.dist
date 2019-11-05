@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  mariadb:
+    # Making database data persistent
+    volumes:
+      - "./docker/mariadb-data:/var/lib/mysql:z"
+  backend:
+    volumes:
+      - "./:/app"
+    working_dir: /app/backend
+  frontend:
+    volumes:
+      - "./:/app"
+    working_dir: /app/frontend
+    ports:
+      - "8080:8080"

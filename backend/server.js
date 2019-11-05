@@ -1,0 +1,47 @@
+var express = require('express');
+const app = express();
+
+var cors = require('cors');
+app.use(cors());
+
+var bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+const config = require('config');
+const dbConfig = require('./dbConfig.js');
+const knex = require('knex')(dbConfig);
+const session = require('express-session');
+const KnexSessionStore = require('connect-session-knex')(session);
+
+const store = new KnexSessionStore({
+  knex: knex,
+  tablename: 'sessions' // optional. Defaults to 'sessions'
+});
+
+app.use(session({
+  secret: 'keyboard cat',
+  cookie: {
+    maxAge: 7890000000 // Cookie expiration set to 3 month
+  },
+  store: store,
+  saveUninitialized: true,
+  resave: false,
+}));
+
+app.use(express.static('dist'));
+
+// Disabling mp3 serve in demo mode
+if (config.get('global.demoMode') === false)
+  app.use('/music', express.static('music'));
+
+app.use('/tmp', express.static('tmp'));
+
+var http = require('http');
+var server = http.createServer(app);
+
+require('./router')(app);
+
+server.listen(config.get('global.port'), function () {
+  console.log('Example app listening on port ' + config.get('global.port'));
+});

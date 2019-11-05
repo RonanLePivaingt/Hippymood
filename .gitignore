@@ -1,14 +1,8 @@
 .DS_Store
 node_modules/
-dist/
 music
 npm-debug.log
-yarn-error.log
-test/unit/coverage
-test/e2e/reports
-selenium-debug.log
-config/server.config.js
-tmp
-toutdoux.md
 docker/mariadb-data
-.*.sw*
+docker-compose.override.yml
+!config/default.json
+config/*

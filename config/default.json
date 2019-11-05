@@ -1,0 +1,17 @@
+{
+  "db": {
+    "host": "mariadb",
+    "user": "hippymood_user",
+    "password": "hippymood_password",
+    "database": "hippymood",
+    "port": 3306
+  },
+  "global": {
+    "port": 8090,
+    // Time in milliseconds since last visit before reseting the list of played songs (3600000 milliseconds is 1 hour)
+    "moodResetSinceLastVisit": 28800000,
+    "masterUser": "",
+    "adminShownName": "Admin",
+    "demoMode": false
+  }
+}
