@@ -13,5 +13,7 @@ services:
     volumes:
       - "./:/app"
     working_dir: /app/frontend
+    environment:
+      NODE_ENV: development
     ports:
       - "8080:8080"
