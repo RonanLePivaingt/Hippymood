@@ -8,5 +8,8 @@ module.exports = {
     plugins: [
       new webpack.DefinePlugin({ CONFIG: JSON.stringify(require("config")) })
     ]
+  },
+  devServer: {
+    disableHostCheck: true
   }
 }
