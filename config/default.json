@@ -1,10 +1,9 @@
 {
   "db": {
-    "host": "mariadb",
+    "host": "db",
     "user": "hippymood_user",
     "password": "hippymood_password",
-    "database": "hippymood",
-    "port": 3306
+    "database": "hippymood"
   },
   "global": {
     "port": 8090,

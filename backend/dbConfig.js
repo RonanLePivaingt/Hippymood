@@ -1,7 +1,7 @@
 // Loading configuration file with database credentials
 const config = require('config');
 var dbConfig = {
-  client: 'mysql',
+  client: 'pg',
   connection: config.get('db'),
 };
 

@@ -1,13 +1,13 @@
 version: "3.7"
 
 services:
-  mariadb:
-    image: mariadb:10
+  db:
+    image: postgres:12
     environment:
-      MYSQL_DATABASE: hippymood
-      MYSQL_USER: hippymood_user
-      MYSQL_PASSWORD: hippymood_password
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      POSTGRES_DB: hippymood
+      POSTGRES_USER: hippymood_user
+      POSTGRES_PASSWORD: hippymood_password
+      POSTGRES_RANDOM_ROOT_PASSWORD: 'yes'
 
   backend:
     image: node:12-stretch
@@ -15,9 +15,9 @@ services:
     environment:
       NODE_CONFIG_DIR: '../config'
     links:
-      - mariadb
+      - db
     depends_on:
-      - mariadb
+      - db
 
   frontend:
     image: node:12-stretch
