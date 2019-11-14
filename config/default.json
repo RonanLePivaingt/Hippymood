@@ -5,6 +5,10 @@
     "password": "hippymood_password",
     "database": "hippymood"
   },
+  "music": {
+    "path": "test",
+    "scanConcurrency": 2
+  },
   "global": {
     "port": 8090,
     // Time in milliseconds since last visit before reseting the list of played songs (3600000 milliseconds is 1 hour)

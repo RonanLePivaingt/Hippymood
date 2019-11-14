@@ -46,10 +46,10 @@ module.exports.Up = () => {
             t.string('path');
             t.string('youtube');
             t.timestamps();
-            t.integer('id_albums').unsigned();
-            t.foreign('id_albums').references('albums.id');
-            t.integer('id_artists').unsigned();
-            t.foreign('id_artists').references('artists.id');
+            t.integer('id_album').unsigned();
+            t.foreign('id_album').references('albums.id');
+            t.integer('id_artist').unsigned();
+            t.foreign('id_artist').references('artists.id');
           });
         }
 
@@ -68,8 +68,8 @@ module.exports.Up = () => {
                   return knex.schema.createTable('genres_relations', t => {
                     t.integer('id').unsigned();
                     t.foreign('id').references('genres.id');
-                    t.integer('id_songs').unsigned();
-                    t.foreign('id_songs').references('songs.id');
+                    t.integer('id_song').unsigned();
+                    t.foreign('id_song').references('songs.id');
                   });
                 }
 
@@ -131,22 +131,20 @@ module.exports.Up = () => {
  * Function to delete the music database except users and suggestions
  */
 exports.Down = (req, res) => {
-  if (req.session.masterUser === true) {
-    // Could be cleaner with promises
-    knex('genres_relations').del().then(() => {
-      knex('genres').del().then(() => {
-        knex('songs').del().then(() => {
-          knex('artists').del().then(() => {
-            knex('albums').del().then(() => {
-              res.send("Bim bim");
-            });
+  // Could be cleaner
+  knex('genres_relations').del().then(() => {
+    knex('genres').del().then(() => {
+      knex('songs').del().then(() => {
+        knex('artists').del().then(() => {
+          knex('albums').del().then(() => {
+            // res.send("Bim bim");
+            console.log("All music in the database is now gone");
+            process.exit();
           });
         });
       });
     });
-  } else {
-    res.send("Not your business");
-  }
+  });
 }
 
 require('make-runnable/custom')({
