@@ -16,7 +16,7 @@ exports.Moods = function(req, res){
     .count('songs.youtube as nbVideo')
     .from('genres')
     .join('genres_relations', 'genres.id', '=', 'genres_relations.id')
-    .join('songs', 'songs.id', '=', 'genres_relations.id_songs')
+    .join('songs', 'songs.id', '=', 'genres_relations.id_song')
     .groupBy('genres.id')
     .then(function(rows) {
       res.send(
@@ -50,9 +50,9 @@ exports.Mood = function(req, res){
 
   var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'songs.path', 'albums.name AS album', 'songs.youtube', 'songs.created_at')
     .from('songs')
-    .join('genres_relations', 'songs.id', '=', 'genres_relations.id_songs')
-    .join('artists', 'artists.id', '=', 'songs.id_artists')
-    .join('albums', 'albums.id', '=', 'songs.id_albums')
+    .join('genres_relations', 'songs.id', '=', 'genres_relations.id_song')
+    .join('artists', 'artists.id', '=', 'songs.id_artist')
+    .join('albums', 'albums.id', '=', 'songs.id_album')
     .where('genres_relations.id', moodId)
     .whereNotIn('songs.id', songsIdAlreadyPlayed);
 
@@ -62,40 +62,6 @@ exports.Mood = function(req, res){
 
   select.then(function(rows) {
       if (rows.length > 0) {
-        var randomIndex1 = Math.floor(Math.random() * rows.length);
-
-        var randomSongs = [];
-        randomSongs.push(rows[randomIndex1]);
-
-        // Selecting next song as well if possible
-        if (rows.length > 1) {
-          var randomIndex2 = randomIndex1;
-          do {
-            randomIndex2 = Math.floor(Math.random() * rows.length);
-          } while (randomIndex1 == randomIndex2);
-          randomSongs.push(rows[randomIndex2]);
-        }
-
-        // -1 to count the one being played
-        var infos = {nbSongLeft: rows.length - 1};
-
-        var randomIndex1 = Math.floor(Math.random() * rows.length);
-
-        var randomSongs = [];
-        randomSongs.push(rows[randomIndex1]);
-
-        // Selecting next song as well if possible
-        if (rows.length > 1) {
-          var randomIndex2 = randomIndex1;
-          do {
-            randomIndex2 = Math.floor(Math.random() * rows.length);
-          } while (randomIndex1 == randomIndex2);
-          randomSongs.push(rows[randomIndex2]);
-        }
-
-        // -1 to count the one being played
-        var infos = {nbSongLeft: rows.length - 1};
-
         // Resetting the list of played songs if the delay configured in config is passed
         if (req.session.lastVisit != undefined) {
           if(Date.now() - req.session.lastVisit > config.get('global.moodResetSinceLastVisit')) {
@@ -104,20 +70,10 @@ exports.Mood = function(req, res){
         }
         req.session.lastVisit = Date.now();
 
-        // Saving song played id
-        if (req.session.playedSongs == undefined)
-          req.session.playedSongs = [randomSongs[0]['id']];
-        else
-          req.session.playedSongs.push(randomSongs[0]['id']);
-
-        // Creating response
-        randomSongs.forEach(function(el, index, array) {
-          el.moodId = moodId;
-        });
+        const randomSongs = shuffleArray(rows);
 
         res.send({
           songs: randomSongs,
-          nbSongsLeft: rows.length - 1
         });
       }
       else {
@@ -138,10 +94,10 @@ exports.Search = function(req, res){
 
   knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'songs.path', 'albums.name AS album', 'genres.name as mood', 'genres.id as moodId')
     .from('songs')
-    .join('genres_relations', 'songs.id', '=', 'genres_relations.id_songs')
+    .join('genres_relations', 'songs.id', '=', 'genres_relations.id_song')
     .join('genres', 'genres.id', '=', 'genres_relations.id')
-    .join('artists', 'artists.id', '=', 'songs.id_artists')
-    .join('albums', 'albums.id', '=', 'songs.id_albums')
+    .join('artists', 'artists.id', '=', 'songs.id_artist')
+    .join('albums', 'albums.id', '=', 'songs.id_album')
     .where('songs.name', 'like', keywords)
     .orWhere('artists.name', 'like', keywords)
     .orWhere('albums.name', 'like', keywords)
@@ -168,10 +124,10 @@ exports.newSongs = function(req, res){
 
   var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'genres.id AS moodId', 'genres.name AS mood', 'songs.path', 'albums.name AS album', 'songs.youtube', 'songs.created_at')
     .from('songs')
-    .join('genres_relations', 'songs.id', '=', 'genres_relations.id_songs')
+    .join('genres_relations', 'songs.id', '=', 'genres_relations.id_song')
     .join('genres', 'genres_relations.id', '=', 'genres.id')
-    .join('artists', 'artists.id', '=', 'songs.id_artists')
-    .join('albums', 'albums.id', '=', 'songs.id_albums')
+    .join('artists', 'artists.id', '=', 'songs.id_artist')
+    .join('albums', 'albums.id', '=', 'songs.id_album')
     .limit(10)
     .orderBy('songs.created_at', 'desc');
 
@@ -219,7 +175,7 @@ exports.ResetMood = function(req, res){
     .where('id', moodId)
     .then(function(rows) {
       rows.forEach(function(entry, index) {
-        var i = req.session.playedSongs.indexOf(entry.id_songs);
+        var i = req.session.playedSongs.indexOf(entry.id_song);
         req.session.playedSongs.splice(i, 1);
       });
       res.send("Mood ID : " + moodId);
