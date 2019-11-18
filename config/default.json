@@ -6,15 +6,29 @@
     "database": "hippymood"
   },
   "music": {
-    "path": "test",
-    "scanConcurrency": 2
+    "path": "music",
+    "scanConcurrency": 4
   },
   "global": {
-    "port": 8090,
-    // Time in milliseconds since last visit before reseting the list of played songs (3600000 milliseconds is 1 hour)
-    "moodResetSinceLastVisit": 28800000,
     "masterUser": "",
-    "adminShownName": "Admin",
-    "demoMode": false
+    "demoMode": false,
+    // Time in milliseconds since last visit before reseting the list of played songs (3600000 milliseconds is 1 hour)
+    "moodResetSinceLastVisit": 28800000
+  },
+  "backend": {
+    "port": 8090
+  },
+  "frontend": {
+    "apiProxy": {
+      "target": "http://localhost:8090",
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/api": ""
+      }
+    },
+    "musicProxy": {
+      "target": "http://backend:8090"
+    },
+    "adminShownName": "Admin"
   }
 }

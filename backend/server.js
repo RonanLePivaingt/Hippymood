@@ -33,7 +33,7 @@ app.use(express.static('dist'));
 
 // Disabling mp3 serve in demo mode
 if (config.get('global.demoMode') === false)
-  app.use('/music', express.static('music'));
+  app.use('/music', express.static(config.get('music.path')));
 
 app.use('/tmp', express.static('tmp'));
 
@@ -42,6 +42,6 @@ var server = http.createServer(app);
 
 require('./router')(app);
 
-server.listen(config.get('global.port'), function () {
-  console.log('Example app listening on port ' + config.get('global.port'));
+server.listen(config.get('backend.port'), function () {
+  console.log('Example app listening on port ' + config.get('backend.port'));
 });

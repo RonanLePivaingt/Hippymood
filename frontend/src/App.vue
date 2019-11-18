@@ -39,22 +39,26 @@
 
     <v-content>
       <HelloWorld/>
+      <MoodList/>
+      <AudioPlayer/>
     </v-content>
   </v-app>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld';
+import MoodList from './components/MoodList';
+import AudioPlayer from './components/AudioPlayer';
 
 export default {
   name: 'App',
-
   components: {
     HelloWorld,
+    MoodList,
+    AudioPlayer,
   },
-
-  data: () => ({
-    //
-  }),
+  created () {
+    this.$store.dispatch('music/getMoods')
+  },
 };
 </script>

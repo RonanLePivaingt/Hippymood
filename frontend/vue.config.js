@@ -1,4 +1,7 @@
 const webpack = require("webpack");
+const config = require("config");
+const frontendApiProxy = config.frontend.apiProxy;
+const musicProxy = config.frontend.musicProxy;
 
 module.exports = {
   "transpileDependencies": [
@@ -10,6 +13,11 @@ module.exports = {
     ]
   },
   devServer: {
-    disableHostCheck: true
+    disableHostCheck: true,
+    host: '0.0.0.0',
+    proxy: {
+      '/api': frontendApiProxy,
+      '/music': musicProxy,
+    },
   }
 }
