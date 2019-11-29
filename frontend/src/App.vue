@@ -65,7 +65,8 @@
     </v-app-bar>
 
     <v-content>
-      <PlayerCard/>
+      <router-view></router-view>
+
       <MoodList/>
       <AudioPlayer/>
     </v-content>
@@ -75,14 +76,12 @@
 <script>
 import MoodList from './components/MoodList';
 import AudioPlayer from './components/AudioPlayer';
-import PlayerCard from './components/PlayerCard';
 
 export default {
   name: 'App',
   components: {
     MoodList,
     AudioPlayer,
-    PlayerCard,
   },
   created () {
     this.$store.dispatch('music/getMoods')
