@@ -62,40 +62,6 @@ exports.Mood = function(req, res){
 
   select.then(function(rows) {
       if (rows.length > 0) {
-        var randomIndex1 = Math.floor(Math.random() * rows.length);
-
-        var randomSongs = [];
-        randomSongs.push(rows[randomIndex1]);
-
-        // Selecting next song as well if possible
-        if (rows.length > 1) {
-          var randomIndex2 = randomIndex1;
-          do {
-            randomIndex2 = Math.floor(Math.random() * rows.length);
-          } while (randomIndex1 == randomIndex2);
-          randomSongs.push(rows[randomIndex2]);
-        }
-
-        // -1 to count the one being played
-        var infos = {nbSongLeft: rows.length - 1};
-
-        var randomIndex1 = Math.floor(Math.random() * rows.length);
-
-        var randomSongs = [];
-        randomSongs.push(rows[randomIndex1]);
-
-        // Selecting next song as well if possible
-        if (rows.length > 1) {
-          var randomIndex2 = randomIndex1;
-          do {
-            randomIndex2 = Math.floor(Math.random() * rows.length);
-          } while (randomIndex1 == randomIndex2);
-          randomSongs.push(rows[randomIndex2]);
-        }
-
-        // -1 to count the one being played
-        var infos = {nbSongLeft: rows.length - 1};
-
         // Resetting the list of played songs if the delay configured in config is passed
         if (req.session.lastVisit != undefined) {
           if(Date.now() - req.session.lastVisit > config.get('global.moodResetSinceLastVisit')) {
@@ -104,20 +70,10 @@ exports.Mood = function(req, res){
         }
         req.session.lastVisit = Date.now();
 
-        // Saving song played id
-        if (req.session.playedSongs == undefined)
-          req.session.playedSongs = [randomSongs[0]['id']];
-        else
-          req.session.playedSongs.push(randomSongs[0]['id']);
-
-        // Creating response
-        randomSongs.forEach(function(el, index, array) {
-          el.moodId = moodId;
-        });
+        const randomSongs = shuffleArray(rows);
 
         res.send({
           songs: randomSongs,
-          nbSongsLeft: rows.length - 1
         });
       }
       else {
