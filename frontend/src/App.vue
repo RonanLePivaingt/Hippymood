@@ -1,44 +1,71 @@
 <template>
   <v-app>
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      clipped
+      >
+      <v-list dense>
+        <v-list-item link>
+          <v-list-item-action>
+            <v-icon>mdi-download</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Télécharger</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item link>
+          <v-list-item-action>
+            <v-icon>mdi-settings</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Mode vidéo</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item link>
+          <v-list-item-action>
+            <v-icon>mdi-new-box</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Quoi de neuf ?</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item link>
+          <v-list-item-action>
+            <v-icon>mdi-wrench</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Administration</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item link>
+          <v-list-item-action>
+            <v-icon>mdi-information-outline</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>À propos</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+      </v-list>
+    </v-navigation-drawer>
+
     <v-app-bar
       app
+      clipped-left
       color="primary"
       dark
     >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title>Hippy Mood</v-toolbar-title>
     </v-app-bar>
 
     <v-content>
-      <HelloWorld/>
+      <PlayerCard/>
       <MoodList/>
       <AudioPlayer/>
     </v-content>
@@ -46,19 +73,22 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
 import MoodList from './components/MoodList';
 import AudioPlayer from './components/AudioPlayer';
+import PlayerCard from './components/PlayerCard';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
     MoodList,
     AudioPlayer,
+    PlayerCard,
   },
   created () {
     this.$store.dispatch('music/getMoods')
   },
+  data: () => ({
+    drawer: false,
+  }),
 };
 </script>
