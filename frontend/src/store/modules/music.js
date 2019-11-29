@@ -15,14 +15,11 @@ const actions = {
       commit('setMoods', { moods: response.data });
     });
   },
-  loadMoodSongs ({ commit }, moodId) {
-    music.getMood(moodId).then(response => {
+  changeMood ({ commit }, mood) {
+    music.getMood(mood.id).then(response => {
       commit('setNextSongs', response.data.songs)
+      commit('setCurrentMood', mood)
     });
-  },
-  async changeMood ({ dispatch, commit }, mood) {
-    await dispatch('loadMoodSongs', mood.id)
-    commit('setCurrentMood', { mood })
   },
   playNext ({ commit, state }) {
     if (state.nextSongs.length > 0) {
@@ -39,7 +36,7 @@ const mutations = {
     // more info there : https://vuedose.tips/tips/improve-performance-on-large-lists-in-vue-js/
     state.moods = Object.freeze(moods)
   },
-  setCurrentMood (state, { mood }) {
+  setCurrentMood (state, mood) {
     state.currentMood = mood
   },
   setNextSongs (state, songs) {

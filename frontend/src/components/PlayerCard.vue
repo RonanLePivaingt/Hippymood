@@ -3,6 +3,7 @@
     <v-row justify="center">
       <v-card
         v-if="currentSong.song"
+        width="30rem"
         max-width="30rem"
         >
         <v-card-text>
@@ -23,11 +24,18 @@
             {{ currentSong.artist}}
           </div>
         </v-card-text>
+
         <v-card-actions>
           <v-btn text>Play</v-btn>
           <v-btn text>Pause</v-btn>
           <v-btn @click.stop="playNext" text>Next</v-btn>
         </v-card-actions>
+
+        <v-card-text>
+          <v-chip class="ma-2">
+            {{ currentMood.name }}
+          </v-chip>
+        </v-card-text>
       </v-card>
     </v-row>
   </v-container>
@@ -38,7 +46,10 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'PlayerCard',
-  computed: mapState('music', [ 'currentSong' ]),
+  computed: mapState('music', [
+    'currentSong',
+    'currentMood'
+  ]),
   methods: mapActions('music', [ 'playNext' ]),
 };
 </script>

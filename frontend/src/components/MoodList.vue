@@ -5,7 +5,7 @@
         <v-btn
           v-for="mood in moods"
           :key="mood.id"
-          @click="loadMoodSongs(mood.id)"
+          @click="changeMood(mood)"
           class="mood-btn">
           {{ mood.name }}
         </v-btn>
@@ -20,7 +20,7 @@ import { mapState, mapActions } from 'vuex'
 export default {
   name: 'MoodList',
   computed: mapState('music', [ 'moods' ]),
-  methods: mapActions('music', [ 'loadMoodSongs' ])
+  methods: mapActions('music', [ 'changeMood' ])
 };
 </script>
 
