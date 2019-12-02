@@ -1,7 +1,8 @@
 <template>
-  <v-container>
+  <v-container no-gutters>
     <v-row justify="center">
       <v-col
+        class="pa-0"
         sm="8"
         cols="12"
         align="center">
@@ -34,6 +35,6 @@ export default {
 
 <style>
 .mood-btn {
-  margin: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 </style>

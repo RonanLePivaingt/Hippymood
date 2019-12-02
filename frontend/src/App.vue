@@ -8,7 +8,7 @@
 
     <v-app-bar
       color="primary"
-      app clipped-left dark collapse-on-scroll>
+      app clipped-left dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title href="/">
         <router-link to="/" class="toolbar-title">
@@ -18,7 +18,7 @@
     </v-app-bar>
 
     <v-content>
-      <v-container fluid>
+      <v-container fluid class="pa-0">
         <router-view></router-view>
 
         <AudioPlayer/>

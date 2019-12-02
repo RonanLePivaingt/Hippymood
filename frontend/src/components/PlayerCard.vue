@@ -1,9 +1,9 @@
 <template>
-  <v-container>
+  <v-container class="pa-0">
     <v-row justify="center">
       <v-col
         v-if="currentSong.song"
-        cols="12"
+        cols="11"
         sm="8"
         md="6"
         lg="5"

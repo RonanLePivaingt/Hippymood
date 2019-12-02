@@ -40,7 +40,7 @@
 
       <v-btn
         @click="playNext"
-        fab>
+        fab outlined>
         <v-icon>mdi-skip-next</v-icon>
       </v-btn>
     </div>
@@ -77,6 +77,14 @@ export default {
 
   > a {
     color: rgba(0, 0, 0, 0.87);
+  }
+  &.theme--dark a  {
+    color: white;
+  }
+
+
+
+  > a {
     text-decoration: none;
     overflow: hidden;
 
@@ -91,6 +99,10 @@ export default {
 
   .actions {
     flex-shrink: 0;
+
+    button:last-child {
+      margin-left: 8px;
+    }
   }
 }
 </style>
