@@ -29,29 +29,8 @@
             </div>
           </v-card-text>
 
-          <v-card-actions
-            class="d-none d-sm-flex player-card-actions"
-            >
-            <v-btn
-              @click="play()"
-              v-show="playbackState === 'paused'"
-              color="primary"
-              class="play"
-              fab large>
-              <v-icon>mdi-play</v-icon>
-            </v-btn>
-            <v-btn
-              @click="pause()"
-              v-show="playbackState === 'playing'"
-              color="primary"
-              fab large>
-              <v-icon>mdi-pause</v-icon>
-            </v-btn>
-            <v-btn
-              @click.stop="playNext"
-              fab large>
-              <v-icon>mdi-skip-next</v-icon>
-            </v-btn>
+          <v-card-actions>
+            <PlayerControls fab />
           </v-card-actions>
 
           <v-card-text class="player-card-mood">
@@ -62,34 +41,23 @@
         </v-card>
       </v-col>
     </v-row>
-
-    <MoodList/>
   </v-container>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
-import MoodList from './MoodList';
+import { mapState } from 'vuex'
+import PlayerControls from './PlayerControls'
 
 export default {
   name: 'PlayerCard',
   components: {
-    MoodList,
+    PlayerControls,
   },
   computed: mapState('music', [
     'currentSong',
     'currentMood',
     'playbackState',
   ]),
-  methods: {
-    ...mapActions('music', [ 'playNext' ]),
-    play() {
-      this.$root.$emit('play');
-    },
-    pause() {
-      this.$root.$emit('pause');
-    },
-  },
 };
 </script>
 

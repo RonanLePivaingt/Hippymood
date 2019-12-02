@@ -82,8 +82,6 @@ export default {
     color: white;
   }
 
-
-
   > a {
     text-decoration: none;
     overflow: hidden;
@@ -100,7 +98,7 @@ export default {
   .actions {
     flex-shrink: 0;
 
-    button:last-child {
+    button {
       margin-left: 8px;
     }
   }

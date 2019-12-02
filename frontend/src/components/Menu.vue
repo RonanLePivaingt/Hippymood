@@ -27,7 +27,7 @@
       </v-list-item-content>
     </v-list-item>
 
-    <v-list-item @click="videoMode = !videoMode">
+    <v-list-item @click="toggleVideoMode">
       <v-list-item-action>
         <v-switch v-model="videoMode" readonly class="ma-2"></v-switch>
       </v-list-item-action>
@@ -66,13 +66,16 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
   name: 'Menu',
   data: () => ({
     darkMode: false,
-    videoMode: false,
   }),
+  computed: mapState('music', [ 'videoMode' ]),
   methods: {
+    ...mapActions('music', [ 'toggleVideoMode' ]),
     darkModeToggle() {
       this.darkMode = !this.darkMode
       this.$vuetify.theme.dark = this.darkMode

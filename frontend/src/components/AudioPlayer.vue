@@ -1,10 +1,10 @@
 <template>
   <audio
-    autoplay
+    v-if="audioPlayback"
     v-on:ended="playNext()"
     :src="/music/ + currentSong.path"
     ref="audioPlayer"
-    >
+    autoplay>
     Your browser does not support the
     <code>audio</code> element.
   </audio>
@@ -15,7 +15,19 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'AudioPlayer',
-  computed: mapState('music', [ 'currentSong' ]),
+  computed: {
+    ...mapState('music', [
+      'currentSong',
+      'videoMode',
+    ]),
+    audioPlayback () {
+      if (this.videoMode && this.currentSong.youtube !== null) {
+        return false
+      }
+
+      return true
+    }
+  },
   created () {
     this.$root.$on('pause', this.pause);
     this.$root.$on('play', this.play);
@@ -26,12 +38,16 @@ export default {
       'playNext',
     ]),
     pause() {
-      this.$refs.audioPlayer.pause()
-      this.setPlaybackState('paused')
+      if (this.audioPlayback) {
+        this.$refs.audioPlayer.pause()
+        this.setPlaybackState('paused')
+      }
     },
     play() {
-      this.$refs.audioPlayer.play()
-      this.setPlaybackState('playing')
+      if (this.audioPlayback) {
+        this.$refs.audioPlayer.play()
+        this.setPlaybackState('playing')
+      }
     },
   }
 };

@@ -4,6 +4,7 @@ import vuetify from './plugins/vuetify'
 import store from './store'
 import VueRouter from 'vue-router'
 import routes from './routes'
+import VueYouTubeEmbed from 'vue-youtube-embed'
 
 if (process.env.NODE_ENV === 'development') {
   // Display user timings in dev tools to check components performance in browser dev tools
@@ -21,6 +22,7 @@ const router = new VueRouter({
 })
 
 Vue.use(VueRouter)
+Vue.use(VueYouTubeEmbed)
 
 new Vue({
   vuetify,

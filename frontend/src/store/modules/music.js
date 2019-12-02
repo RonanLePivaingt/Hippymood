@@ -6,7 +6,8 @@ const state = {
   currentMood: {},
   currentSong: {},
   nextSongs: [],
-  playbackState: ''
+  playbackState: '',
+  videoMode: false,
 }
 
 // actions
@@ -24,11 +25,22 @@ const actions = {
   },
   playNext ({ commit, state }) {
     if (state.nextSongs.length > 0) {
-      commit('setNextSongs', state.nextSongs)
+      if (!state.videoMode) {
+        commit('setNextSongs', state.nextSongs)
+      } else {
+        const data = {}
+        data.nextVideoSongs = state.nextSongs.filter(song => song.youtube !== null)
+        const nextVideoId = data.nextVideoSongs[0].id
+        data.nextSongs = state.nextSongs.filter(song => song.youtube !== nextVideoId)
+        commit('setVideoNextSongs', data)
+      }
     }
   },
   setPlaybackState ({ commit }, playbackState) {
     commit('setPlaybackState', playbackState)
+  },
+  toggleVideoMode ({ commit, state }) {
+    commit('setVideoMode', !state.videoMode)
   },
 }
 
@@ -47,8 +59,16 @@ const mutations = {
     state.playbackState = 'playing'
     state.nextSongs = Object.freeze(songs.slice(1))
   },
+  setVideoNextSongs (state, data) {
+    state.currentSong = data.nextVideoSongs[0]
+    state.playbackState = 'playing'
+    state.nextSongs = Object.freeze(data.nextSongs.slice(1))
+  },
   setPlaybackState (state, playbackState) {
     state.playbackState = playbackState
+  },
+  setVideoMode (state, videoMode) {
+    state.videoMode = videoMode
   },
 }
 
