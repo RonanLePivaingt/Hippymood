@@ -5,7 +5,8 @@ const state = {
   moods: [],
   currentMood: {},
   currentSong: {},
-  nextSongs: []
+  nextSongs: [],
+  playbackState: ''
 }
 
 // actions
@@ -26,7 +27,9 @@ const actions = {
       commit('setNextSongs', state.nextSongs)
     }
   },
-
+  setPlaybackState ({ commit }, playbackState) {
+    commit('setPlaybackState', playbackState)
+  },
 }
 
 // mutations
@@ -41,7 +44,11 @@ const mutations = {
   },
   setNextSongs (state, songs) {
     state.currentSong = songs[0]
+    state.playbackState = 'playing'
     state.nextSongs = Object.freeze(songs.slice(1))
+  },
+  setPlaybackState (state, playbackState) {
+    state.playbackState = playbackState
   },
 }
 
