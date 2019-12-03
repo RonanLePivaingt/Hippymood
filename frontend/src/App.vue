@@ -10,6 +10,7 @@
       color="primary"
       app clipped-left dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+
       <v-toolbar-title href="/">
         <router-link to="/" class="toolbar-title">
           Hippy Mood
@@ -18,13 +19,15 @@
     </v-app-bar>
 
     <v-content>
-      <v-container fluid class="pa-0">
+      <div class="d-flex pa-0">
         <router-view></router-view>
 
         <AudioPlayer/>
-      </v-container>
-      <Footer/>
+      </div>
+
     </v-content>
+
+    <Footer/>
   </v-app>
 </template>
 

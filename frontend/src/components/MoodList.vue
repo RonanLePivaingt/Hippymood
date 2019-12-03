@@ -1,23 +1,20 @@
 <template>
-  <v-container no-gutters>
-    <v-row justify="center">
-      <v-col
-        class="pa-0"
-        sm="8"
-        cols="12"
-        align="center">
-        <v-btn
-          v-for="mood in moods"
-          :key="mood.id"
-          @click="changeMood(mood)"
-          class="mood-btn"
-          :color="mood.id === currentMood.id ? 'primary' : ''"
-          >
-          {{ mood.name }}
-        </v-btn>
-      </v-col>
-    </v-row>
-  </v-container>
+  <v-col
+    align="center"
+    sm="8"
+    cols="12"
+    class="pa-0"
+    >
+    <v-btn
+      v-for="mood in moods"
+      :key="mood.id"
+      @click="changeMood(mood)"
+      class="mood-btn"
+      :color="mood.id === currentMood.id ? 'primary' : ''"
+      >
+      {{ mood.name }}
+    </v-btn>
+  </v-col>
 </template>
 
 <script>

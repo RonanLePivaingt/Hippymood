@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <v-col align="center" class="pa-0">
     <PlayerCard v-if="!videoMode" />
     <PlayerVideo v-if="videoMode" />
 
     <MoodList/>
-  </div>
+  </v-col>
 </template>
 
 <script>
