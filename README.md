@@ -19,6 +19,7 @@ docker-compose run --rm backend yarn dbInit
 docker-compose run --rm backend yarn scan
 
 # Project is now ready for startup
+
 docker-compose up
 ```
 
@@ -44,5 +45,6 @@ docker-compose run --rm backend yarn dbInit
 docker-compose run --rm backend yarn scan
 
 # Project is now ready for startup
+
 docker-compose up
 ```
