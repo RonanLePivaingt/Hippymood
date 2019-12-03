@@ -1,0 +1,18 @@
+{
+  "music": {
+    "path": "../music",
+    "scanConcurrency": 4
+  },
+  "frontend": {
+    "apiProxy": {
+      "target": "http://backend:8090",
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/api": ""
+      }
+    },
+    "musicProxy": {
+      "target": "http://backend:8090"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "music": {
+    "path": "../music"
+  },
+  "global": {
+    "masterUser": ""
+  },
+  "frontend": {
+    "adminShownName": "Admin"
+  }
+}
