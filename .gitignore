@@ -2,7 +2,7 @@
 node_modules/
 music
 npm-debug.log
-docker/mariadb-data
+docker/postgres-data
 docker-compose.override.yml
 config/*
 !config/default.json
