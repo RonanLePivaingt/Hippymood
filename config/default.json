@@ -6,7 +6,7 @@
     "database": "hippymood"
   },
   "music": {
-    "path": "music",
+    "path": "../music",
     "scanConcurrency": 4
   },
   "global": {
