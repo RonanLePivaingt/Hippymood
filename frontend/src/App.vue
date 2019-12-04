@@ -8,6 +8,7 @@
 
     <v-app-bar
       color="primary"
+      :value="Object.keys(currentSong).length !== 0"
       app clipped-left dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
@@ -19,11 +20,16 @@
     </v-app-bar>
 
     <v-content>
-      <div class="d-flex pa-0">
+      <v-col
+        class="main-content pa-0"
+        cols="12"
+        md="7"
+        align-self="center"
+        >
         <router-view></router-view>
 
         <AudioPlayer/>
-      </div>
+      </v-col>
 
     </v-content>
 
@@ -32,6 +38,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Menu from './components/Menu';
 import AudioPlayer from './components/AudioPlayer';
 import Footer from './components/Footer';
@@ -45,10 +52,12 @@ export default {
   },
   created () {
     this.$store.dispatch('music/getMoods')
+    // this.$vuetify.theme.dark = true
   },
   data: () => ({
     drawer: false,
   }),
+  computed: mapState('music', [ 'currentSong' ]),
 };
 </script>
 
@@ -56,5 +65,9 @@ export default {
 .v-application a.toolbar-title {
   color: #fff;
   text-decoration: inherit;
+}
+
+.main-content {
+  margin: 0 auto;
 }
 </style>

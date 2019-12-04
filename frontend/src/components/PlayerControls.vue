@@ -55,12 +55,16 @@ export default {
 </script>
 
 <style lang="scss">
-.player-card-actions.fab {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-.v-application--is-ltr .v-card__actions .player-card-actions .v-btn--fab + .v-btn--fab {
-  margin-left: 0px;
+.player-card-actions {
+  .fab {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  &:not(.fab) button:last-child {
+    margin-left: 1rem;
+  }
+  .v-application--is-ltr .v-card__actions .player-card-actions .v-btn--fab + .v-btn--fab {
+    margin-left: 0px;
+  }
 }
 </style>
-

@@ -1,7 +1,7 @@
 <template>
   <v-col
     align="center"
-    sm="8"
+    sm="10"
     cols="12"
     class="pa-0"
     >

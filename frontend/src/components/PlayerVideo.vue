@@ -1,6 +1,6 @@
 <template>
   <v-col
-    v-if="videoMode"
+    v-if="videoMode && currentSong.song"
     align="center"
     class="video-player pa-0"
     >
@@ -98,14 +98,6 @@ export default {
 
 <style lang="scss">
 .video-player {
-  iframe {
-    width: 100%;
-
-    @media screen and (min-width: 600px) {
-      width: 60%;
-    }
-  }
-
   .video-player-card {
     @media screen and (min-width: 600px) {
       width: 30rem;
