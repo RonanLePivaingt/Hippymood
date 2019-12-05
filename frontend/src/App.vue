@@ -1,23 +1,11 @@
 <template>
-  <v-app>
+  <v-app class="app">
     <v-navigation-drawer
       v-model="drawer"
-      app clipped>
+      disable-resize-watcher
+      app>
       <Menu />
     </v-navigation-drawer>
-
-    <v-app-bar
-      color="primary"
-      :value="Object.keys(currentSong).length !== 0"
-      app clipped-left dark>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-
-      <v-toolbar-title href="/">
-        <router-link to="/" class="toolbar-title">
-          Hippy Mood
-        </router-link>
-      </v-toolbar-title>
-    </v-app-bar>
 
     <v-content>
       <v-col
@@ -26,6 +14,14 @@
         md="7"
         align-self="center"
         >
+        <h1 class="display-2 ma-4 text-center"> Hippy Mood </h1>
+
+        <v-breadcrumbs
+          class="breadcrumb"
+          v-show="$route.path !== '/'"
+          :items="breadcrumbItems"
+          large></v-breadcrumbs>
+
         <router-view></router-view>
 
         <AudioPlayer/>
@@ -33,7 +29,7 @@
 
     </v-content>
 
-    <Footer/>
+    <Footer v-on:show-menu="drawer = true" />
   </v-app>
 </template>
 
@@ -57,17 +53,35 @@ export default {
   data: () => ({
     drawer: false,
   }),
-  computed: mapState('music', [ 'currentSong' ]),
+  computed: {
+    ...mapState('music', [ 'currentSong' ]),
+    breadcrumbItems () {
+      return [
+        {
+          text: 'Hippy Mood',
+          disabled: false,
+          to: '/',
+        },
+        {
+          text: this.$route.name,
+          disabled: false,
+        },
+      ]
+    },
+  },
 };
 </script>
 
-<style>
-.v-application a.toolbar-title {
-  color: #fff;
-  text-decoration: inherit;
-}
-
-.main-content {
-  margin: 0 auto;
+<style lang="scss">
+.app {
+  h1.display-3 {
+    font-weight: 400;
+  }
+  .breadcrumb {
+    padding-left: 0;
+  }
+  .main-content {
+    margin: 0 auto;
+  }
 }
 </style>

@@ -1,8 +1,17 @@
 <template>
   <v-footer
     v-if="currentSong.song"
-    class="d-flex d-sm-none"
+    class="mobile-footer d-flex d-sm-none"
     fixed>
+
+    <v-btn
+      v-on:click="$emit('show-menu')"
+      color=""
+      elevation="0"
+      fab small>
+      <v-icon>mdi-menu</v-icon>
+    </v-btn>
+
     <router-link to="/">
       <div class="flex-column song-information">
         <p>
@@ -69,11 +78,9 @@ export default {
 </script>
 
 <style lang="scss">
-.v-application .song-information p {
-  margin-bottom: 0px;
-}
-.v-application footer {
+footer.mobile-footer {
   flex-wrap: nowrap;
+  padding: 6px 8px;
 
   > a {
     color: rgba(0, 0, 0, 0.87);
@@ -88,6 +95,7 @@ export default {
 
     .song-information {
       p {
+        margin-bottom: 0px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;

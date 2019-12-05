@@ -1,7 +1,5 @@
 <template>
   <div v-if="!currentSong.song" class="intro pa-4">
-    <h1 class="display-3 ma-6"> Hippy Mood </h1>
-
     <p class="text-left">
        Un site pour écouter de la musique selon ta "mood"
     </p>
@@ -52,9 +50,6 @@ export default {
 
 <style lang="scss">
 .intro {
-  h1.display-3 {
-    font-weight: 400;
-  }
   p {
     font-size: 1.3rem;
 

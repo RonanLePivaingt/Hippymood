@@ -2,6 +2,30 @@
   <v-col v-if="currentSong.song">
 
     <v-card class="player-card">
+      <v-card-actions class="player-card-top d-none d-sm-flex" color="primary">
+        <v-spacer></v-spacer>
+
+        <v-btn
+          to="/search"
+          elevation="0"
+          text fab small>
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+
+        <v-menu bottom left>
+          <template v-slot:activator="{ on }">
+            <v-btn
+              v-on="on"
+              class="ma-2"
+              elevation="0"
+              text fab small>
+              <v-icon>mdi-menu</v-icon>
+            </v-btn>
+          </template>
+          <Menu />
+        </v-menu>
+      </v-card-actions>
+
       <v-card-text class="player-card-top">
         <p class="title">
         <v-icon>mdi-music-note</v-icon>
@@ -37,11 +61,13 @@
 <script>
 import { mapState } from 'vuex'
 import PlayerControls from './PlayerControls'
+import Menu from './Menu'
 
 export default {
   name: 'PlayerCard',
   components: {
     PlayerControls,
+    Menu,
   },
   computed: mapState('music', [
     'currentSong',
@@ -61,6 +87,10 @@ export default {
 
   .player-card-top {
     background-color: rgb(25, 118, 210);
+
+    .theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+      background-color: inherit;
+    }
 
     i.v-icon {
       color: rgba(255, 255, 255, 0.8);

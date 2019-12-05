@@ -83,9 +83,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.mood-btn {
-  margin: 0.5rem;
-}
-</style>
