@@ -36,6 +36,10 @@ const actions = {
       }
     }
   },
+  playSearchSong ({ commit, state }, song) {
+    commit('setCurrentSong', song)
+    commit('setCurrentMood', state.moods.find(mood => mood.id === song.moodId))
+  },
   setPlaybackState ({ commit }, playbackState) {
     commit('setPlaybackState', playbackState)
   },
@@ -53,6 +57,10 @@ const mutations = {
   },
   setCurrentMood (state, mood) {
     state.currentMood = mood
+  },
+  setCurrentSong (state, song) {
+    state.playbackState = 'playing'
+    state.currentSong = song
   },
   setNextSongs (state, songs) {
     state.currentSong = songs[0]

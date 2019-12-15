@@ -104,7 +104,7 @@ exports.Search = function(req, res){
     .then(function(rows) {
       var data = {};
       if (rows.length > 0)
-        data.searchResults = rows;
+        data = rows;
       res.send(data);
     })
     .catch(function(error) {

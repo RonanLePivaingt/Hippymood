@@ -10,5 +10,7 @@ export default {
       { moodId }
     );
   },
-
+  search( value ) {
+    return axios.get(`/api/search/${value}`);
+  }
 }

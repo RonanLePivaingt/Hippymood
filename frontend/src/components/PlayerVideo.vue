@@ -49,6 +49,14 @@
               {{ currentSong.artist}}
             </p>
           </v-col>
+
+          <v-btn
+            to="/search"
+            elevation="0"
+            class="ma-2"
+            text fab small>
+            <v-icon>mdi-magnify</v-icon>
+          </v-btn>
           <v-menu
             class="d-none d-sm-flex"
             bottom left>
