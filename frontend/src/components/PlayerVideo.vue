@@ -49,7 +49,9 @@
               {{ currentSong.artist}}
             </p>
           </v-col>
-          <v-menu bottom left>
+          <v-menu
+            class="d-none d-sm-flex"
+            bottom left>
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"

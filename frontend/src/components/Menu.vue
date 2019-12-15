@@ -1,5 +1,15 @@
 <template>
   <v-list dense>
+    <v-list-item class="d-flex d-sm-none">
+      <v-list-item-content>
+        <v-list-item-title class="title pa-2 ma-2">
+          Hippy Mood
+        </v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
+
+    <v-divider class="d-flex d-sm-none"></v-divider>
+
     <v-list-item link to="/">
       <v-list-item-action>
         <v-icon>mdi-play-circle-outline</v-icon>

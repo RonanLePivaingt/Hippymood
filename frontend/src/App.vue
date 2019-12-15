@@ -2,8 +2,7 @@
   <v-app class="app">
     <v-navigation-drawer
       v-model="drawer"
-      disable-resize-watcher
-      app>
+      disable-resize-watcher app>
       <Menu />
     </v-navigation-drawer>
 
