@@ -50,27 +50,27 @@
             </p>
           </v-col>
 
-          <v-btn
-            to="/search"
-            elevation="0"
-            class="ma-2"
-            text fab small>
-            <v-icon>mdi-magnify</v-icon>
-          </v-btn>
-          <v-menu
-            class="d-none d-sm-flex"
-            bottom left>
-            <template v-slot:activator="{ on }">
-              <v-btn
-                v-on="on"
-                class="ma-2"
-                elevation="0"
-                text fab small>
-                <v-icon>mdi-menu</v-icon>
-              </v-btn>
-            </template>
-            <Menu />
-          </v-menu>
+          <div class="d-none d-sm-flex">
+            <v-btn
+              to="/search"
+              elevation="0"
+              class="ma-2"
+              text fab small>
+              <v-icon>mdi-magnify</v-icon>
+            </v-btn>
+            <v-menu bottom left>
+              <template v-slot:activator="{ on }">
+                <v-btn
+                  v-on="on"
+                  class="ma-2"
+                  elevation="0"
+                  text fab small>
+                  <v-icon>mdi-menu</v-icon>
+                </v-btn>
+              </template>
+              <Menu />
+            </v-menu>
+          </div>
         </v-row>
       </v-card-text>
 

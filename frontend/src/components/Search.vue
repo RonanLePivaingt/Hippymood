@@ -1,5 +1,5 @@
 <template>
-  <v-col>
+  <v-col class="search">
     <h2> Search </h2>
 
     <v-text-field
@@ -14,24 +14,23 @@
       v-for="song in searchResults"
       :key="song.id"
       @click="play(song)"
+      class="pa-0"
       three-line>
-      <v-list-item-content>
-        <v-list-item-title>
-          <v-icon>mdi-music-note</v-icon>
-          {{ song.song }}
-        </v-list-item-title>
-        <v-list-item-subtitle v-show="song.album">
-          <v-icon>mdi-album</v-icon>
-          {{ song.album }}
-        </v-list-item-subtitle>
-        <v-list-item-subtitle>
-          <v-icon>mdi-account</v-icon>
-          {{ song.artist }}
-        </v-list-item-subtitle>
-      </v-list-item-content>
-
-      <v-list-item-content>
-
+      <v-list-item-content class="nowrap">
+        <v-col>
+          <v-list-item-title class="flex-wrap">
+            <v-icon>mdi-music-note</v-icon>
+            {{ song.song }}
+          </v-list-item-title>
+          <v-list-item-subtitle v-show="song.album">
+            <v-icon>mdi-album</v-icon>
+            {{ song.album }}
+          </v-list-item-subtitle>
+          <v-list-item-subtitle>
+            <v-icon>mdi-account</v-icon>
+            {{ song.artist }}
+          </v-list-item-subtitle>
+        </v-col>
         <v-btn
           class="mood-btn"
           >
@@ -39,11 +38,14 @@
         </v-btn>
 
       </v-list-item-content>
+
     </v-list-item>
 
-    <v-col v-show="noResult">
+    <v-col
+      v-show="noResult"
+      class="text-center">
       <!-- eslint-disable -->
-      <p class="emoji ma-4">(>_<)</p>
+      <p class="emoji">(>_<)</p>
       <!-- eslint-enable -->
 
       <p> No search result for : {{ searchValue }} </p>
@@ -100,3 +102,16 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.search {
+  .emoji {
+    font-size: 8rem;
+    color: rgba(0, 0, 0, 0.54);
+
+    .theme--dark & {
+      color: rgba(255, 255, 255, 0.54);
+    }
+  }
+}
+</style>
