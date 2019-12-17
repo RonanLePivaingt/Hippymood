@@ -30,7 +30,7 @@
 
     <v-list-item @click="darkModeToggle()">
       <v-list-item-action>
-        <v-switch v-model="darkMode" readonly class="ma-2"></v-switch>
+        <v-switch v-model="darkMode" color="secondary" readonly class="ma-2"></v-switch>
       </v-list-item-action>
       <v-list-item-content>
         <v-list-item-title>Dark mode</v-list-item-title>
@@ -39,7 +39,7 @@
 
     <v-list-item @click="toggleVideoMode">
       <v-list-item-action>
-        <v-switch v-model="videoMode" readonly class="ma-2"></v-switch>
+        <v-switch v-model="videoMode" color="secondary" readonly class="ma-2"></v-switch>
       </v-list-item-action>
       <v-list-item-content>
         <v-list-item-title>Video mode</v-list-item-title>

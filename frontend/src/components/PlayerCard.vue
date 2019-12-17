@@ -86,7 +86,7 @@ export default {
   }
 
   .player-card-top {
-    background-color: rgb(25, 118, 210);
+    background-color: var(--v-secondary-base);
 
     .theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
       background-color: inherit;
