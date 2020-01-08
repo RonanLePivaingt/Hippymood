@@ -16,9 +16,9 @@
       @click="play(song)"
       class="pa-0"
       three-line>
-      <v-list-item-content class="nowrap">
-        <v-col>
-          <v-list-item-title class="flex-wrap">
+      <v-list-item-content class="flex-nowrap">
+        <v-col class="metadata flex-wrap">
+          <v-list-item-title>
             <v-icon>mdi-music-note</v-icon>
             {{ song.song }}
           </v-list-item-title>
@@ -105,6 +105,16 @@ export default {
 
 <style lang="scss">
 .search {
+  .metadata {
+    overflow: hidden;
+
+    .v-list-item__subtitle {
+      display: inherit;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
   .emoji {
     font-size: 8rem;
     color: rgba(0, 0, 0, 0.54);
