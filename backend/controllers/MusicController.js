@@ -86,26 +86,37 @@ exports.Mood = function(req, res){
     });
 };
 
-/*
- * Function to get song infos by submitting a genre
+/**
+ * Search songs by keywords
  */
 exports.Search = function(req, res){
-  var keywords = '%' + req.params.keywords + '%';
+  const keywords = req.params.keywords;
+  const similarity_threshold = 0.25;
 
-  knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'songs.path', 'albums.name AS album', 'genres.name as mood', 'genres.id as moodId')
+  knex.select(
+    'songs.id',
+    'songs.name AS song',
+    'artists.name AS artist',
+    'songs.path',
+    'albums.name AS album',
+    'genres.name AS mood',
+    'genres.id AS moodId'
+  )
     .from('songs')
-    .join('genres_relations', 'songs.id', '=', 'genres_relations.id_song')
-    .join('genres', 'genres.id', '=', 'genres_relations.id')
-    .join('artists', 'artists.id', '=', 'songs.id_artist')
-    .join('albums', 'albums.id', '=', 'songs.id_album')
-    .where('songs.name', 'like', keywords)
-    .orWhere('artists.name', 'like', keywords)
-    .orWhere('albums.name', 'like', keywords)
+    .join('genres_relations', 'songs.id',   '=', 'genres_relations.id_song')
+    .join('genres',           'genres.id',  '=', 'genres_relations.id')
+    .join('artists',          'artists.id', '=', 'songs.id_artist')
+    .join('albums',           'albums.id',  '=', 'songs.id_album')
+    .whereRaw("SIMILARITY(?, artists.name) > ?", [keywords, similarity_threshold])
+    .orWhereRaw("SIMILARITY(?, albums.name) > ?", [keywords, similarity_threshold])
+    .orWhereRaw("SIMILARITY(?, songs.name) > ?", [keywords, similarity_threshold])
+    .orderByRaw("SIMILARITY(?, artists.name) + SIMILARITY(?, albums.name) + SIMILARITY(?, songs.name)", [keywords, keywords, keywords])
     .then(function(rows) {
-      var data = {};
-      if (rows.length > 0)
-        data = rows;
-      res.send(data);
+      if (rows.length > 0) {
+        res.send( rows );
+      } else {
+        res.send( {} );
+      }
     })
     .catch(function(error) {
       console.error(error);
