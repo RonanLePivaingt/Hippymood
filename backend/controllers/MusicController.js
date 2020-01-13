@@ -115,7 +115,7 @@ exports.Search = function(req, res){
 /*
  * Function to get song infos by submitting a genre
  */
-exports.newSongs = function(req, res){
+exports.whatsNew = function(req, res){
   res.header("Cache-Control", "no-cache, no-store, must-revalidate");
   res.header("Pragma", "no-cache");
   res.header("Expires", 0);
@@ -135,12 +135,12 @@ exports.newSongs = function(req, res){
     select.offset(page * 10);
 
   select.then(function(rows) {
-    var data = {};
+    if (rows.length > 0) {
+      res.send(rows);
+    } else {
+      res.send({});
+    }
 
-    if (rows.length > 0)
-      data.newSongs = rows;
-
-    res.send(data);
   })
   .catch(function(err) {
     console.error(err);

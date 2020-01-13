@@ -14,7 +14,7 @@ module.exports = function(app){
     app.get('/moods', MusicController.Moods);
     app.post('/mood/', MusicController.Mood);
     app.get('/resetMood/:id', MusicController.ResetMood);
-    app.get('/newSongs/:page', MusicController.newSongs);
+    app.get('/whatsNew/:page', MusicController.whatsNew);
     app.get('/search/:keywords', MusicController.Search);
     app.get('/searchSongPlayed/:songId', MusicController.searchSongPlayed);
     app.get('/admin/resetSession', MusicController.ResetSession);

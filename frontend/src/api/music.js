@@ -10,5 +10,7 @@ export default {
       { moodId }
     );
   },
-
+  getWhatsNew( page ) {
+    return axios.get( `/api/whatsNew/${page}` );
+  },
 }
