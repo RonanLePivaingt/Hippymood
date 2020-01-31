@@ -50,12 +50,11 @@
             </p>
           </v-col>
           <v-menu
-            class="d-none d-sm-flex"
             bottom left>
             <template v-slot:activator="{ on }">
               <v-btn
                 v-on="on"
-                class="ma-2"
+                class="d-none d-sm-flex ma-2"
                 elevation="0"
                 text fab small>
                 <v-icon>mdi-menu</v-icon>

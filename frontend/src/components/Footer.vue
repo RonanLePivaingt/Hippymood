@@ -34,7 +34,7 @@
     <div class="actions">
       <v-btn @click="play"
         v-show="playbackState === 'paused'"
-        color="primary"
+        color="secondary"
         fab>
         <v-icon>mdi-play</v-icon>
       </v-btn>
@@ -42,7 +42,7 @@
       <v-btn
         v-show="playbackState === 'playing'"
         @click="pause"
-        color="primary"
+        color="secondary"
         fab>
         <v-icon>mdi-pause</v-icon>
       </v-btn>

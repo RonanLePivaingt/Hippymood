@@ -10,7 +10,7 @@
       :key="mood.id"
       @click="changeMood(mood)"
       class="mood-btn"
-      :color="mood.id === currentMood.id ? 'primary' : ''"
+      :color="mood.id === currentMood.id ? 'secondary' : ''"
       >
       {{ mood.name }}
     </v-btn>

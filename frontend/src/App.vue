@@ -6,17 +6,17 @@
       <Menu />
     </v-navigation-drawer>
 
-    <v-content>
+    <v-content :class="currentSong.id ? 'footer-visible' : ''">
       <v-col
         class="main-content pa-0"
         cols="12"
         md="7"
         align-self="center"
         >
-        <h1 class="display-2 ma-4 text-center"> Hippy Mood </h1>
+        <h1 class="ma-4 text-center"> Hippy Mood </h1>
 
         <v-breadcrumbs
-          class="breadcrumb"
+          class="breadcrumb mx-3 mx-md-0"
           v-show="$route.path !== '/'"
           :items="breadcrumbItems"
           large></v-breadcrumbs>
@@ -25,7 +25,6 @@
 
         <AudioPlayer/>
       </v-col>
-
     </v-content>
 
     <Footer v-on:show-menu="drawer = true" />
@@ -73,14 +72,30 @@ export default {
 
 <style lang="scss">
 .app {
-  h1.display-3 {
+  h1 {
+    font-family: 'Monoton', cursive !important;
+    font-size: 3rem;
     font-weight: 400;
+
+    @media screen and (min-width: 600px) {
+      font-size: 4rem;
+    }
+    @media screen and (min-width: 1000px) {
+      font-size: 5rem;
+    }
   }
   .breadcrumb {
     padding-left: 0;
   }
   .main-content {
     margin: 0 auto;
+  }
+  main {
+    margin-bottom: 2rem;
+
+    &.footer-visible {
+      margin-bottom: 6rem;
+    }
   }
 }
 </style>

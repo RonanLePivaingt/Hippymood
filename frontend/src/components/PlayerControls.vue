@@ -3,7 +3,7 @@
     <v-btn
       @click="play()"
       v-show="playbackState === 'paused'"
-      color="primary"
+      color="secondary"
       class="play"
       :fab="fab"
       :rounded="rounded"
@@ -14,7 +14,7 @@
     <v-btn
       @click="pause()"
       v-show="playbackState === 'playing'"
-      color="primary"
+      color="secondary"
       :fab="fab"
       :rounded="rounded"
       large>
