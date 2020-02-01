@@ -1,5 +1,5 @@
 <template>
-  <v-col v-if="currentSong.song">
+  <v-col class="pa-0 pb-4" v-if="currentSong.song">
 
     <v-card class="player-card">
       <v-card-actions class="player-card-top d-none d-sm-flex" color="primary">

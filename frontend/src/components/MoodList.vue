@@ -3,7 +3,7 @@
     align="center"
     sm="10"
     cols="12"
-    class="pa-0"
+    class="pa-0 pt-4"
     >
     <v-btn
       v-for="mood in moods"

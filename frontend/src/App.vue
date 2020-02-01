@@ -13,7 +13,7 @@
         md="7"
         align-self="center"
         >
-        <h1 class="ma-4 text-center"> Hippy Mood </h1>
+        <h1 class="text-center"> Hippy Mood </h1>
 
         <v-breadcrumbs
           class="breadcrumb mx-3 mx-md-0"
@@ -73,15 +73,13 @@ export default {
 <style lang="scss">
 .app {
   h1 {
-    font-family: 'Monoton', cursive !important;
-    font-size: 3rem;
+    font-family: 'Grenadier-NF';
+    font-size: 4.5rem;
     font-weight: 400;
+    line-height: 1.4em;
 
     @media screen and (min-width: 600px) {
-      font-size: 4rem;
-    }
-    @media screen and (min-width: 1000px) {
-      font-size: 5rem;
+      font-size: 7rem;
     }
   }
   .breadcrumb {
@@ -94,8 +92,22 @@ export default {
     margin-bottom: 2rem;
 
     &.footer-visible {
-      margin-bottom: 6rem;
+      margin-bottom: 5rem;
+
+      @media screen and (min-width: 600px) {
+        margin-bottom: 2rem;
+      }
     }
   }
+}
+
+@font-face {
+    font-family: 'Grenadier-NF';
+    src:url('assets/fonts/GrenadierNF/Grenadier-NF.ttf.woff2') format('woff2'),
+        url('assets/fonts/GrenadierNF/Grenadier-NF.ttf.woff') format('woff'),
+        url('assets/fonts/GrenadierNF/Grenadier-NF.ttf.svg#Grenadier-NF') format('svg'),
+        url('assets/fonts/GrenadierNF/Grenadier-NF.ttf.eot'),
+        url('assets/fonts/GrenadierNF/Grenadier-NF.ttf.eot?#iefix') format('embedded-opentype');
+    font-style: normal;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!currentSong.song" class="intro pa-4">
+  <div v-if="!currentSong.song" class="intro px-4">
     <p class="text-left">
        Un site pour écouter de la musique selon ta "mood"
     </p>
