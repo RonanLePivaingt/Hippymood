@@ -8,7 +8,7 @@
       C'est comme une boite de chocolat, tant que t'as pas essayé tu ne sais pas! Des fois tu reviens, des fois pas...
     </p>
 
-    <div class="actions d-flex justify-center align-center">
+    <div class="actions d-flex justify-center align-center mb-3">
       <v-switch
         :input-value="videoMode"
         @change="toggleVideoMode"
@@ -17,7 +17,7 @@
 
       <v-btn
         to="/search"
-        class="ma-4"
+        class="mx-4"
         fab small>
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
@@ -74,7 +74,6 @@ export default {
 
   .v-divider {
     width: 40%;
-    margin-top: 0.5rem;
   }
 }
 </style>
