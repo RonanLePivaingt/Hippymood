@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2> Admin </h2>
+    <h2> Administration </h2>
 
     <p class="text-justify">
       To be implemented...

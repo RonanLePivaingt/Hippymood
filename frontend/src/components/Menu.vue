@@ -17,7 +17,7 @@
             <v-icon>mdi-play-circle-outline</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Player</v-list-item-title>
+            <v-list-item-title>Lecteur</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -26,16 +26,16 @@
             <v-icon>mdi-new-box</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Whats new</v-list-item-title>
+            <v-list-item-title>Quoi de neuf ?</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
         <v-list-item @click="toggleVideoMode">
-          <v-list-item-action>
-            <v-switch v-model="videoMode" color="secondary" readonly class="ma-2"></v-switch>
+          <v-list-item-action class="mr-0">
+            <v-switch v-model="videoMode" color="secondary" readonly class="mr-4"></v-switch>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Video mode</v-list-item-title>
+            <v-list-item-title>Mode vidéo</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -44,7 +44,7 @@
             <v-icon>mdi-download</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Download</v-list-item-title>
+            <v-list-item-title>Télécharger</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 

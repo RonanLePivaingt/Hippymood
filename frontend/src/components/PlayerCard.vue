@@ -7,7 +7,6 @@
 
         <v-btn
           to="/search"
-          elevation="0"
           text fab small>
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
@@ -17,7 +16,6 @@
             <v-btn
               v-on="on"
               class="ma-2"
-              elevation="0"
               text fab small>
               <v-icon>mdi-menu</v-icon>
             </v-btn>

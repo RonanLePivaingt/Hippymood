@@ -15,11 +15,26 @@
         >
         <h1 class="text-center"> Hippy Mood </h1>
 
-        <v-breadcrumbs
-          class="breadcrumb mx-3 mx-md-0"
-          v-show="$route.path !== '/'"
-          :items="breadcrumbItems"
-          large></v-breadcrumbs>
+        <v-row justify="space-between" align="center" class="px-6">
+          <v-breadcrumbs
+            class="breadcrumb mx-md-0"
+            v-show="$route.path !== '/'"
+            :items="breadcrumbItems"
+            large></v-breadcrumbs>
+
+          <v-menu bottom left>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                v-on="on"
+                class="breadcrumb-menu ma-2"
+                v-show="$route.path !== '/'"
+                icon text large>
+                <v-icon>mdi-menu</v-icon>
+              </v-btn>
+            </template>
+            <Menu />
+          </v-menu>
+        </v-row>
 
         <router-view></router-view>
 
@@ -97,6 +112,14 @@ export default {
       @media screen and (min-width: 600px) {
         margin-bottom: 2rem;
       }
+    }
+  }
+  .breadcrumb-menu {
+    float: right;
+    display: none;
+
+    @media screen and (min-width: 600px) {
+      display: inline;
     }
   }
 }
