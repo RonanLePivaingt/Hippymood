@@ -1,5 +1,5 @@
 <template>
-  <div class="about">
+  <v-col class="about">
     <h2> About </h2>
 
     <div class="made-with-love">
@@ -81,7 +81,7 @@
           <v-icon size="10rem">mdi-github-circle</v-icon>
         </a>
       </v-row>
-  </div>
+  </v-col>
 </template>
 
 <script>
