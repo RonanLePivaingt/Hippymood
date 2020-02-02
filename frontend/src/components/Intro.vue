@@ -13,6 +13,7 @@
         :input-value="videoMode"
         @change="toggleVideoMode"
         label="Mode video"
+        color="secondary"
         ></v-switch>
 
       <v-btn
@@ -22,8 +23,16 @@
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
+      <v-btn
+        class="mr-4"
+        fab small
+        @click="toggleDarkMode()" >
+            <v-icon v-show="!darkMode">mdi-brightness-7</v-icon>
+            <v-icon v-show="darkMode">mdi-brightness-4</v-icon>
+      </v-btn>
+
       <v-btn class="new" to="/whatsnew">
-        <v-icon>mdi-new-box</v-icon>
+        <v-icon left>mdi-new-box</v-icon>
         Quoi de neuf ?
       </v-btn>
     </div>
@@ -37,14 +46,20 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Intro',
-  computed: mapState('music', [
-    'currentSong',
-    'videoMode',
-  ]),
-  methods: mapActions('music', [
-    'playNext',
-    'toggleVideoMode',
-  ]),
+  computed: {
+    ...mapState('music', [
+      'currentSong',
+      'videoMode',
+    ]),
+    ...mapState(['darkMode']),
+  },
+  methods: {
+    ...mapActions('music', [
+      'playNext',
+      'toggleVideoMode',
+    ]),
+    ...mapActions([ 'toggleDarkMode' ]),
+  }
 };
 </script>
 

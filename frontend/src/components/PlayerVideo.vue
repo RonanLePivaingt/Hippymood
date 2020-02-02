@@ -55,7 +55,6 @@
               <v-btn
                 v-on="on"
                 class="d-none d-sm-flex ma-2"
-                elevation="0"
                 text fab small>
                 <v-icon>mdi-menu</v-icon>
               </v-btn>

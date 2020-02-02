@@ -77,7 +77,7 @@
         <v-list-item class="pa-0">
           <v-spacer></v-spacer>
           <v-btn
-            @click="darkModeToggle()"
+            @click="toggleDarkMode()"
             class="ma-2"
             text icon>
             <v-icon v-show="!darkMode">mdi-brightness-7</v-icon>
@@ -95,16 +95,13 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Menu',
-  data: () => ({
-    darkMode: false,
-  }),
-  computed: mapState('music', [ 'videoMode' ]),
+  computed: {
+    ...mapState('music', [ 'videoMode' ]),
+    ...mapState([ 'darkMode' ]),
+  },
   methods: {
     ...mapActions('music', [ 'toggleVideoMode' ]),
-    darkModeToggle() {
-      this.darkMode = !this.darkMode
-      this.$vuetify.theme.dark = this.darkMode
-    }
+    ...mapActions([ 'toggleDarkMode' ]),
   }
 };
 </script>
