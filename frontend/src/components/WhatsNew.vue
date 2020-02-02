@@ -9,7 +9,7 @@
       class="pa-0"
       three-line>
       <v-list-item-content class="flex-nowrap">
-        <v-col class="metadata flex-wrap">
+        <v-col class="metadata flex-wrap pl-0">
           <v-list-item-title>
             <v-icon>mdi-music-note</v-icon>
             {{ song.song }}
