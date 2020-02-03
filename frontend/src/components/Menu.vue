@@ -25,6 +25,19 @@
         </v-list-item>
 
         <v-list-item
+          class="d-flex d-sm-none"
+          to="/search"
+          link
+        >
+          <v-list-item-action>
+            <v-icon>mdi-magnify</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Recherche</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item
           to="/whatsnew"
           link
         >
@@ -53,6 +66,7 @@
         <v-list-item
           to="/download"
           link
+          class="d-none"
         >
           <v-list-item-action>
             <v-icon>mdi-download</v-icon>
