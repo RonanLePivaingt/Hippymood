@@ -5,7 +5,7 @@
     <v-text-field
       ref="searchField"
       :loading="loading"
-      label="Song, artist or album name"
+      label="Chanson, album ou artiste"
       clearable
       @input="debouncedSearch"
       @click:clear="searchResults = []"

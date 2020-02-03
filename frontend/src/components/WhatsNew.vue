@@ -1,6 +1,6 @@
 <template>
   <v-col class="whats-new">
-    <h2> What's New </h2>
+    <h2> Quoi de neuf ? </h2>
 
     <v-list>
       <v-list-item
