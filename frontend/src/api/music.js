@@ -12,5 +12,8 @@ export default {
   },
   search( value ) {
     return axios.get(`/api/search/${value}`);
-  }
+  },
+  getWhatsNew( page ) {
+    return axios.get( `/api/whatsNew/${page}` );
+  },
 }
