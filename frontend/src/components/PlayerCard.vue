@@ -79,7 +79,7 @@
 import { mapState } from 'vuex'
 import Menu from './Menu'
 import PlayerControls from './PlayerControls'
-import DemoSnackbar from './DemoSnackbar'
+import DemoSnackbar from './demo/DemoSnackbar'
 
 export default {
   name: 'PlayerCard',
