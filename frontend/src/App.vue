@@ -2,7 +2,9 @@
   <v-app class="app">
     <v-navigation-drawer
       v-model="drawer"
-      disable-resize-watcher app>
+      disable-resize-watcher
+      app
+    >
       <Menu />
     </v-navigation-drawer>
 
@@ -12,22 +14,50 @@
         cols="12"
         md="7"
         align-self="center"
+      >
+        <h1 class="text-center">
+          Hippy Mood
+        </h1>
+
+        <v-row
+          class="px-6"
+          justify="space-between"
+          align="center"
         >
-        <h1 class="text-center"> Hippy Mood </h1>
+          <v-breadcrumbs
+            v-show="$route.path !== '/'"
+            class="breadcrumb mx-md-0"
+            :items="breadcrumbItems"
+            large
+          />
 
-        <v-breadcrumbs
-          class="breadcrumb mx-3 mx-md-0"
-          v-show="$route.path !== '/'"
-          :items="breadcrumbItems"
-          large></v-breadcrumbs>
+          <v-menu
+            bottom
+            left
+          >
+            <template v-slot:activator="{ on }">
+              <v-btn
+                v-show="$route.path !== '/'"
+                class="breadcrumb-menu ma-2"
+                icon
+                text
+                large
+                v-on="on"
+              >
+                <v-icon>mdi-menu</v-icon>
+              </v-btn>
+            </template>
+            <Menu />
+          </v-menu>
+        </v-row>
 
-        <router-view></router-view>
+        <router-view />
 
-        <AudioPlayer/>
+        <AudioPlayer />
       </v-col>
     </v-content>
 
-    <Footer v-on:show-menu="drawer = true" />
+    <Footer @show-menu="drawer = true" />
   </v-app>
 </template>
 
@@ -97,6 +127,14 @@ export default {
       @media screen and (min-width: 600px) {
         margin-bottom: 2rem;
       }
+    }
+  }
+  .breadcrumb-menu {
+    float: right;
+    display: none;
+
+    @media screen and (min-width: 600px) {
+      display: inline;
     }
   }
 }

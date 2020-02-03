@@ -1,34 +1,59 @@
 <template>
-  <div v-if="!currentSong.song" class="intro px-4">
+  <div
+    v-if="!currentSong.song"
+    class="intro px-4"
+  >
     <p class="text-left">
-       Un site pour écouter de la musique selon ta "mood"
+      Un site pour écouter de la musique selon ta "mood"
     </p>
 
     <p class="text-left">
       C'est comme une boite de chocolat, tant que t'as pas essayé tu ne sais pas! Des fois tu reviens, des fois pas...
     </p>
 
-    <div class="actions d-flex justify-center align-center">
+    <div class="actions d-flex justify-center align-center mb-3">
       <v-switch
         :input-value="videoMode"
-        @change="toggleVideoMode"
+        color="secondary"
         label="Mode video"
-        ></v-switch>
+        @change="toggleVideoMode"
+      />
 
       <v-btn
         to="/search"
-        class="ma-4"
-        fab small>
+        class="mx-4"
+        fab
+        small
+      >
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
-      <v-btn class="new" to="/whatsnew">
-        <v-icon>mdi-new-box</v-icon>
+      <v-btn
+        class="mr-4"
+        fab
+        small
+        @click="toggleDarkMode()"
+      >
+        <v-icon v-show="!darkMode">
+          mdi-brightness-7
+        </v-icon>
+        <v-icon v-show="darkMode">
+          mdi-brightness-4
+        </v-icon>
+      </v-btn>
+
+      <v-btn
+        class="new"
+        to="/whatsnew"
+      >
+        <v-icon left>
+          mdi-new-box
+        </v-icon>
         Quoi de neuf ?
       </v-btn>
     </div>
 
-    <v-divider></v-divider>
+    <v-divider />
   </div>
 </template>
 
@@ -37,14 +62,20 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Intro',
-  computed: mapState('music', [
-    'currentSong',
-    'videoMode',
-  ]),
-  methods: mapActions('music', [
-    'playNext',
-    'toggleVideoMode',
-  ]),
+  computed: {
+    ...mapState('music', [
+      'currentSong',
+      'videoMode',
+    ]),
+    ...mapState(['darkMode']),
+  },
+  methods: {
+    ...mapActions('music', [
+      'playNext',
+      'toggleVideoMode',
+    ]),
+    ...mapActions([ 'toggleDarkMode' ]),
+  }
 };
 </script>
 
@@ -74,7 +105,6 @@ export default {
 
   .v-divider {
     width: 40%;
-    margin-top: 0.5rem;
   }
 }
 </style>

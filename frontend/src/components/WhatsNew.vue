@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <h2> What's New </h2>
+  <v-col>
+    <h2> Quoi de neuf ? </h2>
 
     <p class="text-justify">
       To be implemented...
     </p>
-  </div>
+  </v-col>
 </template>
 
 <script>

@@ -1,10 +1,9 @@
 <template>
   <v-col
     v-if="videoMode && currentSong.song"
-    align="center"
     class="video-player pa-0"
-    >
-
+    align="center"
+  >
     <youtube
       v-show="currentSong.youtube"
       :video-id="videoId"
@@ -13,25 +12,38 @@
       @playing="setPlaybackState('playing')"
       @paused="setPlaybackState('paused')"
       @ended="playNext"
-      />
+    />
 
-    <v-card class="video-player-card" elevation="0">
-      <v-card-text class="song-information" align="left">
-
-    <v-container
-      v-show="!currentSong.youtube"
-      class="video-problem">
-      <v-row class="flex-nowrap" align="center" justify="center">
-        <!-- eslint-disable -->
-        <p class="emoji ma-4">(>_<)</p>
-        <!-- eslint-enable -->
-        <div class="message text-left">
-          <p>Il y a un problème de vidéo pour cette chanson</p>
-
-          <p class="ma-0">Pour continuer en mode vidéo avant la fin de la chanson, clique sur suivant ou deux fois sur une autre mood</p>
-        </div>
-      </v-row>
-    </v-container>
+    <v-card
+      class="video-player-card"
+      elevation="0"
+    >
+      <v-card-text
+        class="song-information"
+        align="left"
+      >
+        <v-container
+          v-show="!currentSong.youtube"
+          class="video-problem"
+        >
+          <v-row
+            class="flex-nowrap"
+            align="center"
+            justify="center"
+          >
+            <!-- eslint-disable -->
+            <p class="emoji ma-4">(>_<)</p>
+            <!-- eslint-enable -->
+            <div class="message text-left">
+              <p>
+                Il y a un problème de vidéo pour cette chanson
+              </p>
+              <p class="ma-0">
+                Pour continuer en mode vidéo avant la fin de la chanson, clique sur suivant ou deux fois sur une autre mood
+              </p>
+            </div>
+          </v-row>
+        </v-container>
         <v-row>
           <v-col>
             <p class="ma-0">
@@ -39,24 +51,31 @@
               {{ currentSong.song }}
             </p>
 
-            <p v-if="currentSong.album" class="ma-0">
+            <p
+              v-if="currentSong.album"
+              class="ma-0"
+            >
               <v-icon>mdi-album</v-icon>
               {{ currentSong.album }}
             </p>
 
             <p class="ma-0">
               <v-icon>mdi-account</v-icon>
-              {{ currentSong.artist}}
+              {{ currentSong.artist }}
             </p>
           </v-col>
           <v-menu
-            bottom left>
+            bottom
+            left
+          >
             <template v-slot:activator="{ on }">
               <v-btn
-                v-on="on"
                 class="d-none d-sm-flex ma-2"
-                elevation="0"
-                text fab small>
+                text
+                fab
+                small
+                v-on="on"
+              >
                 <v-icon>mdi-menu</v-icon>
               </v-btn>
             </template>
@@ -87,10 +106,6 @@ export default {
     PlayerControls,
     Menu,
   },
-  created () {
-    this.$root.$on('pause', this.pause);
-    this.$root.$on('play', this.play);
-  },
   data: () => ({
     playerVars: {
       autoplay: 1,
@@ -111,6 +126,10 @@ export default {
 
       return ''
     }
+  },
+  created () {
+    this.$root.$on('pause', this.pause);
+    this.$root.$on('play', this.play);
   },
   methods: {
     ...mapActions('music', [
