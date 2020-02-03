@@ -74,10 +74,6 @@ export default {
     Footer,
     Menu,
   },
-  created () {
-    this.$store.dispatch('music/getMoods')
-    // this.$vuetify.theme.dark = true
-  },
   data: () => ({
     drawer: false,
   }),
@@ -96,6 +92,10 @@ export default {
         },
       ]
     },
+  },
+  created () {
+    this.$store.dispatch('music/getMoods')
+    // this.$vuetify.theme.dark = true
   },
 };
 </script>

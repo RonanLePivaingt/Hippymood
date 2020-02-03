@@ -3,13 +3,13 @@
     <h2> About </h2>
 
     <div class="made-with-love">
-      Fait avec <div class="heart"></div>  par Ronan Le Pivaingt
+      Fait avec <div class="heart" /> par Ronan Le Pivaingt
     </div>
 
     <v-list>
       <v-list-group
         no-action
-        >
+      >
         <template v-slot:activator>
           <v-list-item-content>
             <v-list-item-title>Technologies utilisées</v-list-item-title>
@@ -20,20 +20,45 @@
           <v-list-item-content>
             <v-list-item-title>Frontend</v-list-item-title>
             <v-row>
-              <v-col cols="12" sm="6">
+              <v-col
+                cols="12"
+                sm="6"
+              >
                 <v-card class="ma-2">
-                  <a class="logo-link" href="https://vuejs.org/" target="_blank" title="Vue.js" contain>
-                    <img src="../assets/used-technologies/Vue.js.svg" alt="Vue.js logo"  />
+                  <a
+                    class="logo-link"
+                    href="https://vuejs.org/"
+                    target="_blank"
+                    title="Vue.js"
+                    contain
+                  >
+                    <img
+                      class="logo"
+                      src="../assets/used-technologies/Vue.js.svg"
+                      alt="Vue.js logo"
+                    >
                     <span class="my-auto mx-4">
                       VueJS
                     </span>
                   </a>
                 </v-card>
               </v-col>
-              <v-col cols="12" sm="6">
+              <v-col
+                cols="12"
+                sm="6"
+              >
                 <v-card class="ma-2">
-                  <a class="logo-link" href="https://vuetifyjs.com/" target="_blank" title="Vuetify">
-                    <img class="logo" src="../assets/used-technologies/Vuetify.svg" alt="Vuetify logo" />
+                  <a
+                    class="logo-link"
+                    href="https://vuetifyjs.com/"
+                    target="_blank"
+                    title="Vuetify"
+                  >
+                    <img
+                      class="logo"
+                      src="../assets/used-technologies/Vuetify.svg"
+                      alt="Vuetify logo"
+                    >
                     <span class="my-auto mx-4">
                       Vuetify
                     </span>
@@ -48,20 +73,44 @@
           <v-list-item-content>
             <v-list-item-title>Backend</v-list-item-title>
             <v-row>
-              <v-col cols="12" sm="6">
+              <v-col
+                cols="12"
+                sm="6"
+              >
                 <v-card class="ma-2">
-                  <a class="logo-link" href="https://nodejs.org/" target="_blank" title="Node.js" contain>
-                    <img src="../assets/used-technologies/Node.js.png" alt="Node.js logo"  />
+                  <a
+                    class="logo-link"
+                    href="https://nodejs.org/"
+                    target="_blank"
+                    title="Node.js"
+                    contain
+                  >
+                    <img
+                      src="../assets/used-technologies/Node.js.png"
+                      alt="Node.js logo"
+                    >
                     <span class="my-auto mx-4">
                       Node.js
                     </span>
                   </a>
                 </v-card>
               </v-col>
-              <v-col cols="12" sm="6">
+              <v-col
+                cols="12"
+                sm="6"
+              >
                 <v-card class="ma-2">
-                  <a class="logo-link express" href="https://expressjs.com/fr/" target="_blank" title="Express">
-                    <img class="logo" src="../assets/used-technologies/Expressjs.png" alt="Express logo" />
+                  <a
+                    class="logo-link express"
+                    href="https://expressjs.com/fr/"
+                    target="_blank"
+                    title="Express"
+                  >
+                    <img
+                      class="logo"
+                      src="../assets/used-technologies/Expressjs.png"
+                      alt="Express logo"
+                    >
                     <span class="my-auto mx-4">
                       Express
                     </span>
@@ -76,11 +125,16 @@
 
     <v-divider class="mb-4" />
 
-      <v-row justify="space-around" >
-        <a href="https://github.com/3615Yeye/Hippymood" alt="Voir le code d'Hippymood sur Github" target="_blank" class="github-link">
-          <v-icon size="10rem">mdi-github-circle</v-icon>
-        </a>
-      </v-row>
+    <v-row justify="space-around">
+      <a
+        href="https://github.com/3615Yeye/Hippymood"
+        alt="Voir le code d'Hippymood sur Github"
+        target="_blank"
+        class="github-link"
+      >
+        <v-icon size="10rem">mdi-github-circle</v-icon>
+      </a>
+    </v-row>
   </v-col>
 </template>
 
