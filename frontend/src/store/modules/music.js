@@ -8,6 +8,7 @@ const state = {
   nextSongs: [],
   playbackState: '',
   videoMode: false,
+  whatsNew: [],
 }
 
 // actions
@@ -46,6 +47,16 @@ const actions = {
   toggleVideoMode ({ commit, state }) {
     commit('setVideoMode', !state.videoMode)
   },
+  getWhatsNew ({ commit, state }) {
+    const page = state.whatsNew.length ? state.whatsNew.length / 10 : 0
+    music.getWhatsNew(page).then(response => {
+      commit('setWhatsNew', [...state.whatsNew, ...response.data]);
+    });
+  },
+  playSong ({ commit, state }, song) {
+    commit('setCurrentSong', song)
+    commit('setCurrentMood', state.moods.find(mood => mood.id === song.moodId))
+  },
 }
 
 // mutations
@@ -77,6 +88,9 @@ const mutations = {
   },
   setVideoMode (state, videoMode) {
     state.videoMode = videoMode
+  },
+  setWhatsNew (state, whatsNew) {
+    state.whatsNew = Object.freeze(whatsNew)
   },
 }
 
