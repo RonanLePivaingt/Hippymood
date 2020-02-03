@@ -4,14 +4,14 @@
     sm="10"
     cols="12"
     class="pa-0 pt-4"
-    >
+  >
     <v-btn
       v-for="mood in moods"
       :key="mood.id"
-      @click="changeMood(mood)"
       class="mood-btn"
       :color="mood.id === currentMood.id ? 'secondary' : ''"
-      >
+      @click="changeMood(mood)"
+    >
       {{ mood.name }}
     </v-btn>
   </v-col>

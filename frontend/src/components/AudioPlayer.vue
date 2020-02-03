@@ -1,10 +1,11 @@
 <template>
   <audio
     v-if="audioPlayback"
-    v-on:ended="playNext()"
-    :src="/music/ + currentSong.path"
     ref="audioPlayer"
-    autoplay>
+    :src="/music/ + currentSong.path"
+    autoplay
+    @-on:ended="playNext()"
+  >
     Your browser does not support the
     <code>audio</code> element.
   </audio>
