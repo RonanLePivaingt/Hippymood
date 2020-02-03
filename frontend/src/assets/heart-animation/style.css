@@ -1,0 +1,23 @@
+/* Heart effect
+ * Thanks to Twitter and this nice tutorial : https://medium.com/@chrismabry/how-did-they-do-that-the-twitter-like-animation-2a473b658e43
+ */
+.made-with-love {
+  display: flex;
+  align-items: center;
+}
+.heart {
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  background-image:url( 'web_heart_animation.png');
+  background-position: right;
+  background-repeat:no-repeat;
+  background-size:2900%;
+}
+@keyframes heart-burst {
+  from {background-position:left;}
+  to { background-position:right;}
+}
+.made-with-love:hover .heart {
+  animation: heart-burst .8s steps(28) 1;
+}
