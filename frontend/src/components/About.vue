@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <h2> About </h2>
+  <v-col>
+    <h2> À propos </h2>
 
     <p class="text-justify">
       To be implemented...
     </p>
-  </div>
+  </v-col>
 </template>
 
 <script>

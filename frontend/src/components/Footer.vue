@@ -2,20 +2,20 @@
   <v-footer
     v-if="currentSong.song"
     class="mobile-footer d-flex d-sm-none"
-    fixed>
-
+    fixed
+  >
     <v-btn
-      v-on:click="$emit('show-menu')"
-      color=""
-      elevation="0"
-      fab small>
+      fab
+      small
+      @click="$emit('show-menu')"
+    >
       <v-icon>mdi-menu</v-icon>
     </v-btn>
 
     <router-link to="/">
       <div class="flex-column song-information">
         <p>
-        <v-icon>mdi-music-note</v-icon>
+          <v-icon>mdi-music-note</v-icon>
           {{ currentSong.song }}
         </p>
         <p v-show="currentSong.album">
@@ -24,32 +24,36 @@
         </p>
         <p>
           <v-icon>mdi-account</v-icon>
-          {{ currentSong.artist}}
+          {{ currentSong.artist }}
         </p>
       </div>
     </router-link>
 
-    <v-spacer></v-spacer>
+    <v-spacer />
 
     <div class="actions">
-      <v-btn @click="play"
+      <v-btn
         v-show="playbackState === 'paused'"
-        color="primary"
-        fab>
+        color="secondary"
+        fab
+        @click="play"
+      >
         <v-icon>mdi-play</v-icon>
       </v-btn>
 
       <v-btn
         v-show="playbackState === 'playing'"
+        fab
         @click="pause"
-        color="primary"
-        fab>
+      >
         <v-icon>mdi-pause</v-icon>
       </v-btn>
 
       <v-btn
+        fab
+        outlined
         @click="playNext"
-        fab outlined>
+      >
         <v-icon>mdi-skip-next</v-icon>
       </v-btn>
     </div>

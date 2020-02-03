@@ -2,41 +2,46 @@
   <v-col class="whats-new">
     <h2> What's New </h2>
 
-    <v-list-item
-      v-for="song in whatsNew"
-      :key="song.id"
-      @click="play(song)"
-      class="pa-0"
-      three-line>
-      <v-list-item-content class="flex-nowrap">
-        <v-col class="metadata flex-wrap pl-0">
-          <v-list-item-title>
-            <v-icon>mdi-music-note</v-icon>
-            {{ song.song }}
-          </v-list-item-title>
-          <v-list-item-subtitle v-show="song.album">
-            <v-icon>mdi-album</v-icon>
-            {{ song.album }}
-          </v-list-item-subtitle>
-          <v-list-item-subtitle>
-            <v-icon>mdi-account</v-icon>
-            {{ song.artist }}
-          </v-list-item-subtitle>
-        </v-col>
-        <v-btn
-          class="mood-btn"
+    <v-list>
+      <v-list-item
+        v-for="song in whatsNew"
+        :key="song.id"
+        class="pa-0"
+        three-line
+        @click="play(song)"
+      >
+        <v-list-item-content class="flex-nowrap">
+          <v-col class="metadata flex-wrap pa-0">
+            <v-list-item-title>
+              <v-icon>mdi-music-note</v-icon>
+              {{ song.song }}
+            </v-list-item-title>
+            <v-list-item-subtitle v-show="song.album">
+              <v-icon>mdi-album</v-icon>
+              {{ song.album }}
+            </v-list-item-subtitle>
+            <v-list-item-subtitle>
+              <v-icon>mdi-account</v-icon>
+              {{ song.artist }}
+            </v-list-item-subtitle>
+          </v-col>
+          <v-btn
+            class="mood-btn"
           >
-          {{ song.mood }}
-        </v-btn>
-
-      </v-list-item-content>
-
-    </v-list-item>
+            {{ song.mood }}
+          </v-btn>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
 
     <v-col class="text-center">
-      <v-btn @click="getWhatsNew" color="primary">Load moar</v-btn>
+      <v-btn
+        color="primary"
+        @click="getWhatsNew"
+      >
+        Charger plus
+      </v-btn>
     </v-col>
-
   </v-col>
 </template>
 
@@ -66,6 +71,10 @@ export default {
 
 <style lang="scss">
 .whats-new {
+  .v-list {
+    background: transparent;
+  }
+
   .metadata {
     overflow: hidden;
 

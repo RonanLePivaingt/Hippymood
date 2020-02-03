@@ -1,11 +1,14 @@
 <template>
-  <v-col align="center" class="pa-0">
+  <v-col
+    align="center"
+    class="pa-0"
+  >
     <Intro />
 
     <PlayerCard v-if="!videoMode" />
     <PlayerVideo v-if="videoMode" />
 
-    <MoodList/>
+    <MoodList />
   </v-col>
 </template>
 

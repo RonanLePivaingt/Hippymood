@@ -1,31 +1,37 @@
 <template>
-  <v-row class="player-card-actions justify-center d-none d-sm-flex" :class="fab ? 'fab' : ''">
+  <v-row
+    class="player-card-actions justify-center d-none d-sm-flex"
+    :class="fab ? 'fab' : ''"
+  >
     <v-btn
-      @click="play()"
       v-show="playbackState === 'paused'"
-      color="primary"
+      color="secondary"
       class="play"
       :fab="fab"
       :rounded="rounded"
-      large>
+      large
+      @click="play()"
+    >
       <v-icon>mdi-play</v-icon>
     </v-btn>
 
     <v-btn
-      @click="pause()"
       v-show="playbackState === 'playing'"
-      color="primary"
+      color="secondary"
       :fab="fab"
       :rounded="rounded"
-      large>
+      large
+      @click="pause()"
+    >
       <v-icon>mdi-pause</v-icon>
     </v-btn>
 
     <v-btn
-      @click.stop="playNext"
       :fab="fab"
       :rounded="rounded"
-      large>
+      large
+      @click.stop="playNext"
+    >
       <v-icon>mdi-skip-next</v-icon>
     </v-btn>
   </v-row>
@@ -36,7 +42,10 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'PlayerControls',
-  props: [ 'fab', 'rounded' ],
+  props: {
+    fab: Boolean,
+    rounded: Boolean
+  },
   computed: mapState('music', [
     'currentSong',
     'videoMode',

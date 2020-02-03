@@ -1,24 +1,36 @@
 <template>
-  <v-col v-if="currentSong.song">
-
+  <v-col
+    v-if="currentSong.song"
+    class="pa-0 pb-4"
+  >
     <v-card class="player-card">
-      <v-card-actions class="player-card-top d-none d-sm-flex" color="primary">
-        <v-spacer></v-spacer>
+      <v-card-actions
+        class="player-card-top d-none d-sm-flex"
+        color="primary"
+      >
+        <v-spacer />
 
         <v-btn
           to="/search"
-          elevation="0"
-          text fab small>
+          text
+          fab
+          small
+        >
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
 
-        <v-menu bottom left>
+        <v-menu
+          bottom
+          left
+        >
           <template v-slot:activator="{ on }">
             <v-btn
-              v-on="on"
               class="ma-2"
-              elevation="0"
-              text fab small>
+              text
+              fab
+              small
+              v-on="on"
+            >
               <v-icon>mdi-menu</v-icon>
             </v-btn>
           </template>
@@ -28,20 +40,23 @@
 
       <v-card-text class="player-card-top">
         <p class="title">
-        <v-icon>mdi-music-note</v-icon>
-        {{ currentSong.song }}
+          <v-icon>mdi-music-note</v-icon>
+          {{ currentSong.song }}
         </p>
       </v-card-text>
 
       <v-card-text class="song-information">
-        <div v-show="currentSong.album" class="text--primary subtitle-1">
+        <div
+          v-show="currentSong.album"
+          class="text--primary subtitle-1"
+        >
           <v-icon>mdi-album</v-icon>
           {{ currentSong.album }}
         </div>
 
         <div class="text--primary subtitle-1">
           <v-icon>mdi-account</v-icon>
-          {{ currentSong.artist}}
+          {{ currentSong.artist }}
         </div>
       </v-card-text>
 
@@ -86,7 +101,7 @@ export default {
   }
 
   .player-card-top {
-    background-color: var(--v-secondary-base);
+    background-color: var(--v-primary-base);
 
     .theme--light.v-btn:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
       background-color: inherit;
