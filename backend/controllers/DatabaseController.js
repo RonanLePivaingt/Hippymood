@@ -11,6 +11,7 @@ module.exports.Up = () => {
         return knex.schema.createTable('albums', t => {
           t.increments('id').primary();
           t.string('name');
+          t.index('name');
         });
       }
 
@@ -21,6 +22,7 @@ module.exports.Up = () => {
         return knex.schema.createTable('artists', t => {
           t.increments('id').primary();
           t.string('name');
+          t.index('name');
         });
       }
 
@@ -50,6 +52,7 @@ module.exports.Up = () => {
             t.foreign('id_album').references('albums.id');
             t.integer('id_artist').unsigned();
             t.foreign('id_artist').references('artists.id');
+            t.index('name');
           });
         }
 
@@ -62,6 +65,7 @@ module.exports.Up = () => {
             return knex.schema.createTable('genres', t => {
               t.increments('id').primary();
               t.string('name');
+              t.index('name');
             }).then((res) => {
               knex.schema.hasTable('genres_relations').then(exists => {
                 if (!exists) {
