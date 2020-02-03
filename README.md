@@ -19,6 +19,7 @@ docker-compose run --rm backend yarn dbInit
 docker-compose run --rm backend yarn scan
 
 # Project is now ready for startup
+
 docker-compose up
 ```
 
@@ -29,6 +30,11 @@ Create your own docker-compose.override.yaml file from docker-compose.override.y
 Inside the config directory, create your own production.json file from production.json.dist file
 
 ```
+# Install dependencies
+
+docker-compose run --rm backend yarn install
+docker-compose run --rm frontend yarn install
+
 # Build frontend files
 
 docker-compose run --rm frontend yarn build
@@ -39,5 +45,6 @@ docker-compose run --rm backend yarn dbInit
 docker-compose run --rm backend yarn scan
 
 # Project is now ready for startup
+
 docker-compose up
 ```
