@@ -1,8 +1,0 @@
-build/*.js
-config/*.js
-src/js/auth.js
-src/js/testUMD.js
-src/js/auth.animations.js
-src/js/hammer.min.js
-src/js/keypress-2.1.4.min.js
-src/js/socket.io.js

@@ -5,7 +5,9 @@ const state = {
   moods: [],
   currentMood: {},
   currentSong: {},
-  nextSongs: []
+  nextSongs: [],
+  playbackState: '',
+  videoMode: false,
 }
 
 // actions
@@ -15,21 +17,31 @@ const actions = {
       commit('setMoods', { moods: response.data });
     });
   },
-  loadMoodSongs ({ commit }, moodId) {
-    music.getMood(moodId).then(response => {
+  changeMood ({ commit }, mood) {
+    music.getMood(mood.id).then(response => {
       commit('setNextSongs', response.data.songs)
+      commit('setCurrentMood', mood)
     });
-  },
-  async changeMood ({ dispatch, commit }, mood) {
-    await dispatch('loadMoodSongs', mood.id)
-    commit('setCurrentMood', { mood })
   },
   playNext ({ commit, state }) {
     if (state.nextSongs.length > 0) {
-      commit('setNextSongs', state.nextSongs)
+      if (!state.videoMode) {
+        commit('setNextSongs', state.nextSongs)
+      } else {
+        const data = {}
+        data.nextVideoSongs = state.nextSongs.filter(song => song.youtube !== null)
+        const nextVideoId = data.nextVideoSongs[0].id
+        data.nextSongs = state.nextSongs.filter(song => song.youtube !== nextVideoId)
+        commit('setVideoNextSongs', data)
+      }
     }
   },
-
+  setPlaybackState ({ commit }, playbackState) {
+    commit('setPlaybackState', playbackState)
+  },
+  toggleVideoMode ({ commit, state }) {
+    commit('setVideoMode', !state.videoMode)
+  },
 }
 
 // mutations
@@ -39,12 +51,24 @@ const mutations = {
     // more info there : https://vuedose.tips/tips/improve-performance-on-large-lists-in-vue-js/
     state.moods = Object.freeze(moods)
   },
-  setCurrentMood (state, { mood }) {
+  setCurrentMood (state, mood) {
     state.currentMood = mood
   },
   setNextSongs (state, songs) {
     state.currentSong = songs[0]
+    state.playbackState = 'playing'
     state.nextSongs = Object.freeze(songs.slice(1))
+  },
+  setVideoNextSongs (state, data) {
+    state.currentSong = data.nextVideoSongs[0]
+    state.playbackState = 'playing'
+    state.nextSongs = Object.freeze(data.nextSongs.slice(1))
+  },
+  setPlaybackState (state, playbackState) {
+    state.playbackState = playbackState
+  },
+  setVideoMode (state, videoMode) {
+    state.videoMode = videoMode
   },
 }
 
