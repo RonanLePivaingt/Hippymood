@@ -70,20 +70,27 @@
         </v-chip>
       </v-card-text>
     </v-card>
+
+    <DemoSnackbar v-if="demoMode" />
   </v-col>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import PlayerControls from './PlayerControls'
 import Menu from './Menu'
+import PlayerControls from './PlayerControls'
+import DemoSnackbar from './demo/DemoSnackbar'
 
 export default {
   name: 'PlayerCard',
   components: {
     PlayerControls,
     Menu,
+    DemoSnackbar ,
   },
+  data: () => ({
+    demoMode: CONFIG.global.demoMode,
+  }),
   computed: mapState('music', [
     'currentSong',
     'currentMood',
