@@ -9,6 +9,7 @@
         class="pa-0"
         :two-line="!song.album ? true : false"
         :three-line="song.album ? true : false"
+        :disabled="videoMode && !song.youtube ? true : false"
         @click="play(song)"
       >
         <v-list-item-content class="pa-0">
@@ -32,7 +33,15 @@
               </v-list-item-subtitle>
             </v-col>
 
-            <v-btn>
+            <v-btn
+              :disabled="videoMode && !song.youtube ? true : false"
+            >
+              <v-icon
+                v-show="videoMode && song.youtube"
+                left
+              >
+                mdi-youtube
+              </v-icon>
               {{ song.mood }}
             </v-btn>
           </v-row>
@@ -58,6 +67,7 @@ export default {
   name: 'WhatsNew',
   computed: mapState('music', [
     'whatsNew',
+    'videoMode',
   ]),
   created () {
     this.$store.dispatch('music/getWhatsNew')
@@ -90,6 +100,10 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+  }
+
+  .v-btn > .v-btn__content .v-icon.theme--light {
+    color: rgba(0, 0, 0, 0.54);
   }
 }
 </style>

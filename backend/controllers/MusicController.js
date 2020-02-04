@@ -96,6 +96,7 @@ exports.Search = function(req, res){
   knex.select(
     'songs.id',
     'songs.name AS song',
+    'songs.youtube AS youtube',
     'artists.name AS artist',
     'songs.path',
     'albums.name AS album',

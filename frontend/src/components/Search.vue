@@ -10,6 +10,7 @@
       @input="debouncedSearch"
       @click:clear="searchResults = []"
     />
+
     <v-list>
       <v-list-item
         v-for="song in searchResults"
@@ -17,6 +18,7 @@
         class="pa-0"
         :two-line="!song.album ? true : false"
         :three-line="song.album ? true : false"
+        :disabled="videoMode && !song.youtube ? true : false"
         @click="play(song)"
       >
         <v-list-item-content class="pa-0">
@@ -40,7 +42,15 @@
               </v-list-item-subtitle>
             </v-col>
 
-            <v-btn>
+            <v-btn
+              :disabled="videoMode && !song.youtube ? true : false"
+            >
+              <v-icon
+                v-show="videoMode && song.youtube"
+                left
+              >
+                mdi-youtube
+              </v-icon>
               {{ song.mood }}
             </v-btn>
           </v-row>
@@ -64,7 +74,7 @@
 <script>
 import _ from 'lodash'
 import music from '../api/music'
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Search',
@@ -74,6 +84,9 @@ export default {
     searchValue: '',
     noResult: false
   }),
+  computed: mapState('music', [
+    'videoMode',
+  ]),
   created () {
     this.debouncedSearch = _.debounce(this.search, 300);
   },
@@ -134,6 +147,10 @@ export default {
     .theme--dark & {
       color: rgba(255, 255, 255, 0.54);
     }
+  }
+
+  .v-btn > .v-btn__content .v-icon.theme--light {
+    color: rgba(0, 0, 0, 0.54);
   }
 }
 </style>

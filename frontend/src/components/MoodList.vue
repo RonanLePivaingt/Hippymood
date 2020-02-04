@@ -10,6 +10,7 @@
       :key="mood.id"
       class="mood-btn"
       :color="mood.id === currentMood.id ? 'secondary' : ''"
+      :disabled="videoMode && mood.nbVideo === '0' ? true : false"
       @click="changeMood(mood)"
     >
       {{ mood.name }}
@@ -23,8 +24,9 @@ import { mapState, mapActions } from 'vuex'
 export default {
   name: 'MoodList',
   computed: mapState('music', [
-    'moods',
-    'currentMood',
+      'moods',
+      'currentMood',
+      'videoMode',
   ]),
   methods: mapActions('music', [ 'changeMood' ])
 };

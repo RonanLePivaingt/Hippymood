@@ -18,8 +18,12 @@ const actions = {
       commit('setMoods', { moods: response.data });
     });
   },
-  changeMood ({ commit }, mood) {
+  changeMood ({ commit, state }, mood) {
     music.getMood(mood.id).then(response => {
+      if (state.videoMode) {
+        response.data.songs.sort(videoSongsFirst)
+      }
+
       commit('setNextSongs', response.data.songs)
       commit('setCurrentMood', mood)
     });
@@ -46,6 +50,14 @@ const actions = {
   },
   toggleVideoMode ({ commit, state }) {
     commit('setVideoMode', !state.videoMode)
+
+    // Not negating state.videoMode because above commit is already applied
+    if (state.videoMode) {
+      commit(
+        'setSortedNextSongs',
+        JSON.parse(JSON.stringify(state.nextSongs)).sort(videoSongsFirst)
+      )
+    }
   },
   getWhatsNew ({ commit, state }) {
     const page = state.whatsNew.length ? state.whatsNew.length / 10 : 0
@@ -83,6 +95,9 @@ const mutations = {
     state.playbackState = 'playing'
     state.nextSongs = Object.freeze(data.nextSongs.slice(1))
   },
+  setSortedNextSongs (state, songs) {
+    state.nextSongs = Object.freeze(songs)
+  },
   setPlaybackState (state, playbackState) {
     state.playbackState = playbackState
   },
@@ -101,3 +116,13 @@ export default {
   mutations
 }
 
+// Sort songs to place video songs first
+function videoSongsFirst (a, b) {
+  if (a.youtube === null && b.youtube === null) {
+    return 0
+  } else if (a.youtube === null) {
+    return 1
+  } else {
+    return -1
+  }
+}
