@@ -61,6 +61,8 @@
     </v-content>
 
     <Footer @show-menu="drawer = true" />
+
+    <Octocat v-if="demoMode" />
   </v-app>
 </template>
 
@@ -69,6 +71,7 @@ import { mapState } from 'vuex'
 import Menu from './components/Menu';
 import AudioPlayer from './components/AudioPlayer';
 import Footer from './components/Footer';
+import Octocat from './components/demo/Octocat';
 
 export default {
   name: 'App',
@@ -76,9 +79,11 @@ export default {
     AudioPlayer,
     Footer,
     Menu,
+    Octocat,
   },
   data: () => ({
     drawer: false,
+    demoMode: CONFIG.global.demoMode,
   }),
   computed: {
     ...mapState('music', [ 'currentSong' ]),
