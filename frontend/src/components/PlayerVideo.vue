@@ -34,12 +34,28 @@
             <!-- eslint-disable -->
             <p class="emoji ma-4">(>_<)</p>
             <!-- eslint-enable -->
-            <div class="message text-left">
+
+            <div
+              v-show="currentMood.nbVideo !== '0'"
+              class="message text-left"
+            >
               <p>
-                Il y a un problème de vidéo pour cette chanson
+                Il n'y a pas de vidéo pour cette chanson
               </p>
               <p class="ma-0">
-                Pour continuer en mode vidéo avant la fin de la chanson, clique sur suivant ou deux fois sur une autre mood
+                Pour continuer en mode vidéo, clique sur suivant ou deux fois sur une autre mood
+              </p>
+            </div>
+
+            <div
+              v-show="currentMood.nbVideo === '0'"
+              class="message text-left"
+            >
+              <p>
+                Il n'y a pas de vidéo pour cette mood
+              </p>
+              <p class="ma-0">
+                Pour continuer en mode vidéo, clique deux fois sur une autre mood
               </p>
             </div>
           </v-row>
