@@ -27,6 +27,8 @@
     </v-btn>
 
     <v-btn
+      v-show="!displayReplayButton"
+      :class="!fab ? 'ml-2' : ''"
       :fab="fab"
       :rounded="rounded"
       large
@@ -34,11 +36,22 @@
     >
       <v-icon>mdi-skip-next</v-icon>
     </v-btn>
+
+    <v-btn
+      v-show="displayReplayButton"
+      :class="!fab ? 'ml-2' : ''"
+      :fab="fab"
+      :rounded="rounded"
+      large
+      @click.stop="resetSessionBeforePlay(currentMood)"
+    >
+      <v-icon>mdi-replay</v-icon>
+    </v-btn>
   </v-row>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'PlayerControls',
@@ -46,13 +59,33 @@ export default {
     fab: Boolean,
     rounded: Boolean
   },
-  computed: mapState('music', [
-    'currentSong',
-    'videoMode',
-    'playbackState',
-  ]),
+  computed: {
+    ...mapState('music', [
+      'currentSong',
+      'currentMood',
+      'videoMode',
+      'playbackState',
+      'nextType',
+    ]),
+    ...mapGetters('music', [
+      'nbSongsLeft',
+    ]),
+    displayReplayButton () {
+      if (this.nbSongsLeft === 0) {
+        if (this.nextType !== '') {
+          return false
+        }
+        return true
+      }
+      return false
+    }
+  },
   methods: {
-    ...mapActions('music', [ 'playNext' ]),
+    ...mapActions('music', [
+      'playNext',
+      'loadAndPlayMood',
+      'resetSessionBeforePlay',
+    ]),
     play() {
       this.$root.$emit('play');
     },
@@ -68,9 +101,6 @@ export default {
   .fab {
     margin-top: 1rem;
     margin-bottom: 1rem;
-  }
-  &:not(.fab) button:last-child {
-    margin-left: 1rem;
   }
   .v-application--is-ltr .v-card__actions .player-card-actions .v-btn--fab + .v-btn--fab {
     margin-left: 0px;

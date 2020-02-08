@@ -3,7 +3,7 @@
     v-model="demoMessage"
     class="demo-snackbar"
     :class="currentSong.album ? 'three-line-footer' : ''"
-    timeout="10000000"
+    :timeout="10000000"
     vertical
   >
     En mode démo, seule la lecture vidéo est activée.

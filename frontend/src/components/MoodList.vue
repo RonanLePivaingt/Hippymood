@@ -11,9 +11,15 @@
       class="mood-btn"
       :color="mood.id === currentMood.id ? 'secondary' : ''"
       :disabled="videoMode && mood.nbVideo === '0' ? true : false"
-      @click="changeMood(mood)"
+      @click="playNextMood(mood)"
     >
       {{ mood.name }}
+      <v-icon
+        v-if="nextType === 'mood' && next.id === mood.id"
+        right
+      >
+        mdi-update
+      </v-icon>
     </v-btn>
   </v-col>
 </template>
@@ -27,15 +33,21 @@ export default {
       'moods',
       'currentMood',
       'videoMode',
+      'next',
+      'nextType',
   ]),
-  methods: mapActions('music', [ 'changeMood' ])
+  methods: mapActions('music', [
+    'playNextMood',
+  ]),
 };
 </script>
 
-<style>
+<style lang="scss">
 .mood-list {
   .mood-btn {
-    margin-bottom: 0.5rem;
+    > .v-btn__content .v-icon.theme--light {
+      color: rgba(0, 0, 0, 0.54) !important;
+    }
   }
 }
 </style>

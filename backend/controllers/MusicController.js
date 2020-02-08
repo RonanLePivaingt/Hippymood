@@ -48,7 +48,16 @@ exports.Mood = function(req, res){
     });
   }
 
-  var select = knex.select('songs.id', 'songs.name as song', 'artists.name AS artist', 'songs.path', 'albums.name AS album', 'songs.youtube', 'songs.created_at')
+  var select = knex.select(
+    'songs.id',
+    'songs.name as song',
+    'artists.name AS artist',
+    'songs.path',
+    'albums.name AS album',
+    'genres_relations.id as moodId',
+    'songs.youtube',
+    'songs.created_at'
+  )
     .from('songs')
     .join('genres_relations', 'songs.id', '=', 'genres_relations.id_song')
     .join('artists', 'artists.id', '=', 'songs.id_artist')
@@ -162,7 +171,7 @@ exports.whatsNew = function(req, res){
 /*
  * If a song is played from the search result, this function will add it to the played songs list
  */
-exports.searchSongPlayed = function(req, res){
+exports.playedSong = function(req, res){
   var songId = req.params.songId;
 
   // Saving song played id

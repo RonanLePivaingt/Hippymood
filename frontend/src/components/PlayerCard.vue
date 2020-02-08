@@ -64,11 +64,7 @@
         <PlayerControls fab />
       </v-card-actions>
 
-      <v-card-text class="player-card-mood">
-        <v-chip>
-          {{ currentMood.name }}
-        </v-chip>
-      </v-card-text>
+      <MoodChips />
     </v-card>
 
     <DemoSnackbar v-if="demoMode" />
@@ -77,25 +73,27 @@
 
 <script>
 import { mapState } from 'vuex'
-import Menu from './Menu'
-import PlayerControls from './PlayerControls'
 import DemoSnackbar from './demo/DemoSnackbar'
+import Menu from './Menu'
+import MoodChips from './MoodChips'
+import PlayerControls from './PlayerControls'
 
 export default {
   name: 'PlayerCard',
   components: {
-    PlayerControls,
-    Menu,
     DemoSnackbar ,
+    Menu,
+    MoodChips,
+    PlayerControls,
   },
   data: () => ({
     demoMode: CONFIG.global.demoMode,
   }),
-  computed: mapState('music', [
-    'currentSong',
-    'currentMood',
-    'playbackState',
-  ]),
+  computed: {
+    ...mapState('music', [
+      'currentSong',
+    ]),
+  },
 };
 </script>
 
@@ -138,9 +136,6 @@ export default {
         z-index: 5;
       }
     }
-  }
-  .player-card-mood {
-    text-align: center;
   }
 }
 </style>

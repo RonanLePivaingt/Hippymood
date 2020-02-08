@@ -16,4 +16,10 @@ export default {
   getWhatsNew( page ) {
     return axios.get( `/api/whatsNew/${page}` );
   },
+  postPlayedSong( songId ) {
+    return axios.post( `/api/playedSong/${songId}` );
+  },
+  resetMoodSession( moodId ) {
+    return axios.post( `/api/resetMoodSession/${moodId}` );
+  },
 }
