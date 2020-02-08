@@ -13,10 +13,10 @@ module.exports = function(app){
 
     app.get('/moods', MusicController.Moods);
     app.post('/mood/', MusicController.Mood);
-    app.get('/resetMood/:id', MusicController.ResetMood);
     app.get('/whatsNew/:page', MusicController.whatsNew);
     app.get('/search/:keywords', MusicController.Search);
-    app.get('/searchSongPlayed/:songId', MusicController.searchSongPlayed);
+    app.post('/playedSong/:songId', MusicController.playedSong);
+    app.post('/resetMoodSession/:id', MusicController.ResetMood);
     app.get('/admin/resetSession', MusicController.ResetSession);
 
     app.get('/suggestions', SuggestionController.List);

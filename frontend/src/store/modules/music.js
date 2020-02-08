@@ -1,49 +1,105 @@
 import music from '../../api/music'
 
-// initial state
 const state = {
   moods: [],
   currentMood: {},
   currentSong: {},
   nextSongs: [],
+  nextType: '',
+  next: {},
   playbackState: '',
   videoMode: false,
   whatsNew: [],
+  moodSongsAlreadyPlayed: {},
 }
 
-// actions
+const getters = {
+  nbSongsLeft: state => {
+    if (!state.videoMode) {
+      return state.nextSongs.length
+    } else {
+      return state.nextSongs
+        .filter(song => song.youtube !== null)
+        .length
+    }
+  }
+}
+
 const actions = {
   getMoods ({ commit }) {
     music.getMoods().then(response => {
       commit('setMoods', { moods: response.data });
     });
   },
-  changeMood ({ commit, state }, mood) {
-    music.getMood(mood.id).then(response => {
-      if (state.videoMode) {
-        response.data.songs.sort(videoSongsFirst)
+  playNextMood ({ commit, state, dispatch }, mood) {
+    if (state.playbackState !== 'playing') {
+      dispatch('loadAndPlayMood', mood)
+    } else if (state.currentSong.moodId === mood.id) {
+      if (state.nextType !== '') {
+        commit('resetNext')
       }
 
-      commit('setNextSongs', response.data.songs)
-      commit('setCurrentMood', mood)
-    });
-  },
-  playNext ({ commit, state }) {
-    if (state.nextSongs.length > 0) {
-      if (!state.videoMode) {
-        commit('setNextSongs', state.nextSongs)
-      } else {
-        const data = {}
-        data.nextVideoSongs = state.nextSongs.filter(song => song.youtube !== null)
-        const nextVideoId = data.nextVideoSongs[0].id
-        data.nextSongs = state.nextSongs.filter(song => song.youtube !== nextVideoId)
-        commit('setVideoNextSongs', data)
-      }
+      dispatch('playNext')
+    } else if (state.nextType === '' || state.next.id !== mood.id) {
+        commit('setNextType', 'mood')
+        commit('setNext', mood)
+    } else {
+      dispatch('loadAndPlayMood', mood)
     }
   },
-  playSearchSong ({ commit, state }, song) {
-    commit('setCurrentSong', song)
-    commit('setCurrentMood', state.moods.find(mood => mood.id === song.moodId))
+  playNextSong ({ commit, state, dispatch }, song) {
+    commit('setNextType', 'song')
+    commit('setNext', song)
+
+    if (state.playbackState !== 'playing') {
+      dispatch('playNext')
+    }
+  },
+  playNext ({ commit, state, dispatch }) {
+    if (state.moodSongsAlreadyPlayed.id) {
+      return false
+    }
+    if (state.nextType === 'mood') {
+      dispatch('loadAndPlayMood', state.next)
+    } else if (state.nextType === 'song') {
+      // Setting current mood and song
+      commit('setCurrentSong', state.next)
+      commit('setCurrentMood', state.moods.find(mood => mood.id === state.currentSong.moodId))
+
+      dispatch('loadMood', state.next.moodId)
+    } else {
+      commit('setCurrentSong', state.nextSongs[0])
+
+      if (state.nextSongs.length > 0) {
+        commit('setNextSongs', state.nextSongs.slice(1))
+      }
+    }
+
+    if (state.currentSong.moodId !== state.currentMood.id) {
+      commit('setCurrentMood', state.moods.find(mood => mood.id === state.currentSong.moodId))
+    }
+
+    if (state.next !== {}) {
+      commit('resetNext')
+    }
+  },
+  loadMood ({ commit, state, dispatch }, moodId) {
+    return music.getMood(moodId).then(response => {
+      if (response.data.error && response.data.error.allSongGenrePlayed) {
+        commit('setMoodSongsAlreadyPlayed', state.moods.find(mood => mood.id === moodId))
+      } else {
+        if (state.videoMode) {
+          response.data.songs.sort(videoSongsFirst)
+        }
+
+        return commit('setNextSongs', response.data.songs)
+      }
+    });
+  },
+  loadAndPlayMood ({ commit, state, dispatch }, mood) {
+    dispatch('loadMood', mood.id).then( () => {
+      dispatch('playNext')
+    })
   },
   setPlaybackState ({ commit }, playbackState) {
     commit('setPlaybackState', playbackState)
@@ -54,7 +110,7 @@ const actions = {
     // Not negating state.videoMode because above commit is already applied
     if (state.videoMode) {
       commit(
-        'setSortedNextSongs',
+        'setNextSongs',
         JSON.parse(JSON.stringify(state.nextSongs)).sort(videoSongsFirst)
       )
     }
@@ -65,13 +121,20 @@ const actions = {
       commit('setWhatsNew', [...state.whatsNew, ...response.data]);
     });
   },
-  playSong ({ commit, state }, song) {
-    commit('setCurrentSong', song)
-    commit('setCurrentMood', state.moods.find(mood => mood.id === song.moodId))
+  resetMoodSongsAlreadyPlayed ({ commit }) {
+    commit('setMoodSongsAlreadyPlayed', {})
+  },
+  resetSessionBeforePlay ({ commit, state, dispatch }, mood) {
+    music.resetMoodSession(mood.id).then(response => {
+      commit('setMoodSongsAlreadyPlayed', {})
+      dispatch('loadAndPlayMood', mood)
+    })
+  },
+  resetNext ({ commit }) {
+    commit('resetNext')
   },
 }
 
-// mutations
 const mutations = {
   setMoods (state, { moods }) {
     // Perf optimisation because reactivity is not needed for this data
@@ -84,19 +147,16 @@ const mutations = {
   setCurrentSong (state, song) {
     state.playbackState = 'playing'
     state.currentSong = song
+    music.postPlayedSong(song.id)
   },
   setNextSongs (state, songs) {
-    state.currentSong = songs[0]
-    state.playbackState = 'playing'
-    state.nextSongs = Object.freeze(songs.slice(1))
-  },
-  setVideoNextSongs (state, data) {
-    state.currentSong = data.nextVideoSongs[0]
-    state.playbackState = 'playing'
-    state.nextSongs = Object.freeze(data.nextSongs.slice(1))
-  },
-  setSortedNextSongs (state, songs) {
     state.nextSongs = Object.freeze(songs)
+  },
+  setNextType (state, type) {
+    state.nextType = type
+  },
+  setNext (state, next) {
+    state.next = next
   },
   setPlaybackState (state, playbackState) {
     state.playbackState = playbackState
@@ -107,16 +167,16 @@ const mutations = {
   setWhatsNew (state, whatsNew) {
     state.whatsNew = Object.freeze(whatsNew)
   },
+  setMoodSongsAlreadyPlayed (state, mood) {
+    state.moodSongsAlreadyPlayed = Object.freeze(mood)
+  },
+  resetNext (state) {
+    state.next = {}
+    state.nextType = ''
+  },
 }
 
-export default {
-  namespaced: true,
-  state,
-  actions,
-  mutations
-}
-
-// Sort songs to place video songs first
+// Sort function to reoarganize songs with video first
 function videoSongsFirst (a, b) {
   if (a.youtube === null && b.youtube === null) {
     return 0
@@ -125,4 +185,12 @@ function videoSongsFirst (a, b) {
   } else {
     return -1
   }
+}
+
+export default {
+  namespaced: true,
+  state,
+  getters,
+  actions,
+  mutations
 }

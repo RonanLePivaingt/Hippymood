@@ -22,7 +22,7 @@
       elevation="2"
     >
       <v-card-text
-        class="song-information"
+        class="pb-0"
         align="left"
       >
         <v-container
@@ -30,15 +30,15 @@
           class="video-problem"
         >
           <v-row
-            class="flex-nowrap"
+            class="flex-nowrap pr-4"
             align="center"
             justify="center"
           >
             <!-- eslint-disable -->
-            <p class="emoji ma-4">(>_<)</p>
+            <p class="emoji my-4">(>_<)</p>
             <!-- eslint-enable -->
 
-            <div
+            <v-col
               v-show="currentMood.nbVideo !== '0'"
               class="message text-left"
             >
@@ -48,9 +48,9 @@
               <p class="ma-0">
                 Pour continuer en mode vidéo, clique sur suivant ou deux fois sur une autre mood
               </p>
-            </div>
+            </v-col>
 
-            <div
+            <v-col
               v-show="currentMood.nbVideo === '0'"
               class="message text-left"
             >
@@ -60,7 +60,7 @@
               <p class="ma-0">
                 Pour continuer en mode vidéo, clique deux fois sur une autre mood
               </p>
-            </div>
+            </v-col>
           </v-row>
         </v-container>
         <v-row>
@@ -105,11 +105,7 @@
 
       <PlayerControls rounded />
 
-      <v-card-text>
-        <v-chip>
-          {{ currentMood.name }}
-        </v-chip>
-      </v-card-text>
+      <MoodChips />
     </v-card>
   </v-col>
 </template>
@@ -118,12 +114,14 @@
 import { mapState, mapActions } from 'vuex'
 import PlayerControls from './PlayerControls'
 import Menu from './Menu'
+import MoodChips from './MoodChips'
 
 export default {
   name: 'PlayerVideo',
   components: {
     PlayerControls,
     Menu,
+    MoodChips,
   },
   data: () => ({
     playerVars: {
@@ -205,14 +203,6 @@ export default {
         color: white;
       }
     }
-
-    .message {
-      padding-right: 1rem;
-    }
-  }
-
-  .song-information {
-    padding-bottom: 0;
   }
 }
 </style>

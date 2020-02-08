@@ -97,7 +97,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions('music', [ 'playSearchSong' ]),
+    ...mapActions('music', [ 'playNextSong' ]),
     search(val) {
       if (val) {
         this.loading = true
@@ -117,7 +117,7 @@ export default {
       }
     },
     play(song) {
-      this.playSearchSong(song)
+      this.playNextSong(song)
       this.$router.push('/')
     }
   }

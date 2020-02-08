@@ -9,6 +9,22 @@
     <PlayerVideo v-if="videoMode" />
 
     <MoodList />
+
+    <v-snackbar
+      :value="moodSongsAlreadyPlayed.id ? true : false"
+      :timeout="10000"
+      @input="resetMoodSongsAlreadyPlayed"
+    >
+      Les chansons de la mood {{ moodSongsAlreadyPlayed.name }} ont déjà été lues, les
+      <v-btn
+        class="ml-0"
+        color="secondary"
+        text
+        @click="resetSessionBeforePlay(moodSongsAlreadyPlayed)"
+      >
+        les réécouter ?
+      </v-btn>
+    </v-snackbar>
   </v-col>
 </template>
 
@@ -22,20 +38,24 @@ import Intro from './Intro'
 export default {
   name: 'WhatsNew',
   components: {
-    Intro,
     MoodList,
     PlayerCard,
     PlayerVideo,
+    Intro,
   },
+  data: () => ({
+    snackbar: false,
+  }),
   computed: mapState('music', [
     'currentSong',
     'videoMode',
+    'moodSongsAlreadyPlayed',
   ]),
   methods: {
-    ...mapActions('music', [ 'playNext' ]),
-    play() {
-      this.$root.$emit('play');
-    },
+    ...mapActions('music', [
+      'resetSessionBeforePlay',
+      'resetMoodSongsAlreadyPlayed',
+    ]),
   },
 };
 </script>

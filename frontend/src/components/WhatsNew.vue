@@ -75,10 +75,10 @@ export default {
   methods: {
     ...mapActions('music', [
       'getWhatsNew',
-      'playSong'
+      'playNextSong'
     ]),
     play(song) {
-      this.playSong(song)
+      this.playNextSong(song)
       this.$router.push('/')
     }
   },

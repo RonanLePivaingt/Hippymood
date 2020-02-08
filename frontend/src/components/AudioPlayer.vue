@@ -4,7 +4,7 @@
     ref="audioPlayer"
     :src="/music/ + currentSong.path"
     autoplay
-    @-on:ended="playNext()"
+    @-on:ended="playNext"
   >
     Your browser does not support the
     <code>audio</code> element.
