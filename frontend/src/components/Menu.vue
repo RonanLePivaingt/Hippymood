@@ -20,7 +20,9 @@
             <v-icon>mdi-play-circle-outline</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Lecteur</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('menu.player') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -33,7 +35,9 @@
             <v-icon>mdi-magnify</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Recherche</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('menu.search') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -45,7 +49,9 @@
             <v-icon>mdi-new-box</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Quoi de neuf ?</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('menu.whatsNew') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -59,7 +65,9 @@
             />
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Mode vidéo</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('menu.videoMode') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -72,7 +80,9 @@
             <v-icon>mdi-download</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Télécharger</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('menu.download') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -85,7 +95,9 @@
             <v-icon>mdi-wrench</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Administration</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('menu.admin') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -97,7 +109,9 @@
             <v-icon>mdi-information-outline</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>À propos</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('menu.about') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>

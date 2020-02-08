@@ -1,0 +1,16 @@
+{
+  "intro1": "A website to listen to music organized by mood",
+  "intro2": "It's like a box of chocolate, you never know what you're gonna get! Sometimes you come back, sometimes not...",
+  "ui": {
+    "loadMore": "Load more"
+  },
+  "menu": {
+    "player": "Player",
+    "search": "Search",
+    "whatsNew": "What's new ?",
+    "videoMode": "Video mode",
+    "download": "Download",
+    "admin": "Admin",
+    "about": "About"
+  }
+}

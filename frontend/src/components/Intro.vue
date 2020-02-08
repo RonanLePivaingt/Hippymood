@@ -4,18 +4,18 @@
     class="intro px-4"
   >
     <p class="text-left">
-      Un site pour écouter de la musique selon ta "mood"
+      {{ $t('intro1') }}
     </p>
 
     <p class="text-left">
-      C'est comme une boite de chocolat, tant que t'as pas essayé tu ne sais pas! Des fois tu reviens, des fois pas...
+      {{ $t('intro2') }}
     </p>
 
     <div class="actions d-flex justify-center align-center mb-3">
       <v-switch
         :input-value="videoMode"
         color="secondary"
-        label="Mode video"
+        :label="$t('menu.videoMode')"
         @change="toggleVideoMode"
       />
 
@@ -49,7 +49,7 @@
         <v-icon left>
           mdi-new-box
         </v-icon>
-        Quoi de neuf ?
+        {{ $t('menu.whatsNew') }}
       </v-btn>
     </div>
 
