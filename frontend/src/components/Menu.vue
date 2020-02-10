@@ -124,7 +124,48 @@
         <v-divider />
 
         <v-list-item class="pa-0">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                class="ma-2"
+                icon
+                text
+                v-on="on"
+              >
+                <v-icon v-show="!darkMode">
+                  mdi-translate
+                </v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item-group
+                color="primary"
+                :value="langItemIndex"
+              >
+                <v-list-item
+                  v-for="(item, index) in langItems"
+                  :key="index"
+                  @click="changeLang(item.lang, index)"
+                >
+                  <v-list-item-icon>
+                    <v-img
+                      class="lang-img mr-3"
+                      :src="require(`../assets/lang/${item.lang}.svg`)"
+                      height="1rem"
+                      width="2rem"
+                      contain
+                    />
+                  </v-list-item-icon>
+                  <v-list-item-title>
+                    {{ item.name }}
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-menu>
+
           <v-spacer />
+
           <v-btn
             class="ma-2"
             text
@@ -149,13 +190,54 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Menu',
+  data: () => ({
+    langItems: [
+      {
+        name: 'Français',
+        lang: 'fr',
+      },
+      {
+        name: 'English',
+        lang: 'en',
+      },
+      {
+        name: 'Brezhoneg',
+        lang: 'br',
+      },
+    ],
+  }),
   computed: {
     ...mapState('music', [ 'videoMode' ]),
-    ...mapState([ 'darkMode' ]),
+    ...mapState([
+      'darkMode',
+      'lang',
+      'langIndex',
+    ]),
+    //  Computed with getter and setter to avoid no setter error because value is coming from state
+    //  Unfortunately the setter is not called when the index is updated, so changeLang func is here
+    langItemIndex: {
+      get () {
+        return this.langIndex
+      },
+      set () {}
+    }
+  },
+  created () {
+    this.langItem = this.langItems.findIndex(item => item.lang === this.lang)
   },
   methods: {
     ...mapActions('music', [ 'toggleVideoMode' ]),
-    ...mapActions([ 'toggleDarkMode' ]),
+    ...mapActions([
+      'toggleDarkMode',
+      'setLang',
+    ]),
+    changeLang (lang, index) {
+      this.$root.$i18n.locale = lang
+      this.setLang({
+        lang,
+        index,
+      })
+    }
   }
 };
 </script>
