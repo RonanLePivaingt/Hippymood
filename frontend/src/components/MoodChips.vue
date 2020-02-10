@@ -19,8 +19,9 @@
         </v-chip>
       </template>
 
-      <span v-show="nbSongsLeft > 0">{{ nbSongsLeft }} chansons restantes</span>
-      <span v-show="nbSongsLeft === 0">{{ nbSongsLeft }} chanson restante</span>
+      <span v-show="nbSongsLeft > 1"> {{ $t('ui.songsLeft', { nb: nbSongsLeft }) }} </span>
+      <span v-show="nbSongsLeft === 1"> {{ $t('ui.songLeft') }} </span>
+      <span v-show="nbSongsLeft === 0"> {{ $t('ui.noMoreSongsLeft') }} </span>
     </v-tooltip>
 
     <v-chip

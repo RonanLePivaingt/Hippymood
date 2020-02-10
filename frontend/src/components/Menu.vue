@@ -1,10 +1,16 @@
 <template>
   <v-container class="menu-container d-flex flex-column flex-grow-1 pa-0">
     <v-col class="pa-0">
-      <v-list dense>
-        <v-list-item class="d-flex d-sm-none">
+      <v-list
+        class="pa-0"
+        dense
+      >
+        <v-list-item
+          class="d-flex d-sm-none"
+          two-line
+        >
           <v-list-item-content>
-            <v-list-item-title class="title pa-2 ma-2">
+            <v-list-item-title class="menu-title text-center pt-3">
               Hippy Mood
             </v-list-item-title>
           </v-list-item-content>
@@ -20,7 +26,9 @@
             <v-icon>mdi-play-circle-outline</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Lecteur</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('menu.player') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -33,7 +41,9 @@
             <v-icon>mdi-magnify</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Recherche</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('menu.search') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -45,7 +55,9 @@
             <v-icon>mdi-new-box</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Quoi de neuf ?</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('menu.whatsNew') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -59,7 +71,9 @@
             />
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Mode vidéo</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('menu.videoMode') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -72,7 +86,9 @@
             <v-icon>mdi-download</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Télécharger</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('menu.download') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -85,7 +101,9 @@
             <v-icon>mdi-wrench</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Administration</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('menu.admin') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -97,7 +115,9 @@
             <v-icon>mdi-information-outline</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>À propos</v-list-item-title>
+            <v-list-item-title>
+              {{ $t('menu.about') }}
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -110,12 +130,15 @@
         <v-divider />
 
         <v-list-item class="pa-0">
+          <LangMenu />
+
           <v-spacer />
+
           <v-btn
             class="ma-2"
             text
             icon
-            @click="toggleDarkMode()"
+            @click="setDarkMode(!darkMode)"
           >
             <v-icon v-show="!darkMode">
               mdi-brightness-7
@@ -132,22 +155,36 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import LangMenu from './LangMenu';
 
 export default {
   name: 'Menu',
+  components: {
+    LangMenu,
+  },
   computed: {
     ...mapState('music', [ 'videoMode' ]),
-    ...mapState([ 'darkMode' ]),
+    ...mapState([
+      'darkMode',
+      'lang',
+    ]),
   },
   methods: {
     ...mapActions('music', [ 'toggleVideoMode' ]),
-    ...mapActions([ 'toggleDarkMode' ]),
+    ...mapActions([ 'setDarkMode' ]),
   }
 };
 </script>
 
-<style>
+<style lang="scss">
 .menu-container {
   height: 100%;
+
+  .menu-title {
+    height: 4rem;
+    font-family: 'Grenadier-NF';
+    font-size: 3rem !important;
+    line-height: 3rem !important;
+  }
 }
 </style>

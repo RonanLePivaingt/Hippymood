@@ -1,0 +1,29 @@
+{
+  "about": {
+    "madeWith": "Graet gant",
+    "by": "gant",
+    "usedTechnologies": "Teknologiezhioù implijet",
+    "seeCode": "Gwellet kod Hippymood war Github"
+  },
+  "intro1": "Ul lec'hienn internet evit selaou sonerezh hervez da imor",
+  "intro2": "Evel ur boest chokolad eo, keit ma peus ket tañvet na ouiez ket! A wechoù e distroez, a wechoù na rez ket...",
+  "menu": {
+    "player": "Lenner",
+    "search": "Klask",
+    "whatsNew": "Petra nevez ?",
+    "videoMode": "Mod video",
+    "download": "Pellgargañ",
+    "admin": "Melestriñ",
+    "about": "Diwar-benn"
+  },
+  "search": {
+    "placeholder": "Kanaouenn, albom pe arzourien",
+    "notFound": "Netra kavet gant"
+  },
+  "ui": {
+    "loadMore": "Kargañ muioc'h",
+    "songsLeft": "Chom a ra {nb} ganaouennoù",
+    "songLeft": "Chom a ra ur ganaouenn",
+    "noMoreSongsLeft": "Amzer eo cheñch imor mignoñ"
+  }
+}

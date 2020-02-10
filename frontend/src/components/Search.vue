@@ -1,11 +1,11 @@
 <template>
   <v-col class="search">
-    <h2> Search </h2>
+    <h2> {{ $t('menu.search') }} </h2>
 
     <v-text-field
       ref="searchField"
       :loading="loading"
-      label="Chanson, album ou artiste"
+      :label="$t('search.placeholder')"
       clearable
       @input="debouncedSearch"
       @click:clear="searchResults = []"
@@ -66,7 +66,9 @@
       <p class="emoji">(>_<)</p>
       <!-- eslint-enable -->
 
-      <p> No search result for : {{ searchValue }} </p>
+      <p>
+        {{ $t('search.notFound') }} : <strong>{{ searchValue }}</strong>
+      </p>
     </v-col>
   </v-col>
 </template>

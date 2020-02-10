@@ -4,24 +4,25 @@
     class="intro px-4"
   >
     <p class="text-left">
-      Un site pour écouter de la musique selon ta "mood"
+      {{ $t('intro1') }}
     </p>
 
     <p class="text-left">
-      C'est comme une boite de chocolat, tant que t'as pas essayé tu ne sais pas! Des fois tu reviens, des fois pas...
+      {{ $t('intro2') }}
     </p>
 
     <div class="actions d-flex justify-center align-center mb-3">
       <v-switch
+        class="mr-2"
         :input-value="videoMode"
         color="secondary"
-        label="Mode video"
+        :label="$t('menu.videoMode')"
         @change="toggleVideoMode"
       />
 
       <v-btn
         to="/search"
-        class="mx-4"
+        class="ma-2"
         fab
         small
       >
@@ -29,10 +30,10 @@
       </v-btn>
 
       <v-btn
-        class="mr-4"
+        class="ma-2"
         fab
         small
-        @click="toggleDarkMode()"
+        @click="setDarkMode(!darkMode)"
       >
         <v-icon v-show="!darkMode">
           mdi-brightness-7
@@ -42,14 +43,16 @@
         </v-icon>
       </v-btn>
 
+      <LangMenu fab />
+
       <v-btn
-        class="new"
+        class="new ml-2"
         to="/whatsnew"
       >
         <v-icon left>
           mdi-new-box
         </v-icon>
-        Quoi de neuf ?
+        {{ $t('menu.whatsNew') }}
       </v-btn>
     </div>
 
@@ -59,9 +62,13 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import LangMenu from './LangMenu';
 
 export default {
   name: 'Intro',
+  components: {
+    LangMenu,
+  },
   computed: {
     ...mapState('music', [
       'currentSong',
@@ -74,7 +81,7 @@ export default {
       'playNext',
       'toggleVideoMode',
     ]),
-    ...mapActions([ 'toggleDarkMode' ]),
+    ...mapActions([ 'setDarkMode' ]),
   }
 };
 </script>

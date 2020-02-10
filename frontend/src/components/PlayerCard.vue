@@ -22,6 +22,7 @@
         <v-menu
           bottom
           left
+          :close-on-content-click="false"
         >
           <template v-slot:activator="{ on }">
             <v-btn

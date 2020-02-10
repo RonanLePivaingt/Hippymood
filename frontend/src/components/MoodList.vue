@@ -8,7 +8,7 @@
     <v-btn
       v-for="mood in moods"
       :key="mood.id"
-      class="mood-btn"
+      class="mood-btn ma-2"
       :color="mood.id === currentMood.id ? 'secondary' : ''"
       :disabled="videoMode && mood.nbVideo === '0' ? true : false"
       @click="playNextMood(mood)"

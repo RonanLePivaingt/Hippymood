@@ -1,6 +1,6 @@
 <template>
   <v-col class="whats-new">
-    <h2> Quoi de neuf ? </h2>
+    <h2> {{ $t('menu.whatsNew') }}</h2>
 
     <v-list>
       <v-list-item
@@ -54,7 +54,7 @@
         color="secondary"
         @click="getWhatsNew"
       >
-        Charger plus
+        {{ $t('ui.loadMore') }}
       </v-btn>
     </v-col>
   </v-col>

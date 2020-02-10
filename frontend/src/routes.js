@@ -6,12 +6,12 @@ import About from './components/About'
 import Search from './components/Search'
 
 const routes = [
-  { path: '/', component: Player, name: 'Lecteur'  },
-  { path: '/admin', component: Admin, name: 'Administration'  },
-  { path: '/search', component: Search, name: 'Recherche'  },
-  { path: '/whatsnew', component: WhatsNew, name: 'Quoi de neuf ?' },
-  { path: '/download', component: Download, name: 'Téléchargement'  },
-  { path: '/about', component: About, name: 'À propos'  },
+  { path: '/', component: Player, name: 'player'  },
+  { path: '/admin', component: Admin, name: 'admin'  },
+  { path: '/search', component: Search, name: 'search'  },
+  { path: '/whatsnew', component: WhatsNew, name: 'whatsNew' },
+  { path: '/download', component: Download, name: 'download'  },
+  { path: '/about', component: About, name: 'about'  },
 ]
 
 export default routes

@@ -1,9 +1,9 @@
 <template>
   <v-col class="about">
-    <h2> À propos </h2>
+    <h2> {{ $t('menu.about') }} </h2>
 
     <div class="made-with-love">
-      Fait avec <div class="heart" /> par Ronan Le Pivaingt
+      {{ $t('about.madeWith') }} <div class="heart" /> {{ $t('about.by') }} Ronan Le Pivaingt
     </div>
 
     <v-list>
@@ -12,7 +12,7 @@
       >
         <template v-slot:activator>
           <v-list-item-content>
-            <v-list-item-title>Technologies utilisées</v-list-item-title>
+            <v-list-item-title> {{ $t('about.usedTechnologies') }} </v-list-item-title>
           </v-list-item-content>
         </template>
 
@@ -128,7 +128,7 @@
     <v-row justify="space-around">
       <a
         href="https://github.com/3615Yeye/Hippymood"
-        alt="Voir le code d'Hippymood sur Github"
+        :title="$t('about.seeCode')"
         target="_blank"
         class="github-link"
       >

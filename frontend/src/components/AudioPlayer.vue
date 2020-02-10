@@ -2,9 +2,9 @@
   <audio
     v-if="audioPlayback"
     ref="audioPlayer"
-    :src="/music/ + currentSong.path"
     autoplay
-    @-on:ended="playNext"
+    :src="currentSong.path ? `/music/${currentSong.path}` : ''"
+    @ended="playNext"
   >
     Your browser does not support the
     <code>audio</code> element.
@@ -53,9 +53,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.mood-btn {
-  margin: 0.5rem;
-}
-</style>

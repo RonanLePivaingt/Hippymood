@@ -1,0 +1,29 @@
+{
+  "about": {
+    "madeWith": "Made with",
+    "by": "by",
+    "usedTechnologies": "Used technologies",
+    "seeCode": "See Hippymood's code on Github"
+  },
+  "intro1": "A website to listen to music organized by mood",
+  "intro2": "It's like a box of chocolate, you never know what you're gonna get! Sometimes you come back, sometimes not...",
+  "menu": {
+    "player": "Player",
+    "search": "Search",
+    "whatsNew": "What's new ?",
+    "videoMode": "Video mode",
+    "download": "Download",
+    "admin": "Admin",
+    "about": "About"
+  },
+  "search": {
+    "placeholder": "Song, album or artist",
+    "notFound": "No search result for"
+  },
+  "ui": {
+    "loadMore": "Load more",
+    "songsLeft": "{nb} songs left",
+    "songLeft": "One song left",
+    "noMoreSongsLeft": "It's time to change mood"
+  }
+}

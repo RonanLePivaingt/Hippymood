@@ -19,38 +19,7 @@
           Hippy Mood
         </h1>
 
-        <transition name="fade">
-          <v-row
-            v-show="$route.path !== '/'"
-            class="px-6"
-            justify="space-between"
-            align="center"
-          >
-            <v-breadcrumbs
-              class="breadcrumb mx-md-0"
-              :items="breadcrumbItems"
-              large
-            />
-
-            <v-menu
-              bottom
-              left
-            >
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  class="breadcrumb-menu ma-2"
-                  icon
-                  text
-                  large
-                  v-on="on"
-                >
-                  <v-icon>mdi-menu</v-icon>
-                </v-btn>
-              </template>
-              <Menu />
-            </v-menu>
-          </v-row>
-        </transition>
+        <Breadcrumb />
 
         <transition name="fade">
           <router-view />
@@ -67,16 +36,18 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import Menu from './components/Menu';
+import { mapState, mapActions } from 'vuex'
 import AudioPlayer from './components/AudioPlayer';
+import Breadcrumb from './components/Breadcrumb';
 import Footer from './components/Footer';
+import Menu from './components/Menu';
 import Octocat from './components/demo/Octocat';
 
 export default {
   name: 'App',
   components: {
     AudioPlayer,
+    Breadcrumb,
     Footer,
     Menu,
     Octocat,
@@ -87,22 +58,26 @@ export default {
   }),
   computed: {
     ...mapState('music', [ 'currentSong' ]),
-    breadcrumbItems () {
-      return [
-        {
-          text: 'Hippy Mood',
-          disabled: false,
-          to: '/',
-        },
-        {
-          text: this.$route.name,
-          disabled: false,
-        },
-      ]
-    },
   },
   created () {
-    this.$store.dispatch('music/getMoods')
+    this.getMoods()
+
+    const lang = localStorage.lang
+    if (lang) {
+      this.$root.$i18n.locale = lang
+      this.setLang(lang)
+    }
+    const darkMode = localStorage.darkMode
+    if (darkMode === 'true') {
+      this.setDarkMode(true)
+    }
+  },
+  methods: {
+    ...mapActions('music', ['getMoods']),
+    ...mapActions([
+      'setLang',
+      'setDarkMode',
+    ])
   },
 };
 </script>
@@ -119,9 +94,6 @@ export default {
       font-size: 7rem;
     }
   }
-  .breadcrumb {
-    padding-left: 0;
-  }
   .main-content {
     margin: 0 auto;
   }
@@ -134,14 +106,6 @@ export default {
       @media screen and (min-width: 600px) {
         margin-bottom: 2rem;
       }
-    }
-  }
-  .breadcrumb-menu {
-    float: right;
-    display: none;
-
-    @media screen and (min-width: 600px) {
-      display: inline;
     }
   }
 }

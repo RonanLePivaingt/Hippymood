@@ -1,0 +1,29 @@
+{
+  "about": {
+    "madeWith": "Fait avec",
+    "by": "par",
+    "usedTechnologies": "Technologies utilisées",
+    "seeCode": "Voir le code d'Hippymood sur Github"
+  },
+  "intro1": "Un site pour écouter de la musique selon ton humeur",
+  "intro2": " C'est comme une boite de chocolat, tant que t'as pas essayé tu ne sais pas! Des fois tu reviens, des fois pas...",
+  "menu": {
+    "player": "Lecteur",
+    "search": "Recherche",
+    "whatsNew": "Quoi de neuf ?",
+    "videoMode": "Mode vidéo",
+    "download": "Télécharger",
+    "admin": "Administration",
+    "about": "À propos"
+  },
+  "search": {
+    "placeholder": "Chanson, album ou artiste",
+    "notFound": "Aucun résultat pour la recherche"
+  },
+  "ui": {
+    "loadMore": "Charger plus",
+    "songsLeft": "{nb} chansons restantes",
+    "songLeft": "Une chanson restante",
+    "noMoreSongsLeft": "C'est le moment de choisir une autre humeur"
+  }
+}
