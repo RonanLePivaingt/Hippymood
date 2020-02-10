@@ -1,6 +1,6 @@
 <template>
   <v-col>
-    <h2> Télécharger </h2>
+    <h2> {{ $t('menu.download') }}</h2>
 
     <p class="text-justify">
       To be implemented...
