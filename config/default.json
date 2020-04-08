@@ -29,7 +29,12 @@
     "musicProxy": {
       "target": "http://backend:8090"
     },
-    "adminShownName": "Admin"
+    "adminShownName": "Admin",
+    "moodListLoading": {
+      "nbLoaders": 60,
+      "loadingInterval": 5000,
+      "readyAnimationDuration": 1000
+    }
   },
   "dev": {
     "ajaxDelay": 0
