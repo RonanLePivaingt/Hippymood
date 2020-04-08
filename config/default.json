@@ -30,5 +30,8 @@
       "target": "http://backend:8090"
     },
     "adminShownName": "Admin"
+  },
+  "dev": {
+    "ajaxDelay": 0
   }
 }

@@ -37,6 +37,13 @@ if (config.get('global.demoMode') === false)
 
 app.use('/tmp', express.static('tmp'));
 
+// Adding a delay to AJAX responses (for development purpose)
+if (Number.isInteger(config.get('dev.ajaxDelay')) && config.get('dev.ajaxDelay') > 0) {
+  app.use(function(req,res,next) {
+    setTimeout(next, config.get('dev.ajaxDelay'));
+  });
+}
+
 var http = require('http');
 var server = http.createServer(app);
 
