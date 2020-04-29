@@ -10,7 +10,11 @@ module.exports = {
   configureWebpack: {
     plugins: [
       new webpack.DefinePlugin({ CONFIG: JSON.stringify(require('config')) })
-    ]
+    ],
+    output: {
+      filename: '[name].[contenthash].js',
+      chunkFilename: '[name].[contenthash].js',
+    }
   },
   devServer: {
     disableHostCheck: true,
