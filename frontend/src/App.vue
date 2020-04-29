@@ -59,6 +59,15 @@ export default {
   computed: {
     ...mapState('music', [ 'currentSong' ]),
   },
+  beforeCreate () {
+    // Loader exit animation and removal
+    const loader = document.getElementById('loader-container');
+    loader.classList.remove('slide-in-bottom')
+    loader.classList.add('slide-out-bottom')
+    loader.addEventListener("animationend", () => {
+      loader.parentNode.removeChild(loader)
+    }, {once: true})
+  },
   created () {
     this.getMoods()
 
