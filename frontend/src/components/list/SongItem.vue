@@ -54,42 +54,14 @@ export default {
 </script>
 
 <style lang="scss">
-.v-skeleton-loader {
-  display: inline-flex;
-  max-width: 100%;
+.metadata {
+  overflow: hidden;
 
-  > div {
-    flex-grow: 1;
-  }
-
-  &.line {
-    display: flex;
-    overflow: hidden;
-
-    opacity: 0;
-    transition: opacity .4s;
-  }
-
-  .show &.line {
-    opacity: 1;
-  }
-
-  // Text
-  .metadata > div {
-    &,
-    &.v-list-item__subtitle {
-      text-overflow: clip;
-    }
-  }
-
-  .metadata > div & {
-    display: inline-flex;
-    margin-left: 4px;
-    vertical-align: middle;
-
-    .v-skeleton-loader__text {
-      margin-bottom: 0;
-    }
+  .v-list-item__subtitle {
+    display: inherit;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 </style>

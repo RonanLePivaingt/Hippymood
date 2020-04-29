@@ -29,29 +29,29 @@
           <song-item
             v-for="(song, index) in searchResults"
             v-show="!loading"
-            :key="song.id"
+            :key="index"
             :song="song"
             :video-mode="videoMode"
-            :style="`transition-delay: ${resultAnimationDelay(index)}ms;`"
+            :style="`transition-delay: ${resultsAnimationDelay(index)}ms;`"
             @click="play(song)"
           />
         </transition-group>
       </v-list>
 
-      <transition name="search">
-      <v-col
-        v-show="noResult"
-        class="text-center"
-        :style="`transition-delay: ${resultAnimationDelay(2)}ms;`"
+      <transition name="no-results">
+        <v-col
+          v-show="noResult"
+          class="text-center"
+          :style="`transition-delay: ${resultsAnimationDelay(0)}ms;`"
         >
-        <!-- eslint-disable -->
-        <p class="emoji">(>_<)</p>
-        <!-- eslint-enable -->
+          <!-- eslint-disable -->
+          <p class="emoji">(>_<)</p>
+          <!-- eslint-enable -->
 
-        <p>
-        {{ $t('search.notFound') }} : <strong>{{ searchValue }}</strong>
-        </p>
-      </v-col>
+          <p>
+            {{ $t('search.notFound') }} : <strong>{{ searchValue }}</strong>
+          </p>
+        </v-col>
       </transition>
     </div>
   </v-col>
@@ -61,9 +61,10 @@
 import _ from 'lodash'
 import music from '../api/music'
 import { mapState, mapActions } from 'vuex'
-import bezierEasing from 'bezier-easing';
-import LoadingItem from './list/LoadingItem';
-import SongItem from './list/SongItem';
+import bezierEasing from 'bezier-easing'
+import LoadingItem from './list/LoadingItem'
+import SongItem from './list/SongItem'
+import axios from 'axios'
 
 // Generating array of skeleton items with various width
 const nbLoaders = 3,
@@ -76,14 +77,12 @@ const nbLoaders = 3,
     artistWidth: `width: ${Math.max(372 * Math.random(), 122)}px;`,
     btnWidth: `width: ${Math.max(max * Math.random(), min)}px;`,
     isLoader: true,
-  }));
+  }))
 
 // Animations
-const loadingEase = bezierEasing(0.55, 0, 1, 0.45),
-  readyEase = bezierEasing(0.65, 0, 0.35, 1),
-  loadingInterval = 3000,
-  animationDuration = 300,
-  readyAnimationDuration = CONFIG.frontend.moodListLoading.readyAnimationDuration;
+const loadersAnimationTime = 400,
+      loadersAnimationDuration = loadersAnimationTime / nbLoaders,
+      resultsAnimationTime = 400
 
 export default {
   name: 'Search',
@@ -96,12 +95,17 @@ export default {
     searchResults: [],
     searchValue: '',
     noResult: false,
-    loaders: [],
-    loadingClass: '',
+    loaders: loaders,
+    cancelRequest: false
   }),
-  computed: mapState('music', [
-    'videoMode',
-  ]),
+  computed: {
+    ...mapState('music', [
+      'videoMode',
+    ]),
+    resultsAnimationDuration () {
+      return this.searchResults.length > 0 ? resultsAnimationTime / this.searchResults.length : 0
+    },
+  },
   created () {
     this.debouncedSearch = _.debounce(this.search, 300);
   },
@@ -115,22 +119,26 @@ export default {
     ...mapActions('music', [ 'playNextSong' ]),
     search(val) {
       if (val) {
-        this.loading = true
+        // Force loaders animation
+        if (this.loading === false) {
+          this.loaders = []
+          this.$nextTick(() => {
+            this.loaders = loaders
+          })
+        }
+
+        if (this.cancelRequest) {
+          this.cancelRequest.cancel("Searching another term")
+        }
+        this.cancelRequest = axios.CancelToken.source()
+
         this.searchValue = val
         this.noResult = false
+        this.loading = true
 
-        this.loaders = []
-        this.$nextTick(() => {
-          this.loaders = loaders
-        })
-
-        setTimeout(() => {
-          this.loadingClass = 'show'
-        }, 100);
-
-        music.search(val).then(res => {
-          this.loadingClass = '';
+        music.search(val, this.cancelRequest.token).then(res => {
           this.loading = false
+          this.cancelRequest = false
 
           if (Array.isArray(res.data)) {
             this.searchResults = res.data
@@ -139,8 +147,14 @@ export default {
             this.searchResults = []
             this.noResult = true
           }
+        }).catch(err => {
+          // Catching cancellation error
         })
       }
+    },
+    play (song) {
+      this.playNextSong(song)
+      this.$router.push('/')
     },
     clear () {
       this.searchResults = []
@@ -148,33 +162,20 @@ export default {
     },
     loadersAnimationDelay (index) {
       if (this.loading) {
-        console.log("load1", index, this.resultAnimationDelay(0) + (300 * (index + 1)))
-        return this.resultAnimationDelay(0) + (300 * (index + 1))
+        return this.resultsAnimationDelay(0) + (loadersAnimationDuration * (index + 1))
       } else {
-        // return (nbLoaders * animationDuration) - (animationDuration * index)
-        console.log("load2", index, (nbLoaders - index - 1) * animationDuration)
-        return (nbLoaders - index - 1) * animationDuration
+        return (nbLoaders - index) * loadersAnimationDuration
       }
     },
-    resultAnimationDelay (index) {
+    resultsAnimationDelay (index) {
       if (!this.loading) {
-        console.log("result1", index, this.loadersAnimationDelay(0) + (animationDuration * index))
-        return this.loadersAnimationDelay(0) + (animationDuration * index)
+        return this.loadersAnimationDelay(0) + (this.resultsAnimationDuration * index)
       } else {
-        console.log("result2", index, (this.searchResults.length - index) * animationDuration)
-        return (this.searchResults.length - index) * animationDuration
-        // return (this.searchResults.length * animationDuration) - (300 * (index + 1))
+        return (this.searchResults.length - index) * this.resultsAnimationDuration
       }
     },
-    loadingAnimationDelay (index) {
-      return loadingEase(index / nbLoaders ) * nbLoaders * loadingInterval;
-    },
-    play(song) {
-      this.playNextSong(song)
-      this.$router.push('/')
-    }
   }
-};
+}
 </script>
 
 <style lang="scss">
@@ -219,6 +220,9 @@ export default {
 }
 
 /* Animations */
+.search-enter-active, .search-leave-active {
+  transition-timing-function: ease-out;
+}
 .search-enter-active {
   transition: all .3s;
 }
@@ -229,4 +233,15 @@ export default {
   opacity: 0;
   transform: translateY(-100%);
 }
+.no-results-enter-active, .no-results-leave-active {
+  transition: all .3s;
+}
+.no-results-enter, .no-results-leave-to {
+  opacity: 0;
+  transform: translateY(20%);
+}
+.no-results-enter-active, .no-results-leave-active {
+  transition-timing-function: ease-out;
+}
+
 </style>

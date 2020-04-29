@@ -1,4 +1,5 @@
 import music from '../../api/music'
+import axios from 'axios'
 
 const state = {
   moods: [],
@@ -25,6 +26,8 @@ const getters = {
   }
 }
 
+let moodLoadCancel = false
+
 const actions = {
   getMoods ({ commit }) {
     music.getMoods().then(response => {
@@ -32,6 +35,9 @@ const actions = {
     });
   },
   playNextMood ({ commit, state, dispatch }, mood) {
+    if (state.nextType === 'loadingMood' && mood.id === state.next.id) {
+      return false
+    }
     if (state.playbackState !== 'playing') {
       dispatch('loadAndPlayMood', mood)
     } else if (state.currentSong.moodId === mood.id) {
@@ -88,22 +94,37 @@ const actions = {
     }
   },
   loadMood ({ commit, state, dispatch }, moodId) {
-    return music.getMood(moodId).then(response => {
-      if (response.data.error && response.data.error.allSongGenrePlayed) {
-        commit('setMoodSongsAlreadyPlayed', state.moods.find(mood => mood.id === moodId))
-      } else {
-        if (state.videoMode) {
-          response.data.songs.sort(videoSongsFirst)
-        }
+    if (moodLoadCancel) {
+      moodLoadCancel.cancel("Loading another mood")
+    }
+    moodLoadCancel = axios.CancelToken.source();
 
-        return commit('setNextSongs', response.data.songs)
-      }
-    });
+    return music.getMood(moodId, moodLoadCancel.token)
+      .then(response => {
+        moodLoadCancel = false;
+
+        if (response.data.error && response.data.error.allSongGenrePlayed) {
+          commit('setMoodSongsAlreadyPlayed', state.moods.find(mood => mood.id === moodId))
+        } else {
+          if (state.videoMode) {
+            response.data.songs.sort(videoSongsFirst)
+          }
+
+          return commit('setNextSongs', response.data.songs)
+        }
+      })
+    ;
   },
   loadAndPlayMood ({ commit, state, dispatch }, mood) {
-    dispatch('loadMood', mood.id).then( () => {
-      dispatch('playNext')
-    })
+    dispatch('loadMood', mood.id)
+      .then( () => {
+        dispatch('playNext')
+      })
+      .catch( e => {
+        console.log(e)
+      })
+    commit('setNextType', 'loadingMood')
+    commit('setNext', mood)
   },
   setPlaybackState ({ commit }, playbackState) {
     commit('setPlaybackState', playbackState)

@@ -4,14 +4,18 @@ export default {
   getMoods() {
     return axios.get("/api/moods");
   },
-  getMood( moodId ) {
+  getMood( moodId, cancelToken ) {
     return axios.post(
       "/api/mood",
-      { moodId }
+      { moodId },
+      { cancelToken }
     );
   },
-  search( value ) {
-    return axios.get(`/api/search/${value}`);
+  search( value, cancelToken ) {
+    return axios.get(
+      `/api/search/${value}`,
+      { cancelToken }
+    );
   },
   getWhatsNew( page ) {
     return axios.get( `/api/whatsNew/${page}` );
