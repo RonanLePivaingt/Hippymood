@@ -20,15 +20,25 @@
           class="mood-btn"
           :color="mood.id === currentMood.id ? 'secondary' : ''"
           :disabled="videoMode && mood.nbVideo === '0' ? true : false"
-          @click="playNextMood(mood)"
+          @click="!loading ? playNextMood(mood) : ''"
         >
           {{ mood.name }}
+
           <v-icon
             v-if="nextType === 'mood' && next.id === mood.id"
             right
           >
             mdi-update
           </v-icon>
+
+          <v-progress-circular
+            v-if="isLoading(mood.id)"
+            class="ml-2 mr-n2"
+            indeterminate
+            color="secondary"
+            width="3"
+            size="20"
+          />
         </v-btn>
       </v-skeleton-loader>
     </v-col>
@@ -102,11 +112,16 @@ export default {
     }
   },
   mounted () {
-    // Wrapped inside nextTick to avoid issue when using another language than default one
-    this.$nextTick(function () {
+    if (this.moods.length > 0) {
+      this.loading = false;
       this.activeClass = 'show';
-      this.startTime = new Date().getTime();
-    });
+    } else {
+      // Wrapped inside nextTick to avoid issue when using another language than default one
+      this.$nextTick(function () {
+        this.activeClass = 'show';
+        this.startTime = new Date().getTime();
+      });
+    }
   },
   methods: {
     ...mapActions('music', [
@@ -123,7 +138,14 @@ export default {
 
         return ( loadingEase( ( index ) / this.moods.length ) * this.moods.length ) * time;
       }
-    }
+    },
+    isLoading (moodId) {
+      if (this.nextType === 'loadingMood' && this.next.id === moodId) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
 };
 </script>
