@@ -133,6 +133,7 @@
 
           loader.classList.add('slide-in-bottom')
           window.hideLoader = () => {
+            loader.classList.remove('slide-in-bottom')
             loader.classList.add('slide-out-bottom')
           }
         }
