@@ -31,14 +31,16 @@
     </v-list>
 
     <v-col class="text-center">
-      <v-btn
-        v-if="whatsNew.length > 0"
-        color="secondary"
-        :loading="loading"
-        @click="loadMore"
-      >
-        {{ $t('ui.loadMore') }}
-      </v-btn>
+      <transition name="fade">
+        <v-btn
+          v-show="showLoadMore"
+          color="secondary"
+          :loading="loading"
+          @click="loadMore"
+        >
+          {{ $t('ui.loadMore') }}
+        </v-btn>
+      </transition>
     </v-col>
   </v-col>
 </template>
@@ -82,6 +84,7 @@ export default {
     loaders: [],
     displayLoaders: true,
     indexNewResults: 0,
+    showLoadMore: false,
   }),
   computed: {
     ...mapState('music', [
@@ -106,6 +109,8 @@ export default {
       this.$store.dispatch('music/getWhatsNew')
       this.loading = true
       this.loaders = loaders
+    } else {
+      this.showLoadMore = true
     }
   },
   methods: {
@@ -124,6 +129,9 @@ export default {
     hideLoaders () {
       if (this.whatsNew.length > 0) {
         this.displayLoaders = false
+      }
+      if (!this.loading) {
+        this.showLoadMore = true
       }
     },
     loadersAnimationDelay (index) {
