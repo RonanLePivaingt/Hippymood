@@ -31,10 +31,22 @@
       :class="!fab ? 'ml-2' : ''"
       :fab="fab"
       :rounded="rounded"
+      :loading="isLoading"
       large
       @click.stop="playNext"
     >
-      <v-icon>mdi-skip-next</v-icon>
+      <template v-slot:default>
+        <v-icon>mdi-skip-next</v-icon>
+      </template>
+
+      <template v-slot:loader>
+        <v-progress-circular
+          indeterminate
+          color="secondary"
+          width="3"
+          size="28"
+        />
+      </template>
     </v-btn>
 
     <v-btn
@@ -78,7 +90,10 @@ export default {
         return true
       }
       return false
-    }
+    },
+    isLoading () {
+      return this.nextType === 'loadingMood'
+    },
   },
   methods: {
     ...mapActions('music', [
@@ -104,6 +119,9 @@ export default {
   }
   .v-application--is-ltr .v-card__actions .player-card-actions .v-btn--fab + .v-btn--fab {
     margin-left: 0px;
+  }
+  .v-btn__loader {
+    color: var(--v-secondary-base);
   }
 }
 </style>

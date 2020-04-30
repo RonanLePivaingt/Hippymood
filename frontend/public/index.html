@@ -19,15 +19,132 @@
     <link rel="apple-touch-icon" href="<%= BASE_URL %>favicon/favicon-152.png" sizes="152x152">
     <link rel="apple-touch-icon" href="<%= BASE_URL %>favicon/favicon-180.png" sizes="180x180">
     <title>Hippymood</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
-
+    <style>
+      body {
+        margin: 0;
+      }
+      #loader-container {
+        display: grid;
+        height: 100vh;
+        overflow: hidden;
+        position: absolute;
+        width: 100vw;
+        z-index: 1000;
+      }
+      #app-loader {
+        margin: auto;
+        max-height: 30rem;
+        max-width: 60%;
+      }
+      .spin {
+        animation: spin 3s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .slide-in-bottom {
+        animation: slide-in-bottom .4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+      }
+      @keyframes slide-in-bottom {
+        0% {
+          opacity: 0;
+          transform: translateY(50vh);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .slide-out-bottom {
+        animation: slide-out-bottom 0.2s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+      }
+      @keyframes slide-out-bottom {
+        0% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(50vh);
+        }
+      }
+    </style>
   </head>
   <body>
     <noscript>
       <strong>We're sorry but frontend doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
+    <div id="loader-container">
+      <svg
+        id="app-loader"
+        class="spin"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        x="0px"
+        y="0px"
+        viewBox="0 0 512 512"
+        style="enable-background: new 0 0 512 512;"
+      >
+        <circle style="fill: #242424;" cx="256" cy="256" r="256" />
+        <path
+          style="fill: #0f161a;"
+          d="M256,505.6C118.368,505.6,6.4,393.632,6.4,256S118.368,6.4,256,6.4S505.6,118.368,505.6,256
+        S393.632,505.6,256,505.6z"
+        />
+        <g style="opacity: 0.2;">
+          <path
+            style="fill: #588199;"
+            d="M79.588,79.584C34.396,124.788,6.4,187.184,6.4,256s27.996,131.212,73.188,176.416L256,256
+          L79.588,79.584z"
+          />
+          <path
+            style="fill: #588199;"
+            d="M505.6,256c0-68.812-27.992-131.212-73.188-176.416L256,256l176.416,176.416
+          C477.608,387.212,505.6,324.812,505.6,256z"
+          />
+        </g>
+        <path
+          style="fill: #66401e;"
+          d="M256,352c-52.936,0-96-43.064-96-96s43.064-96,96-96s96,43.064,96,96S308.936,352,256,352z"
+        />
+        <path
+          style="fill: #ffeacc;"
+          d="M256,339.2c-45.88,0-83.2-37.324-83.2-83.2s37.32-83.2,83.2-83.2c45.884,0,83.2,37.324,83.2,83.2
+        S301.884,339.2,256,339.2z"
+        />
+        <circle style="fill: #242424;" cx="256" cy="256" r="6.4" />
+      </svg>
+      <script>
+        const loader = document.getElementById('loader-container');
+        if (loader) {
+          loader.addEventListener("animationend", () => {
+            if (loader.classList.contains('slide-in-bottom'))  {
+              loader.classList.remove('slide-in-bottom')
+            } else {
+              loader.parentNode.removeChild(loader)
+            }
+          })
+
+          loader.classList.add('slide-in-bottom')
+          window.hideLoader = () => {
+            loader.classList.remove('slide-in-bottom')
+            loader.classList.add('slide-out-bottom')
+          }
+        }
+      </script>
+    </div>
+
     <div id="app"></div>
+    <style>
+        @import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900");
+        @import url("https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css");
+    </style>
     <!-- built files will be auto injected -->
   </body>
 </html>
