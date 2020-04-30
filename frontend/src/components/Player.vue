@@ -30,10 +30,10 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import MoodList from './MoodList';
-import PlayerCard from './PlayerCard'
-import PlayerVideo from './PlayerVideo'
 import Intro from './Intro'
+import MoodList from './MoodList'
+const PlayerCard = () => import('./PlayerCard')
+const PlayerVideo = () => import('./PlayerVideo')
 
 export default {
   name: 'WhatsNew',
@@ -59,4 +59,3 @@ export default {
   },
 };
 </script>
-

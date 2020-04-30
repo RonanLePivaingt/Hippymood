@@ -5,7 +5,7 @@
       disable-resize-watcher
       app
     >
-      <Menu />
+      <Menu v-if="currentSong.path" />
     </v-navigation-drawer>
 
     <v-content :class="currentSong.id ? 'footer-visible' : ''">
@@ -28,11 +28,14 @@
           <router-view />
         </transition>
 
-        <AudioPlayer />
+        <AudioPlayer v-if="currentSong.path" />
       </v-col>
     </v-content>
 
-    <Footer @show-menu="drawer = true" />
+    <Footer
+      v-if="currentSong.path"
+      @show-menu="drawer = true"
+    />
 
     <Octocat v-if="demoMode" />
   </v-app>
@@ -40,11 +43,12 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import AudioPlayer from './components/AudioPlayer';
-import Breadcrumb from './components/Breadcrumb';
-import Footer from './components/Footer';
-import Menu from './components/Menu';
-import Octocat from './components/demo/Octocat';
+
+const AudioPlayer = () => import('./components/AudioPlayer')
+const Breadcrumb = () => import('./components/Breadcrumb')
+const Footer = () => import('./components/Footer')
+const Menu = () => import('./components/Menu')
+const Octocat = () => import('./components/demo/Octocat')
 
 export default {
   name: 'App',
@@ -64,20 +68,6 @@ export default {
   },
   beforeCreate () {
     window.hideLoader()
-    // Loader exit animation and removal
-    /*
-    const loader = document.getElementById('loader-container');
-    if (loader) {
-      loader.addEventListener("animationend", () => {
-        if (loader.classList.contains('slide-in-bottom'))  {
-          loader.classList.remove('slide-in-bottom')
-          loader.classList.add('slide-out-bottom')
-        } else {
-          loader.parentNode.removeChild(loader)
-        }
-      })
-    }
-    */
   },
   created () {
     this.getMoods()
@@ -105,7 +95,7 @@ export default {
 <style lang="scss">
 .app {
   h1 {
-    font-family: 'Grenadier-NF';
+    font-family: 'Grenadier-NF', sans-serif;
     font-size: 4.5rem;
     font-weight: 400;
     line-height: 1.4em;

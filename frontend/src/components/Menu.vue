@@ -27,7 +27,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              {{ $t('menu.player') }}
+              {{ $t('menu.Player') }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -42,7 +42,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              {{ $t('menu.search') }}
+              {{ $t('menu.Search') }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -56,7 +56,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              {{ $t('menu.whatsNew') }}
+              {{ $t('menu.WhatsNew') }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -72,7 +72,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              {{ $t('menu.videoMode') }}
+              {{ $t('menu.VideoMode') }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -87,7 +87,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              {{ $t('menu.download') }}
+              {{ $t('menu.Download') }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -102,7 +102,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              {{ $t('menu.admin') }}
+              {{ $t('menu.Admin') }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -116,7 +116,7 @@
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              {{ $t('menu.about') }}
+              {{ $t('menu.About') }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>

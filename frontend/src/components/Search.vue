@@ -1,6 +1,6 @@
 <template>
   <v-col class="search">
-    <h2> {{ $t('menu.search') }} </h2>
+    <h2> {{ $t('menu.Search') }} </h2>
 
     <v-text-field
       ref="searchField"

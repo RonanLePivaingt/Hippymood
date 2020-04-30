@@ -1,6 +1,6 @@
 <template>
   <v-col class="whats-new">
-    <h2> {{ $t('menu.whatsNew') }}</h2>
+    <h2> {{ $t('menu.WhatsNew') }}</h2>
 
     <v-list v-if="displayLoaders">
       <transition-group name="search">

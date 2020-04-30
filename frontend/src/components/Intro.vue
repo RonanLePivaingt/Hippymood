@@ -16,7 +16,7 @@
         class="mr-2"
         :input-value="videoMode"
         color="secondary"
-        :label="$t('menu.videoMode')"
+        :label="$t('menu.VideoMode')"
         @change="toggleVideoMode"
       />
 
@@ -52,7 +52,7 @@
         <v-icon left>
           mdi-new-box
         </v-icon>
-        {{ $t('menu.whatsNew') }}
+        {{ $t('menu.WhatsNew') }}
       </v-btn>
     </div>
 
