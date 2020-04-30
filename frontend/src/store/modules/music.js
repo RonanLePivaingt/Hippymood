@@ -38,6 +38,9 @@ const actions = {
     if (state.nextType === 'loadingMood' && mood.id === state.next.id) {
       return false
     }
+    if (moodLoadCancel) {
+      moodLoadCancel.cancel("Cancelling mood loading")
+    }
     if (state.playbackState !== 'playing') {
       dispatch('loadAndPlayMood', mood)
     } else if (state.currentSong.moodId === mood.id) {
