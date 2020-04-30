@@ -1,5 +1,6 @@
-const routeOptions = [
-  { path: '/', name: 'Player'  },
+import Player from './components/Player.vue'
+
+const lazyRouteOptions = [
   { path: '/admin', name: 'Admin'  },
   { path: '/search', name: 'Search'  },
   { path: '/whatsnew', name: 'WhatsNew' },
@@ -7,11 +8,13 @@ const routeOptions = [
   { path: '/about', name: 'About'  },
 ]
 
-const routes = routeOptions.map(route => {
+const routes = lazyRouteOptions.map(route => {
   return {
     ...route,
     component: () => import(/* webpackChunkName: "[request]" */ `./components/${route.name}.vue`)
   }
 })
+
+routes.push({ path: '/', component: Player, name: 'Player'  })
 
 export default routes

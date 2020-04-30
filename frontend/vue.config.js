@@ -12,9 +12,14 @@ module.exports = {
       new webpack.DefinePlugin({ CONFIG: JSON.stringify(require('config')) })
     ],
     output: {
-      filename: '[name].[contenthash].js',
-      chunkFilename: '[name].[contenthash].js',
-    }
+      filename: '[name].[hash].js',
+      chunkFilename: '[name].[hash].js',
+    },
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+      },
+    },
   },
   devServer: {
     disableHostCheck: true,
