@@ -11,7 +11,7 @@
         v-for="(mood, index) in moodLoaders"
         :key="index"
         class="mood-skeleton ma-2"
-        :class="index < nbMoodsDisplayed ? 'display' : ''"
+        :class="index < nbMoodsDisplayed ? 'force-display' : ''"
         type="button"
         :style="loading ? `${mood.width} transition-delay: ${loadingAnimationDelay(index)}ms;` : `transition-delay: ${readyAnimationDelay(index)}ms;`"
       >
@@ -105,9 +105,9 @@ export default {
         // Force Vue to apply class after it was removed from DOM
         this.activeClass = '';
         this.loading = false;
-        this.$nextTick(function () {
+        window.setTimeout( () => {
           this.activeClass = 'show';
-        });
+        }, 0);
       }
     }
   },
@@ -116,11 +116,11 @@ export default {
       this.loading = false;
       this.activeClass = 'show';
     } else {
-      // Wrapped inside nextTick to avoid issue when using another language than default one
-      this.$nextTick(function () {
+      // Forcing vue to add class after DOM is ready, (doesn't work in production settings with nextTick)
+      window.setTimeout( () => {
         this.activeClass = 'show';
         this.startTime = new Date().getTime();
-      });
+      }, 0)
     }
   },
   methods: {
@@ -161,9 +161,9 @@ export default {
     opacity: 0;
     transition: opacity .4s;
 
-    // Used to force visibility on already loaded mood blocks skeletons
-    &.display {
+    &.force-display {
       opacity: 1;
+      transition: all 0s;
     }
 
     .mood-btn {

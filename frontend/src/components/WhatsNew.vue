@@ -105,7 +105,7 @@ export default {
     if (this.whatsNew.length === 0) {
       this.$store.dispatch('music/getWhatsNew')
       this.loading = true
-    this.loaders = loaders
+      this.loaders = loaders
     }
   },
   methods: {

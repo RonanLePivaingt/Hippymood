@@ -33,10 +33,11 @@
           <v-icon
             v-show="videoMode && song.youtube"
             left
-            >
+          >
             mdi-youtube
           </v-icon>
-            {{ song.mood }}
+
+          {{ song.mood }}
         </v-btn>
       </v-row>
     </v-list-item-content>
@@ -47,7 +48,18 @@
 export default {
   name: 'ListItem',
   props: {
-    song: Object,
+    song: {
+      type: Object,
+      default: () => {
+        return {
+          song: 'Song name',
+          album: 'Album name',
+          artist: 'Artist name',
+          youtube: '',
+          mood: 'Mood name',
+        }
+      }
+    },
     videoMode: Boolean,
   },
 };

@@ -21,7 +21,10 @@
 
         <Breadcrumb />
 
-        <transition name="fade" mode="out-in">
+        <transition
+          name="fade"
+          mode="out-in"
+        >
           <router-view />
         </transition>
 
@@ -60,13 +63,21 @@ export default {
     ...mapState('music', [ 'currentSong' ]),
   },
   beforeCreate () {
+    window.hideLoader()
     // Loader exit animation and removal
+    /*
     const loader = document.getElementById('loader-container');
-    loader.classList.remove('slide-in-bottom')
-    loader.classList.add('slide-out-bottom')
-    loader.addEventListener("animationend", () => {
-      loader.parentNode.removeChild(loader)
-    }, {once: true})
+    if (loader) {
+      loader.addEventListener("animationend", () => {
+        if (loader.classList.contains('slide-in-bottom'))  {
+          loader.classList.remove('slide-in-bottom')
+          loader.classList.add('slide-out-bottom')
+        } else {
+          loader.parentNode.removeChild(loader)
+        }
+      })
+    }
+    */
   },
   created () {
     this.getMoods()

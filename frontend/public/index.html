@@ -47,21 +47,8 @@
           transform: rotate(360deg);
         }
       }
-      .slide-out-bottom {
-        animation: slide-out-bottom 0.5s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
-      }
-      @keyframes slide-out-bottom {
-        0% {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        100% {
-          opacity: 0;
-          transform: translateY(50vh);
-        }
-      }
       .slide-in-bottom {
-        animation: slide-in-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+        animation: slide-in-bottom .4s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
       }
       @keyframes slide-in-bottom {
         0% {
@@ -73,13 +60,26 @@
           transform: translateY(0);
         }
       }
+      .slide-out-bottom {
+        animation: slide-out-bottom 0.2s cubic-bezier(0.550, 0.085, 0.680, 0.530) both;
+      }
+      @keyframes slide-out-bottom {
+        0% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(50vh);
+        }
+      }
     </style>
   </head>
   <body>
     <noscript>
       <strong>We're sorry but frontend doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
-    <div id="loader-container" class="slide-in-bottom">
+    <div id="loader-container">
       <svg
         id="app-loader"
         class="spin"
@@ -90,7 +90,6 @@
         y="0px"
         viewBox="0 0 512 512"
         style="enable-background: new 0 0 512 512;"
-        xml:space="preserve"
       >
         <circle style="fill: #242424;" cx="256" cy="256" r="256" />
         <path
@@ -121,6 +120,23 @@
         />
         <circle style="fill: #242424;" cx="256" cy="256" r="6.4" />
       </svg>
+      <script>
+        const loader = document.getElementById('loader-container');
+        if (loader) {
+          loader.addEventListener("animationend", () => {
+            if (loader.classList.contains('slide-in-bottom'))  {
+              loader.classList.remove('slide-in-bottom')
+            } else {
+              loader.parentNode.removeChild(loader)
+            }
+          })
+
+          loader.classList.add('slide-in-bottom')
+          window.hideLoader = () => {
+            loader.classList.add('slide-out-bottom')
+          }
+        }
+      </script>
     </div>
 
     <div id="app"></div>

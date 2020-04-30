@@ -41,28 +41,21 @@
 </template>
 
 <script>
-import bezierEasing from 'bezier-easing';
-
-// Generating array of skeleton items with various width
-const nbLoaders = 3,
-  min = 75,
-  max = 200,
-  loaders = Array.from(Array(nbLoaders).keys()).map((val, index) => ({
-    id: index,
-    songWidth: `width: ${Math.max(372 * Math.random(), 122)}px;`,
-    albumWidth: `width: ${Math.max(372 * Math.random(), 122)}px;`,
-    artistWidth: `width: ${Math.max(372 * Math.random(), 122)}px;`,
-    btnWidth: `width: ${Math.max(max * Math.random(), min)}px;`,
-    isLoader: true,
-  }));
-
 export default {
   name: 'ListItem',
   props: {
-    song: Object,
+    song: {
+      type: Object,
+      default: () => {
+        return {
+          songWidth: 'Song name',
+          albumWidth: 'Album name',
+          artistWidth: 'Artist name',
+          btnWidth: 'Artist name',
+        }
+      }
+    },
   },
-  data: () => ({
-  }),
 };
 </script>
 
