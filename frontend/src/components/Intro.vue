@@ -56,7 +56,7 @@
       </v-btn>
     </div>
 
-    <v-divider />
+    <v-divider class="mr-auto ml-auto" />
   </div>
 </template>
 

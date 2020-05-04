@@ -19,21 +19,25 @@
           Hippy Mood
         </h1>
 
-        <Breadcrumb />
+        <Breadcrumb v-if="!intro" />
+
+        <Intro v-if="intro" />
 
         <transition
           name="fade"
           mode="out-in"
         >
-          <router-view />
+          <router-view v-if="!intro" />
         </transition>
+
+        <MoodList v-if="intro" />
 
         <AudioPlayer v-if="currentSong.path" />
       </v-col>
     </v-content>
 
     <Footer
-      v-if="currentSong.path"
+      v-if="!intro && currentSong.path"
       @show-menu="drawer = true"
     />
 
@@ -44,6 +48,8 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 
+import Intro from './components/Intro'
+import MoodList from './components/MoodList'
 const AudioPlayer = () => import('./components/AudioPlayer')
 const Breadcrumb = () => import('./components/Breadcrumb')
 const Footer = () => import('./components/Footer')
@@ -55,8 +61,10 @@ export default {
   components: {
     AudioPlayer,
     Breadcrumb,
+    Intro,
     Footer,
     Menu,
+    MoodList,
     Octocat,
   },
   data: () => ({
@@ -65,6 +73,9 @@ export default {
   }),
   computed: {
     ...mapState('music', [ 'currentSong' ]),
+    intro () {
+      return this.currentSong.path ? false : true
+    },
   },
   beforeCreate () {
     window.hideLoader()

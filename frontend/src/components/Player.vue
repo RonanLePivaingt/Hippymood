@@ -32,8 +32,8 @@
 import { mapState, mapActions } from 'vuex'
 import Intro from './Intro'
 import MoodList from './MoodList'
-const PlayerCard = () => import('./PlayerCard')
-const PlayerVideo = () => import('./PlayerVideo')
+import PlayerCard from './PlayerCard'
+import PlayerVideo from './PlayerVideo'
 
 export default {
   name: 'WhatsNew',

@@ -1,6 +1,7 @@
 import Player from './components/Player.vue'
 
 const lazyRouteOptions = [
+  { path: '/', name: 'Player'  },
   { path: '/admin', name: 'Admin'  },
   { path: '/search', name: 'Search'  },
   { path: '/whatsnew', name: 'WhatsNew' },
@@ -15,6 +16,6 @@ const routes = lazyRouteOptions.map(route => {
   }
 })
 
-routes.push({ path: '/', component: Player, name: 'Player'  })
+// routes.push({ path: '/', component: Player, name: 'Player'  })
 
 export default routes

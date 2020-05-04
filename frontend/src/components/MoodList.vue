@@ -83,9 +83,9 @@ export default {
     ]),
     moodLoaders () {
       if (this.moods.length === 0) {
-        return loaders;
+        return Object.freeze(loaders);
       } else {
-        return this.moods;
+        return Object.freeze(this.moods);
       }
     },
   },
