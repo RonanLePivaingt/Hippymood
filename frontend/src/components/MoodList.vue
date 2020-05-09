@@ -7,40 +7,34 @@
       sm="10"
       cols="12"
     >
-      <v-skeleton-loader
+      <v-btn
         v-for="(mood, index) in moodLoaders"
-        :key="index"
-        class="mood-skeleton ma-2"
+        :key="mood.id"
+        class="mood-btn ma-2"
         :class="index < nbMoodsDisplayed ? 'force-display' : ''"
-        type="button"
+        :color="mood.id === currentMood.id ? 'secondary' : ''"
+        :disabled="videoMode && mood.nbVideo === '0'"
         :style="loading ? `${mood.width} transition-delay: ${loadingAnimationDelay(index)}ms;` : `transition-delay: ${readyAnimationDelay(index)}ms;`"
+        @click="!loading ? playNextMood(mood) : ''"
       >
-        <v-btn
-          :key="mood.id"
-          class="mood-btn"
-          :color="mood.id === currentMood.id ? 'secondary' : ''"
-          :disabled="videoMode && mood.nbVideo === '0' ? true : false"
-          @click="!loading ? playNextMood(mood) : ''"
+        {{ mood.name }}
+
+        <v-icon
+          v-if="nextType === 'mood' && next.id === mood.id"
+          right
         >
-          {{ mood.name }}
+          mdi-update
+        </v-icon>
 
-          <v-icon
-            v-if="nextType === 'mood' && next.id === mood.id"
-            right
-          >
-            mdi-update
-          </v-icon>
-
-          <v-progress-circular
-            v-if="isLoading(mood.id)"
-            class="ml-2 mr-n2"
-            indeterminate
-            color="secondary"
-            width="3"
-            size="20"
-          />
-        </v-btn>
-      </v-skeleton-loader>
+        <v-progress-circular
+          v-else-if="isLoading(mood.id)"
+          class="ml-2 mr-n2"
+          indeterminate
+          color="secondary"
+          width="3"
+          size="20"
+        />
+      </v-btn>
     </v-col>
   </div>
 </template>
@@ -50,7 +44,8 @@ import { mapState, mapActions } from 'vuex';
 import bezierEasing from 'bezier-easing';
 
 // Generating array of skeleton items with various width
-const nbLoaders = CONFIG.frontend.moodListLoading.nbLoaders,
+// const nbLoaders = CONFIG.frontend.moodListLoading.nbLoaders,
+const nbLoaders = 3,
       min = 75,
       max = 200,
       loaders = Array.from(Array(nbLoaders).keys()).map((val, index) => ({
@@ -59,19 +54,20 @@ const nbLoaders = CONFIG.frontend.moodListLoading.nbLoaders,
       }));
 
 // Animations
-const loadingEase = bezierEasing(0.55, 0, 1, 0.45),
-      readyEase = bezierEasing(0.65, 0, 0.35, 1),
+const loadingEasing = bezierEasing(0.45, 0, 0.55, 1), // easeInCirc
+      readyEasing = bezierEasing(0.55, 0, 1, 0.45),   // easeInQuad
       loadingInterval = CONFIG.frontend.moodListLoading.loadingInterval,
       readyAnimationDuration = CONFIG.frontend.moodListLoading.readyAnimationDuration;
 
 export default {
   name: 'MoodList',
   data: () => ({
-    activeClass: '',
+    activeClass: 'loading',
     demoMode: CONFIG.global.demoMode,
     loading: true,
     nbMoodsDisplayed: 0,
     startTime: 0,
+    loaders: loaders,
   }),
   computed: {
     ...mapState('music', [
@@ -83,9 +79,9 @@ export default {
     ]),
     moodLoaders () {
       if (this.moods.length === 0) {
-        return Object.freeze(loaders);
+        return this.loaders;
       } else {
-        return Object.freeze(this.moods);
+        return this.moods;
       }
     },
   },
@@ -118,9 +114,14 @@ export default {
     } else {
       // Forcing vue to add class after DOM is ready, (doesn't work in production settings with nextTick)
       window.setTimeout( () => {
-        this.activeClass = 'show';
+        this.activeClass = 'loading show';
         this.startTime = new Date().getTime();
       }, 0)
+
+      console.log("initial", this.loadingAnimationDelay(this.loaders.length + 1), this.loaders.length)
+      window.setTimeout( () => {
+        this.addLoaders()
+      }, this.loadingAnimationDelay(nbLoaders + 1))
     }
   },
   methods: {
@@ -128,7 +129,14 @@ export default {
       'playNextMood',
     ]),
     loadingAnimationDelay (index) {
-      return loadingEase(index / nbLoaders ) * nbLoaders * loadingInterval;
+      if (nbLoaders < this.loaders.length) {
+        return loadingEasing(index / this.loaders.length ) * this.loaders.length * loadingInterval
+      } else {
+        return loadingEasing((index + 1) / this.loaders.length ) * this.loaders.length * loadingInterval
+      }
+      // console.log(index, delay)
+      //return loadingEasing(index / nbLoaders ) * nbLoaders * loadingInterval
+      return delay
     },
     readyAnimationDelay (index) {
       if (index < this.nbMoodsDisplayed) {
@@ -136,7 +144,7 @@ export default {
       } else {
         const time = readyAnimationDuration / ( this.moods.length - this.nbMoodsDisplayed );
 
-        return ( loadingEase( ( index ) / this.moods.length ) * this.moods.length ) * time;
+        return ( readyEasing( ( index ) / this.moods.length ) * this.moods.length ) * time;
       }
     },
     isLoading (moodId) {
@@ -146,33 +154,77 @@ export default {
         return false;
       }
     },
+    addLoaders () {
+      if (this.moods.length === 0 && this.loaders.length < 40) {
+        // Ajouter un loader
+        this.loaders.push({
+          id: this.loaders.length,
+          width: `width: ${Math.max(max * Math.random(), min)}px;`,
+        })
+        console.log(
+          "delay",
+          this.loadingAnimationDelay(this.loaders.length + 1) ,
+          this.loadingAnimationDelay(this.loaders.length)
+        )
+        // ajouter un timeout
+        window.setTimeout( () => {
+          this.addLoaders()
+        }, this.loadingAnimationDelay(this.loaders.length + 1))
+      }
+    }
   },
 };
 </script>
 
 <style lang="scss">
 .mood-list {
-  &.show .mood-skeleton {
+  &.show .mood-btn {
     opacity: 1;
   }
 
-  .mood-skeleton {
+  .mood-btn {
     display: inline-flex;
+    flex-grow: 1;
     opacity: 0;
     transition: opacity .4s;
+
 
     &.force-display {
       opacity: 1;
       transition: all 0s;
     }
 
-    .mood-btn {
-      flex-grow: 1;
-
-      > .v-btn__content .v-icon.theme--light {
-        color: rgba(0, 0, 0, 0.54) !important;
-      }
+    > .v-btn__content .v-icon.theme--light {
+      color: rgba(0, 0, 0, 0.54) !important;
     }
+  }
+
+  &.loading .mood-btn {
+    overflow: hidden;
+  }
+  &.loading .mood-btn::after {
+    -webkit-animation: loading 1.5s infinite;
+    animation: loading 1.5s infinite;
+    content: "";
+    height: 100%;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translateX(-100%);
+    z-index: 1;
+    box-shadow: unset;
+    webkit-box-shadow: unset;
+  }
+  .theme--light &.loading .mood-btn::after {
+    background: linear-gradient(90deg,transparent,hsla(0,0%,100%,.5),transparent);
+  }
+  .theme--dark &.loading .mood-btn::after {
+    background: linear-gradient(90deg,transparent,hsla(0,0%,100%,.05),transparent);
+  }
+
+  .v-skeleton-loader__bone {
+    width: 100%;
   }
 }
 </style>
