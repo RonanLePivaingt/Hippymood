@@ -3,8 +3,6 @@
     align="center"
     class="pa-0"
   >
-    <Intro />
-
     <PlayerCard v-if="!videoMode" />
     <PlayerVideo v-if="videoMode" />
 
@@ -30,7 +28,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import Intro from './Intro'
 import MoodList from './MoodList'
 import PlayerCard from './PlayerCard'
 import PlayerVideo from './PlayerVideo'
@@ -41,7 +38,6 @@ export default {
     MoodList,
     PlayerCard,
     PlayerVideo,
-    Intro,
   },
   data: () => ({
     snackbar: false,

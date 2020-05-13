@@ -1,12 +1,14 @@
 <template>
   <v-app class="app">
-    <v-navigation-drawer
-      v-model="drawer"
-      disable-resize-watcher
-      app
-    >
-      <Menu v-if="currentSong.path" />
-    </v-navigation-drawer>
+    <template v-if="!intro">
+      <v-navigation-drawer
+        v-model="drawer"
+        disable-resize-watcher
+        app
+      >
+        <Menu />
+      </v-navigation-drawer>
+    </template>
 
     <v-content :class="currentSong.id ? 'footer-visible' : ''">
       <v-col
@@ -19,25 +21,28 @@
           Hippy Mood
         </h1>
 
-        <Breadcrumb v-if="!intro" />
+        <template v-if="intro">
+          <Intro />
+          <MoodList />
+        </template>
 
-        <Intro v-if="intro" />
+        <template v-else>
+          <Breadcrumb />
 
-        <transition
-          name="fade"
-          mode="out-in"
-        >
-          <router-view v-if="!intro" />
-        </transition>
+          <transition
+            name="fade"
+            mode="out-in"
+          >
+            <router-view />
+          </transition>
 
-        <MoodList v-if="intro" />
-
-        <AudioPlayer v-if="currentSong.path" />
+          <AudioPlayer />
+        </template>
       </v-col>
     </v-content>
 
     <Footer
-      v-if="!intro && currentSong.path"
+      v-if="!intro"
       @show-menu="drawer = true"
     />
 
@@ -48,8 +53,8 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 
-import Intro from './components/Intro'
-import MoodList from './components/MoodList'
+const Intro = () => import('./components/Intro')
+const MoodList = () => import('./components/MoodList')
 const AudioPlayer = () => import('./components/AudioPlayer')
 const Breadcrumb = () => import('./components/Breadcrumb')
 const Footer = () => import('./components/Footer')
@@ -74,7 +79,13 @@ export default {
   computed: {
     ...mapState('music', [ 'currentSong' ]),
     intro () {
-      return this.currentSong.path ? false : true
+      if (this.currentSong.path) {
+        return false
+      } else if (this.$route.path !== '/') {
+        return false
+      } else {
+        return true
+      }
     },
   },
   beforeCreate () {

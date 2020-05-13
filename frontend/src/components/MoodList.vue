@@ -6,35 +6,43 @@
       align="center"
       sm="10"
       cols="12"
+      @transitionend="addLoaders"
     >
-      <v-btn
-        v-for="(mood, index) in moodLoaders"
-        :key="mood.id"
-        class="mood-btn ma-2"
-        :class="index < nbMoodsDisplayed ? 'force-display' : ''"
-        :color="mood.id === currentMood.id ? 'secondary' : ''"
-        :disabled="videoMode && mood.nbVideo === '0'"
-        :style="loading ? `${mood.width} transition-delay: ${loadingAnimationDelay(index)}ms;` : `transition-delay: ${readyAnimationDelay(index)}ms;`"
-        @click="!loading ? playNextMood(mood) : ''"
+      <transition-group
+        name="fade"
+        :duration="{ enter: 400, leave: 0 }"
+        :appear="moods.length === 0"
       >
-        {{ mood.name }}
-
-        <v-icon
-          v-if="nextType === 'mood' && next.id === mood.id"
-          right
+        <v-btn
+          v-for="(mood, index) in moodLoaders"
+          :key="mood.id"
+          :data-index="index"
+          class="mood-btn ma-2"
+          :class="index < nbMoodsDisplayed ? 'force-display' : ''"
+          :color="mood.id === currentMood.id ? 'secondary' : ''"
+          :disabled="videoMode && mood.nbVideo === '0'"
+          :style="loading ? `${mood.width} transition-delay: ${loadingAnimationDelay(index)}ms;` : `transition-delay: ${readyAnimationDelay(index)}ms;`"
+          @click="!loading ? playNextMood(mood) : ''"
         >
-          mdi-update
-        </v-icon>
+          {{ mood.name }}
 
-        <v-progress-circular
-          v-else-if="isLoading(mood.id)"
-          class="ml-2 mr-n2"
-          indeterminate
-          color="secondary"
-          width="3"
-          size="20"
-        />
-      </v-btn>
+          <v-icon
+            v-if="nextType === 'mood' && next.id === mood.id"
+            right
+          >
+            mdi-update
+          </v-icon>
+
+          <v-progress-circular
+            v-else-if="isLoading(mood.id)"
+            class="ml-2 mr-n2"
+            indeterminate
+            color="secondary"
+            width="3"
+            size="20"
+          />
+        </v-btn>
+      </transition-group>
     </v-col>
   </div>
 </template>
@@ -44,7 +52,6 @@ import { mapState, mapActions } from 'vuex';
 import bezierEasing from 'bezier-easing';
 
 // Generating array of skeleton items with various width
-// const nbLoaders = CONFIG.frontend.moodListLoading.nbLoaders,
 const nbLoaders = 3,
       min = 75,
       max = 200,
@@ -79,8 +86,10 @@ export default {
     ]),
     moodLoaders () {
       if (this.moods.length === 0) {
+        console.log("loaders")
         return this.loaders;
       } else {
+        console.log("moods")
         return this.moods;
       }
     },
@@ -118,10 +127,12 @@ export default {
         this.startTime = new Date().getTime();
       }, 0)
 
+      /*
       console.log("initial", this.loadingAnimationDelay(this.loaders.length + 1), this.loaders.length)
       window.setTimeout( () => {
         this.addLoaders()
       }, this.loadingAnimationDelay(nbLoaders + 1))
+      */
     }
   },
   methods: {
@@ -129,14 +140,7 @@ export default {
       'playNextMood',
     ]),
     loadingAnimationDelay (index) {
-      if (nbLoaders < this.loaders.length) {
-        return loadingEasing(index / this.loaders.length ) * this.loaders.length * loadingInterval
-      } else {
-        return loadingEasing((index + 1) / this.loaders.length ) * this.loaders.length * loadingInterval
-      }
-      // console.log(index, delay)
-      //return loadingEasing(index / nbLoaders ) * nbLoaders * loadingInterval
-      return delay
+      return loadingEasing(index / this.loaders.length ) * this.loaders.length * loadingInterval
     },
     readyAnimationDelay (index) {
       if (index < this.nbMoodsDisplayed) {
@@ -154,22 +158,25 @@ export default {
         return false;
       }
     },
-    addLoaders () {
-      if (this.moods.length === 0 && this.loaders.length < 40) {
+    addLoaders (e) {
+      if (this.loaders.length > 40) {
+        return false
+      }
+      if (this.moods.length === 0 && e.target.dataset.index >= this.loaders.length - 1) {
+        console.log(e.target.dataset.index, "Adding 3 loaders")
         // Ajouter un loader
         this.loaders.push({
           id: this.loaders.length,
           width: `width: ${Math.max(max * Math.random(), min)}px;`,
         })
-        console.log(
-          "delay",
-          this.loadingAnimationDelay(this.loaders.length + 1) ,
-          this.loadingAnimationDelay(this.loaders.length)
-        )
-        // ajouter un timeout
-        window.setTimeout( () => {
-          this.addLoaders()
-        }, this.loadingAnimationDelay(this.loaders.length + 1))
+        this.loaders.push({
+          id: this.loaders.length,
+          width: `width: ${Math.max(max * Math.random(), min)}px;`,
+        })
+        this.loaders.push({
+          id: this.loaders.length,
+          width: `width: ${Math.max(max * Math.random(), min)}px;`,
+        })
       }
     }
   },
@@ -178,21 +185,17 @@ export default {
 
 <style lang="scss">
 .mood-list {
-  &.show .mood-btn {
-    opacity: 1;
+
+  // Avoid stutter when loaders are added on desktop
+  @media screen and (min-width: 1100px) {
+    &.loading {
+      text-align: left;
+    }
   }
 
   .mood-btn {
     display: inline-flex;
     flex-grow: 1;
-    opacity: 0;
-    transition: opacity .4s;
-
-
-    &.force-display {
-      opacity: 1;
-      transition: all 0s;
-    }
 
     > .v-btn__content .v-icon.theme--light {
       color: rgba(0, 0, 0, 0.54) !important;
@@ -226,5 +229,12 @@ export default {
   .v-skeleton-loader__bone {
     width: 100%;
   }
+}
+// Animation
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .4s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

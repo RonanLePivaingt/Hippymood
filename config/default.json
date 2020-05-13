@@ -31,8 +31,8 @@
     },
     "adminShownName": "Admin",
     "moodListLoading": {
-      "nbLoaders": 60,
-      "loadingInterval": 5000,
+      "nbLoaders": 10,
+      "loadingInterval": 1000,
       "readyAnimationDuration": 1000
     }
   },
