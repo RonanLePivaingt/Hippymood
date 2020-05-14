@@ -34,7 +34,7 @@
 
       <v-skeleton-loader
         type="button"
-        :style="song.btnWidth"
+        :style="song.moodWidth"
       />
     </v-row>
   </v-skeleton-loader>
@@ -48,10 +48,10 @@ export default {
       type: Object,
       default: () => {
         return {
-          songWidth: 'Song name',
-          albumWidth: 'Album name',
-          artistWidth: 'Artist name',
-          btnWidth: 'Artist name',
+          songWidth: 'width: 200px;',
+          albumWidth: 'width: 160px;',
+          artistWidth: 'width: 240px;',
+          moodWidth: 'width: 100px;',
         }
       }
     },
