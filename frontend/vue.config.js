@@ -9,8 +9,17 @@ module.exports = {
   ],
   configureWebpack: {
     plugins: [
-      new webpack.DefinePlugin({ CONFIG: JSON.stringify(require('config')) })
-    ]
+      new webpack.DefinePlugin({ CONFIG: JSON.stringify(require('config')) }),
+    ],
+    output: {
+      filename: '[name].[hash].js',
+      chunkFilename: '[name].[hash].js',
+    },
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+      },
+    },
   },
   devServer: {
     disableHostCheck: true,

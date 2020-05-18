@@ -1,12 +1,14 @@
 <template>
   <v-app class="app">
-    <v-navigation-drawer
-      v-model="drawer"
-      disable-resize-watcher
-      app
-    >
-      <Menu />
-    </v-navigation-drawer>
+    <template v-if="!intro">
+      <v-navigation-drawer
+        v-model="drawer"
+        disable-resize-watcher
+        app
+      >
+        <Menu />
+      </v-navigation-drawer>
+    </template>
 
     <v-content :class="currentSong.id ? 'footer-visible' : ''">
       <v-col
@@ -19,20 +21,30 @@
           Hippy Mood
         </h1>
 
-        <Breadcrumb />
+        <template v-if="intro">
+          <Intro />
+          <MoodList />
+        </template>
 
-        <transition
-          name="fade"
-          mode="out-in"
-        >
-          <router-view />
-        </transition>
+        <template v-else>
+          <Breadcrumb />
 
-        <AudioPlayer />
+          <transition
+            name="fade"
+            mode="out-in"
+          >
+            <router-view />
+          </transition>
+
+          <AudioPlayer />
+        </template>
       </v-col>
     </v-content>
 
-    <Footer @show-menu="drawer = true" />
+    <Footer
+      v-if="!intro"
+      @show-menu="drawer = true"
+    />
 
     <Octocat v-if="demoMode" />
   </v-app>
@@ -40,19 +52,24 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import AudioPlayer from './components/AudioPlayer';
-import Breadcrumb from './components/Breadcrumb';
-import Footer from './components/Footer';
-import Menu from './components/Menu';
-import Octocat from './components/demo/Octocat';
+
+const Intro = () => import('./components/Intro')
+const MoodList = () => import('./components/MoodList')
+const AudioPlayer = () => import('./components/AudioPlayer')
+const Breadcrumb = () => import('./components/Breadcrumb')
+const Footer = () => import('./components/Footer')
+const Menu = () => import('./components/Menu')
+const Octocat = () => import('./components/demo/Octocat')
 
 export default {
   name: 'App',
   components: {
     AudioPlayer,
     Breadcrumb,
+    Intro,
     Footer,
     Menu,
+    MoodList,
     Octocat,
   },
   data: () => ({
@@ -61,23 +78,18 @@ export default {
   }),
   computed: {
     ...mapState('music', [ 'currentSong' ]),
+    intro () {
+      if (this.currentSong.path) {
+        return false
+      } else if (this.$route.path !== '/') {
+        return false
+      } else {
+        return true
+      }
+    },
   },
   beforeCreate () {
     window.hideLoader()
-    // Loader exit animation and removal
-    /*
-    const loader = document.getElementById('loader-container');
-    if (loader) {
-      loader.addEventListener("animationend", () => {
-        if (loader.classList.contains('slide-in-bottom'))  {
-          loader.classList.remove('slide-in-bottom')
-          loader.classList.add('slide-out-bottom')
-        } else {
-          loader.parentNode.removeChild(loader)
-        }
-      })
-    }
-    */
   },
   created () {
     this.getMoods()
@@ -105,7 +117,7 @@ export default {
 <style lang="scss">
 .app {
   h1 {
-    font-family: 'Grenadier-NF';
+    font-family: 'Grenadier-NF', sans-serif;
     font-size: 4.5rem;
     font-weight: 400;
     line-height: 1.4em;

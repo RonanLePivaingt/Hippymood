@@ -54,7 +54,7 @@ exports.CreateSuggestion = function (req, res, next) {
           })
           .into('suggestions_messages')
           .then(function(id) {
-            res.send("Yes");
+            return res.send("Yes");
           });
       })
     ;
@@ -66,7 +66,7 @@ exports.CreateSuggestion = function (req, res, next) {
 
       // Changing the default upload path
       req.files[0].path = destinationPath;
-      res.send({file: req.files[0]});
+      return res.send({file: req.files[0]});
     });
   }
 };
@@ -122,7 +122,7 @@ exports.CreateMessage = function(req, res){
                 status: data.status
               })
               .then(function() {
-                res.send("Yes");
+                return res.send("Yes");
               });
           });
       }
@@ -176,7 +176,7 @@ exports.List = function(req, res){
           }
         });
 
-        res.send({
+        return res.send({
           suggestions: associativeSuggestions
         });
       })
@@ -196,11 +196,11 @@ exports.DeleteFile = function(req, res){
     if (!error) {
       fs.unlink(filePath,function(error){
         console.log(error);
-        res.send({status: 'success'});
+        return res.send({status: 'success'});
       });
     } else {
       console.log(error);
-      res.send({
+      return res.send({
         status: 'error',
         error: error
       });
@@ -237,13 +237,13 @@ exports.DeleteSuggestion = function(req, res){
 
             deleteSuggestion.del()
               .then(function(rows) {
-                res.send({
+                return res.send({
                   status: 'success'
                 });
               });
           });
         } else {
-          res.send({
+          return res.send({
             status: 'error',
             error: 'No suggestion with this id for thisuser'
           });

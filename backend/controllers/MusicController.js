@@ -19,7 +19,7 @@ exports.Moods = function(req, res){
     .join('songs', 'songs.id', '=', 'genres_relations.id_song')
     .groupBy('genres.id')
     .then(function(rows) {
-      res.send(
+      return res.send(
         shuffleArray(rows)
       );
     })
@@ -81,13 +81,13 @@ exports.Mood = function(req, res){
 
         const randomSongs = shuffleArray(rows);
 
-        res.send({
+        return res.send({
           songs: randomSongs,
         });
       }
       else {
         var error = {"allSongGenrePlayed": 1};
-        res.send({error});
+        return res.send({error});
       }
     })
     .catch(function(error) {
@@ -123,9 +123,9 @@ exports.Search = function(req, res){
     .orderByRaw("SIMILARITY(?, artists.name) + SIMILARITY(?, albums.name) + SIMILARITY(?, songs.name)", [keywords, keywords, keywords])
     .then(function(rows) {
       if (rows.length > 0) {
-        res.send( rows );
+        return res.send( rows );
       } else {
-        res.send( {} );
+        return res.send( {} );
       }
     })
     .catch(function(error) {
@@ -157,9 +157,9 @@ exports.whatsNew = function(req, res){
 
   select.then(function(rows) {
     if (rows.length > 0) {
-      res.send(rows);
+      return res.send(rows);
     } else {
-      res.send({});
+      return res.send({});
     }
 
   })
@@ -183,7 +183,7 @@ exports.playedSong = function(req, res){
   }
 
   // Necessary to save the session (or req.session.save();) but cleaner because it gives a response to the client
-  res.send("Done");
+  return res.send("Done");
 }
 
 /*
@@ -199,7 +199,7 @@ exports.ResetMood = function(req, res){
         var i = req.session.playedSongs.indexOf(entry.id_song);
         req.session.playedSongs.splice(i, 1);
       });
-      res.send("Mood ID : " + moodId);
+      return res.send("Mood ID : " + moodId);
     })
     .catch(function(error) {
       console.error(error);
@@ -211,7 +211,7 @@ exports.ResetMood = function(req, res){
  */
 exports.ResetSession = function(req, res){
   req.session.playedSongs = [];
-  res.send("Done");
+  return res.send("Done");
 };
 
 /**

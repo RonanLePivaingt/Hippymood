@@ -51,11 +51,11 @@ exports.Login = function(req, res){
       }
 
       // Sending result to client
-      res.send(result);
+      return res.send(result);
     })
     .catch(function(error) {
       console.error(error);
-      res.send({
+      return res.send({
         error: true
       });
     });

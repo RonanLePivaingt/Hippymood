@@ -1,6 +1,6 @@
 <template>
   <v-col class="whats-new">
-    <h2> {{ $t('menu.whatsNew') }}</h2>
+    <h2> {{ $t('menu.WhatsNew') }}</h2>
 
     <v-list v-if="displayLoaders">
       <transition-group name="search">
@@ -50,24 +50,17 @@ import { mapState, mapActions } from 'vuex'
 import bezierEasing from 'bezier-easing';
 import LoadingItem from './list/LoadingItem';
 import SongItem from './list/SongItem';
+import { createLoaders } from '../utils/animation'
 
 // Generating array of skeleton items with various width
 const nbLoaders = 10,
-      min = 75,
-      max = 200,
-      loaders = Array.from(Array(nbLoaders).keys()).map((val, index) => ({
-        id: index,
-        songWidth: `width: ${Math.max(372 * Math.random(), 122)}px;`,
-        albumWidth: `width: ${Math.max(372 * Math.random(), 122)}px;`,
-        artistWidth: `width: ${Math.max(372 * Math.random(), 122)}px;`,
-        btnWidth: `width: ${Math.max(max * Math.random(), min)}px;`,
-      }))
+      loaders = createLoaders(nbLoaders)
 
 // Animations
 const loadingEase = bezierEasing(0.55, 0, 1, 0.45),
       readyEase = bezierEasing(0.65, 0, 0.35, 1),
       loadingInterval = 1500,
-      readyAnimationDuration = CONFIG.frontend.moodListLoading.readyAnimationDuration,
+      readyAnimationDuration = 1000,
       loadersAnimationTime = 3000,
       loadersInAnimationDuration = loadersAnimationTime / nbLoaders,
       loadersOutAnimationDuration = 400 / nbLoaders,
@@ -144,8 +137,7 @@ export default {
     resultsAnimationDelay (index) {
       if (!this.loading) {
         if (index >= this.indexNewResults) {
-          // Hack
-          return this.loadersAnimationDelay(0) + (this.resultsAnimationDuration * (index - this.indexNewResults)) - 50
+          return this.loadersAnimationDelay(0) + (this.resultsAnimationDuration * (index - this.indexNewResults))
         } else {
           return 0
         }
@@ -161,17 +153,6 @@ export default {
 .whats-new {
   .v-list {
     background: transparent;
-  }
-
-  .metadata {
-    overflow: hidden;
-
-    .v-list-item__subtitle {
-      display: inherit;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
   }
 
   .v-btn > .v-btn__content .v-icon.theme--light {

@@ -1,17 +1,21 @@
-import Player from './components/Player'
-import Download from './components/Download'
-import WhatsNew from './components/WhatsNew'
-import Admin from './components/Admin'
-import About from './components/About'
-import Search from './components/Search'
+import Player from './components/Player.vue'
 
-const routes = [
-  { path: '/', component: Player, name: 'player'  },
-  { path: '/admin', component: Admin, name: 'admin'  },
-  { path: '/search', component: Search, name: 'search'  },
-  { path: '/whatsnew', component: WhatsNew, name: 'whatsNew' },
-  { path: '/download', component: Download, name: 'download'  },
-  { path: '/about', component: About, name: 'about'  },
+const lazyRouteOptions = [
+  { path: '/', name: 'Player'  },
+  { path: '/admin', name: 'Admin'  },
+  { path: '/search', name: 'Search'  },
+  { path: '/whatsnew', name: 'WhatsNew' },
+  { path: '/download', name: 'Download'  },
+  { path: '/about', name: 'About'  },
 ]
+
+const routes = lazyRouteOptions.map(route => {
+  return {
+    ...route,
+    component: () => import(/* webpackChunkName: "[request]" */ `./components/${route.name}.vue`)
+  }
+})
+
+// routes.push({ path: '/', component: Player, name: 'Player'  })
 
 export default routes

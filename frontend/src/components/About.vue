@@ -1,6 +1,6 @@
 <template>
   <v-col class="about">
-    <h2> {{ $t('menu.about') }} </h2>
+    <h2> {{ $t('menu.About') }} </h2>
 
     <div class="made-with-love">
       {{ $t('about.madeWith') }} <div class="heart" /> {{ $t('about.by') }} Ronan Le Pivaingt

@@ -8,13 +8,13 @@
   "intro1": "Ul lec'hienn internet evit selaou sonerezh hervez da imor",
   "intro2": "Evel ur boest chokolad eo, keit ma peus ket tañvet na ouiez ket! A wechoù e distroez, a wechoù na rez ket...",
   "menu": {
-    "player": "Lenner",
-    "search": "Klask",
-    "whatsNew": "Petra nevez ?",
-    "videoMode": "Mod video",
-    "download": "Pellgargañ",
-    "admin": "Melestriñ",
-    "about": "Diwar-benn"
+    "Player": "Lenner",
+    "Search": "Klask",
+    "WhatsNew": "Petra nevez ?",
+    "VideoMode": "Mod video",
+    "Download": "Pellgargañ",
+    "Admin": "Melestriñ",
+    "About": "Diwar-benn"
   },
   "search": {
     "placeholder": "Kanaouenn, albom pe arzourien",

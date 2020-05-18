@@ -1,6 +1,6 @@
 <template>
   <v-col class="search">
-    <h2> {{ $t('menu.search') }} </h2>
+    <h2> {{ $t('menu.Search') }} </h2>
 
     <v-text-field
       ref="searchField"
@@ -29,7 +29,7 @@
           <song-item
             v-for="(song, index) in searchResults"
             v-show="!loading"
-            :key="index"
+            :key="song.id"
             :song="song"
             :video-mode="videoMode"
             :style="`transition-delay: ${resultsAnimationDelay(index)}ms;`"
@@ -65,19 +65,11 @@ import bezierEasing from 'bezier-easing'
 import LoadingItem from './list/LoadingItem'
 import SongItem from './list/SongItem'
 import axios from 'axios'
+import { createLoaders } from '../utils/animation'
 
 // Generating array of skeleton items with various width
 const nbLoaders = 3,
-  min = 75,
-  max = 200,
-  loaders = Array.from(Array(nbLoaders).keys()).map((val, index) => ({
-    id: index,
-    songWidth: `width: ${Math.max(372 * Math.random(), 122)}px;`,
-    albumWidth: `width: ${Math.max(372 * Math.random(), 122)}px;`,
-    artistWidth: `width: ${Math.max(372 * Math.random(), 122)}px;`,
-    btnWidth: `width: ${Math.max(max * Math.random(), min)}px;`,
-    isLoader: true,
-  }))
+      loaders = createLoaders(nbLoaders)
 
 // Animations
 const loadersAnimationTime = 400,
@@ -91,12 +83,12 @@ export default {
     SongItem,
   },
   data: () => ({
+    cancelRequest: false,
     loading: false,
+    noResult: false,
     searchResults: [],
     searchValue: '',
-    noResult: false,
     loaders: loaders,
-    cancelRequest: false
   }),
   computed: {
     ...mapState('music', [
@@ -195,16 +187,6 @@ export default {
     background: transparent;
   }
 
-  .metadata {
-    overflow: hidden;
-
-    .v-list-item__subtitle {
-      display: inherit;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-  }
   .emoji {
     font-size: 8rem;
     color: rgba(0, 0, 0, 0.54);

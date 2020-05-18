@@ -1,4 +1,4 @@
-<template>
+<template functional>
   <a
     href="https://github.com/3615Yeye/Hippymood/"
     target="_blank"
