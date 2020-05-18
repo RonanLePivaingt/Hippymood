@@ -34,6 +34,14 @@
     </v-chip>
 
     <v-chip
+      v-if="nextType === 'loadingMood'"
+      class="ml-2"
+      @click:close="resetNext()"
+    >
+      {{ next.name }}
+    </v-chip>
+
+    <v-chip
       v-if="nextType === 'song'"
       class="ml-2"
       close
