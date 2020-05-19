@@ -6,9 +6,9 @@ COPY . /app/
 
 WORKDIR /app/frontend
 
-RUN yarn global add @vue/cli @vue/cli-service
-RUN yarn install
+RUN npm install -g @vue/cli @vue/cli-service
+RUN npm install
 
 EXPOSE 8080
 
-CMD ['yarn', 'build']
+CMD ['npm', 'run', 'build']

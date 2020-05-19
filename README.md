@@ -1,5 +1,12 @@
 # Hippymood
 
+Web app to play your music smoothly by genre/mood.
+
+[Demo](http://hippymood.3615yeye.info)
+
+Demo disclaimer :
+- Only the Youtube based video mode will play music, not direct mp3 playing for legal reasons
+
 ## Installation with Docker
 
 ### Development setup
@@ -10,13 +17,13 @@ Inside the config directory, create your own development.json file from developm
 ```
 # Install dependencies
 
-docker-compose run --rm backend yarn install
-docker-compose run --rm frontend yarn install
+docker-compose run --rm backend npm install
+docker-compose run --rm frontend npm install
 
 # Initiate DB and scan music files
 
-docker-compose run --rm backend yarn dbInit
-docker-compose run --rm backend yarn scan
+docker-compose run --rm backend npm run dbInit
+docker-compose run --rm backend npm run scan
 
 # Project is now ready for startup
 
@@ -32,17 +39,17 @@ Inside the config directory, create your own production.json file from productio
 ```
 # Install dependencies
 
-docker-compose run --rm backend yarn install
-docker-compose run --rm frontend yarn install
+docker-compose run --rm backend npm install
+docker-compose run --rm frontend npm install
 
 # Build frontend files
 
-docker-compose run --rm frontend yarn build
+docker-compose run --rm frontend npm build
 
 # Initiate DB and scan music files
 
-docker-compose run --rm backend yarn dbInit
-docker-compose run --rm backend yarn scan
+docker-compose run --rm backend npm run dbInit
+docker-compose run --rm backend npm run scan
 
 # Project is now ready for startup
 

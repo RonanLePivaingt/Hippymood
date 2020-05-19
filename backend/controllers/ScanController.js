@@ -129,8 +129,12 @@ function songsUpsert(filesToUpsert) {
       const artistId = await getIdFromTable('artists', filesToUpsert[p].metadata.common.artist);
       const albumId = await getIdFromTable('albums', filesToUpsert[p].metadata.common.album);
       const genreId = await getIdFromTable('genres', filesToUpsert[p].metadata.common.genre[0]);
-      // Removing prefix from path
-      const songPath = filesToUpsert[p].path.slice(config.get('music.path').length + 1);
+      // Removing prefix from path and encoding special characters
+      const songPath = encodeURIComponent(
+        filesToUpsert[p].path.slice(
+          config.get('music.path').length + 1
+        )
+      );
 
 
       // Check if the song is a duplicate
