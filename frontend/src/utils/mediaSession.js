@@ -1,25 +1,28 @@
 import { EventEmitter } from 'events';
 
 export class MediaSession {
-  constructor (song) {
+  constructor (song, mood) {
     this.emitter = new EventEmitter()
 
     if ('mediaSession' in navigator) {
-      this.setMetadata(song)
+      this.setMetadata(song, mood)
       this.setActions()
     }
   }
 
-  setSong (song) {
+  setSong (song, mood) {
     if ('mediaSession' in navigator) {
-      this.setMetadata(song)
+      this.setMetadata(song, mood)
     }
   }
 
-  setMetadata (song) {
+  setMetadata (song, mood) {
     const songMeta = {
       title: song.song,
       artist: song.artist,
+      artwork: [
+        { src: `/api/tmp/thumbnails/${encodeURIComponent(mood.name)}-512x512.png`,   sizes: '512x512',   type: 'image/png' },
+      ],
     }
 
     if (song.album) {

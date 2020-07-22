@@ -22,6 +22,7 @@ export default {
   }),
   computed: {
     ...mapState('music', [
+      'currentMood',
       'currentSong',
       'playbackState',
       'videoMode',
@@ -36,14 +37,14 @@ export default {
   },
   watch: {
     currentSong (newSong) {
-      this.mediaSession.setSong(newSong)
+      this.mediaSession.setSong(newSong, this.currentMood)
     }
   },
   created () {
     this.$root.$on('pause', this.pause);
     this.$root.$on('play', this.play);
 
-    this.mediaSession = new MediaSession(this.currentSong)
+    this.mediaSession = new MediaSession(this.currentSong, this.currentMood)
     this.mediaSession.emitter.on('playNext', this.playNext)
     this.mediaSession.emitter.on('pause', this.pause)
     this.mediaSession.emitter.on('play', this.play)

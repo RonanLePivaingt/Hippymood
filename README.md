@@ -9,32 +9,17 @@ Demo disclaimer :
 
 ## Installation with Docker
 
-### Development setup
 Create your own docker-compose.override.yaml file from docker-compose.override.yaml.dist
+
+### Development setup
 
 Inside the config directory, create your own development.json file from development.json.dist file
 
-```
-# Install dependencies
-
-docker-compose run --rm backend npm install
-docker-compose run --rm frontend npm install
-
-# Initiate DB and scan music files
-
-docker-compose run --rm backend npm run dbInit
-docker-compose run --rm backend npm run scan
-
-# Project is now ready for startup
-
-docker-compose up
-```
-
 ### Production setup
 
-Create your own docker-compose.override.yaml file from docker-compose.override.yaml.dist
-
 Inside the config directory, create your own production.json file from production.json.dist file
+
+### Production setup
 
 ```
 # Install dependencies
@@ -50,6 +35,9 @@ docker-compose run --rm frontend npm build
 
 docker-compose run --rm backend npm run dbInit
 docker-compose run --rm backend npm run scan
+
+# Generates thumbnails based on mood names
+docker-compose run --rm backend npm run thumbnails
 
 # Project is now ready for startup
 

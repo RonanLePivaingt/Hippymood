@@ -8,3 +8,5 @@ config/*
 !config/default.json
 !config/development.json.dist
 !config/production.json.dist
+backend/tmp/thumbnails/*
+!backend/tmp/thumbnails/.gitkeep

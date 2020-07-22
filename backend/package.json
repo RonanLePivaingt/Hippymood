@@ -4,11 +4,12 @@
   "description": "Hippymood backend",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node controllers/test.js genThumbnails",
     "start": "node server.js",
     "scan": "node controllers/ScanController.js ScanMusic --isCli true",
     "dbInit": "node controllers/DatabaseController.js Up",
-    "dbEmptyMusic": "node controllers/DatabaseController.js Down"
+    "dbEmptyMusic": "node controllers/DatabaseController.js Down",
+    "thumbnails": "node controllers/ThumbnailController.js genThumbnails"
   },
   "author": "",
   "license": "ISC",
@@ -27,6 +28,7 @@
     "npm-check-updates": "^6.0.1",
     "p-limit": "^2.3.0",
     "pg": "^8.2.1",
+    "trianglify": "^4.0.0",
     "util": "^0.12.3"
   }
 }
