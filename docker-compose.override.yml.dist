@@ -45,7 +45,8 @@ services:
     ports:
       - "8088:80"
     volumes:
-      - "./frontend/dist:/usr/share/nginx/html"
+      - "./frontend/dist:/usr/share/nginx/html/front"
+      - "./backend/tmp:/usr/share/nginx/html/tmp"
       - "./docker/server.nginx.conf:/etc/nginx/conf.d/default.conf"
     links:
       - backend

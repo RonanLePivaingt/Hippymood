@@ -21,7 +21,7 @@ export class MediaSession {
       title: song.song,
       artist: song.artist,
       artwork: [
-        { src: `/api/tmp/thumbnails/${encodeURIComponent(mood.name)}-512x512.png`,   sizes: '512x512',   type: 'image/png' },
+        { src: `/tmp/thumbnails/${encodeURIComponent(mood.name)}-512x512.png`,   sizes: '512x512',   type: 'image/png' },
       ],
     }
 
